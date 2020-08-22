@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="author" content="Jack Evans" />
+
+    <link rel="shortcut icon" type="image/png" href="/static/favicon.ico" />
+
+    <title>Jack Evans - Updating Global Pip Packages</title>
+
+    <!-- Custom styles for this template -->
+    <link href="/static/style.css" rel="stylesheet" />
+
+    <!-- Syntax highlighting css -->
+    <link href="/static/pygments.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container">
+      
+<article>
+  <a href="/">View all posts</a>
+  <h1>Updating Global Pip Packages</h1>
+  <aside class="time">
+    <i>Posted <time>July 11, 2018</time></i>
+  </aside>
+  <content>
+    <p>If you're like me, you have quite a few useful python packages installed
+globally. For example ipython, mypy, httpie, flake8, autopep8 the list goes
+on...</p>
+<p>Occasionally I want to upgrade all such packages at once. Unfortunately unlike
+other package managers (i.e. npm) there's no built in flag to update global
+dependencies. So here's how I usually do so with pip</p>
+<pre><code>pip list -o --format=freeze | cut -d &quot;=&quot; -f 1 | pip install - U
+</code></pre>
+<p>Lets step through each section and explain what's going on here</p>
+<ul>
+<li><code>pip list -o</code></li>
+</ul>
+<p>Short for --outdated, lists outdated pip packages</p>
+<ul>
+<li><code>--format=freeze</code></li>
+</ul>
+<p>Displays results in the pip freeze format: e.g. ipython==6.2.1</p>
+<ul>
+<li><code>cut -d &quot;=&quot; -f 1</code></li>
+</ul>
+<p>Splits the field on the &quot;=&quot; delimiter, and selects the first field (1 indexed)</p>
+<p>For example, splitting a stance by whitespace and selecting the first word:</p>
+<pre><code>λ echo &quot;hello world&quot; | cut -d &quot; &quot; -f 1
+hello
+</code></pre>
+<ul>
+<li><code>pip install -U</code></li>
+</ul>
+<p>Short for --upgrade, upgrades all specified packages to the newest version</p>
+<p>A fairly straightforward little snippet that helps me keep all my fancy Python command line tools up to date.</p>
+
+  </content>
+</article>
+
+    </div>
+
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+      integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+      crossorigin="anonymous"
+    />
+
+    <footer>
+      <div class="avatar-container">
+        <img class="avatar" src="/static/avatar.jpg" alt="bulbasaur avatar" />
+      </div>
+      <div class="info">
+        <div class="name">Jack Evans</div>
+        <a href="https://github.com/Jackevansevo" rel="noopener">
+          <i class="fab fa-github" aria-hidden="true"></i> Jackevansevo</a
+        >
+        ·
+        <a href="https://twitter.com/ThisIsJackEvans" rel="noopener">
+          <i class="fab fa-twitter" aria-hidden="true"></i> ThisIsJackEvans</a
+        >
+        <br />
+      </div>
+    </footer>
+  </body>
+</html>

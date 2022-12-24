@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>The State of Django Autoreloading</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+        <meta name="description" content="Encountering a bug in pywatchman and exploring an alterate file reloading solution. TLDR: On Python-3.10 watchman bindings are broken. My..." />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Jack's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="/category/linux.html">Linux</a></li>
+                    <li><a href="/category/neovim.html">Neovim</a></li>
+                    <li><a href="/category/personal.html">Personal</a></li>
+                    <li><a href="/category/programming.html">Programming</a></li>
+                    <li class="active"><a href="/category/python.html">Python</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/the-state-of-django-autoreloading.html" rel="bookmark"
+           title="Permalink to The State of Django Autoreloading">The State of Django Autoreloading</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-09-19T00:00:00+01:00">
+                Published: Mon 19 September 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/python.html">Python</a>.</p>
+<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/django.html">django</a> </p>
+</footer><!-- /.post-info -->      <p>Encountering a bug in <code>pywatchman</code> and exploring an alterate file reloading solution.</p>
+<p><strong>TLDR:</strong> On Python-3.10 watchman bindings are broken. My recommendation is to
+use: <a href="https://pypi.org/project/django-watchfiles/">django-watchfiles</a></p>
+<h2>What the Docs Say</h2>
+<p>I recently went down a bit of a rabbit hole debugging auto reloading in Django.</p>
+<p>The <a href="https://docs.djangoproject.com/en/4.1/ref/django-admin/#runserver">official documentation</a> for Django <code>runserver</code> states</p>
+<blockquote>
+<p>The development server automatically reloads Python code for each request, as
+needed. You don’t need to restart the server for code changes to take effect...</p>
+</blockquote>
+<p>And that:</p>
+<blockquote>
+<p>If you’re using Linux or MacOS and install both pywatchman and the Watchman
+service, kernel signals will be used to autoreload the server (rather than
+polling file modification timestamps each second). This offers better
+performance on large projects...</p>
+</blockquote>
+<p>So by default <code>./manage.py runserver</code> Should work out of the box, but it's not
+particularly efficient for bigger projects.</p>
+<p>Optionally: installing the <code>watchman</code> binary (a file watching service by Facebook) and the
+<code>pywatchman</code> (the python bindings) should result in a smoother experience.</p>
+<hr>
+<h2>My Experience</h2>
+<p>In the past I've found the default reloader doesn't always restart the server
+when I'd expect it to.</p>
+<p>Recently I started a new project (with <code>Python 3.10.6</code>) so I figured I'd give
+the watchman reloader a try.</p>
+<p>I installed the <code>watchman</code> binary via my distribution package manager and
+<code>pywatchman</code> via pip</p>
+<p>To my confusion: the <code>StatReloader</code> (the default/fallback) was still being used 🤔</p>
+<div class="highlight"><pre><span></span><code>❯ ./manage.py runserver
+Watching <span class="k">for</span> file changes with StatReloader
+Performing system checks...
+</code></pre></div>
+
+<h2>Investigation</h2>
+<p>Let's have a look at why this is happening 🕵️</p>
+<p>Django's reloading implementation can be found in <a href="https://github.com/django/django/blob/main/django/utils/autoreload.py#L640-L646">django/utils/autoreload.py</a></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_reloader</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return the most suitable reloader for this environment.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">WatchmanReloader</span><span class="o">.</span><span class="n">check_availability</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">WatchmanUnavailable</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">StatReloader</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">WatchmanReloader</span><span class="p">()</span>
+</code></pre></div>
+
+<p>It looks like by default Django will first check to see if watchman is
+available, and call back to the default stat reloader if the compatibility
+check fails.</p>
+<p><strong>The Smoking Gun</strong></p>
+<p>If the check fails: <code>get_reloader</code> will swallow the exception and silently
+fall back to using the stat <code>StatReloader</code>. From the end user perspective
+(someone executing <code>./manage.py runserver</code>) there's no indication why the
+availability check failed.</p>
+<h3>Reproducing</h3>
+<p>So lets dig a little further:</p>
+<p>The <code>check_availability</code> method on <code>WatchmanReloader</code> implementation can be found <a href="https://github.com/django/django/blob/cfe3008123ed7c9e3f3a4d51d4a22f9d96634e33/django/utils/autoreload.py#L622-L637">here</a></p>
+<p>The important lines are:</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="ow">not</span> <span class="n">pywatchman</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="n">WatchmanUnavailable</span><span class="p">(</span><span class="s2">&quot;pywatchman not installed.&quot;</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">pywatchman</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">capabilityCheck</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="c1"># The service is down?</span>
+    <span class="k">raise</span> <span class="n">WatchmanUnavailable</span><span class="p">(</span><span class="s2">&quot;Cannot connect to the watchman service.&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Where the <code>pywatchman</code> variable being checked against is just a module level
+import wrapped with a <code>try/except</code> block (to check if the <code>pywatchman</code> python
+package is available)</p>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pywatchman</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">pywatchman</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div>
+
+<p>If I open a shell and execute this code:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">pywatchman</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">client</span> <span class="o">=</span> <span class="n">pywatchman</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">capabilityCheck</span><span class="p">()</span>
+</code></pre></div>
+
+<p>I get the following exception 💥 (the same exception unfortunately gets swallowed by Django).</p>
+<div class="highlight"><pre><span></span><code><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s2">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+  <span class="n">File</span> <span class="s2">&quot;/home/jackevans/.local/share/virtualenvs/blog-ZV8xlUiZ/lib/python3.10/site-packages/pywatchman/__init__.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1071</span><span class="p">,</span> <span class="ow">in</span> <span class="n">capabilityCheck</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="n">File</span> <span class="s2">&quot;/home/jackevans/.local/share/virtualenvs/blog-ZV8xlUiZ/lib/python3.10/site-packages/pywatchman/__init__.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1048</span><span class="p">,</span> <span class="ow">in</span> <span class="n">query</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_connect</span><span class="p">()</span>
+  <span class="n">File</span> <span class="s2">&quot;/home/jackevans/.local/share/virtualenvs/blog-ZV8xlUiZ/lib/python3.10/site-packages/pywatchman/__init__.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">917</span><span class="p">,</span> <span class="ow">in</span> <span class="n">_connect</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sockpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolvesockname</span><span class="p">()</span>
+  <span class="n">File</span> <span class="s2">&quot;/home/jackevans/.local/share/virtualenvs/blog-ZV8xlUiZ/lib/python3.10/site-packages/pywatchman/__init__.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">904</span><span class="p">,</span> <span class="ow">in</span> <span class="n">_resolvesockname</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">bser</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">stdout</span><span class="p">)</span>
+<span class="ne">SystemError</span><span class="p">:</span> <span class="n">PY_SSIZE_T_CLEAN</span> <span class="n">macro</span> <span class="n">must</span> <span class="n">be</span> <span class="n">defined</span> <span class="k">for</span> <span class="s1">&#39;#&#39;</span> <span class="n">formats</span>
+</code></pre></div>
+
+<p>It looks like the <code>capabilityCheck()</code> call is failing due to an exception raised
+inside <code>pywatchman</code>.</p>
+<p>Mystery solved 🔮 this explains why <code>StatReloader</code> (not <code>WatchmanReloader</code>) is
+being used, despite all the necessary pre-requisite dependencies being available.</p>
+<h2>An Alternative Solution</h2>
+<p>After a bit of Googling I ended up in <a href="https://github.com/facebook/watchman/issues/970">this github issue
+thread</a>, which was originally
+opened on 2 Nov 2021.</p>
+<p>It appears like there was a change in Python 3.10 that caused things to break
+in pywatchman library. Consequently bindings will need updating to work for
+newer Python releases.</p>
+<p>According to the thread: a <a href="https://github.com/facebook/watchman/issues/970#issuecomment-1002054941">pre-release
+fix</a>
+is available, it just hasn't been tagged/released on PyPI. There's a lot of
+frustration in the thread with commenters requesting that the patch/fix be officially
+merged/released.</p>
+<p>Luckily, in the mean time one of the
+<a href="https://github.com/facebook/watchman/issues/970#issuecomment-1191330203">suggestions</a>
+in the thread pointed me towards
+<a href="https://pypi.org/project/django-watchfiles/">django-watchfiles</a>.</p>
+<p><code>django-watchfiles</code> provides Django integration with <code>watchfiles</code>, which itself is a set of Python bindings for the underlying <code>notify</code> file-system notification library written in rust.</p>
+<p>Similar to the way <code>pywathman</code> provides bindings to the <code>Watchman</code>
+file-watching service, both solutions implement performance sensitive
+operations (low file watching events) in a lower level language, providing
+higher level language wrappers for the Python ecosystem.</p>
+<p>I've found that <code>django-watchfiles</code> works very nicely out of the box, so gets
+my approval 👍</p>
+<h2>Conclusion</h2>
+<p>Hopefully either the <code>pywatchman</code> library will be updated in the future or the
+Django documentation will include a disclaimer about broken behaviour in
+Python-3.10+.</p>
+<p>Otherwise future developers are destined to retrace my footsteps (maybe you even found this blog post)</p>
+<p>In the meantime, I'll continue to use <code>django-watchfiles</code>.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
+                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

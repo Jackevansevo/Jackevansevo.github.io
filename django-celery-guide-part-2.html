@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Django Celery Guide (Part 2)</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+        <meta name="description" content="Using Django ORM as a Results Backend In part 1 we got a celery worker up and running, using a redis instance as our celery broker and results..." />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Jack's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="/category/linux.html">Linux</a></li>
+                    <li><a href="/category/neovim.html">Neovim</a></li>
+                    <li><a href="/category/personal.html">Personal</a></li>
+                    <li><a href="/category/programming.html">Programming</a></li>
+                    <li class="active"><a href="/category/python.html">Python</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/django-celery-guide-part-2.html" rel="bookmark"
+           title="Permalink to Django Celery Guide (Part 2)">Django Celery Guide (Part 2)</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-09-24T00:00:00+01:00">
+                Published: Sat 24 September 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/python.html">Python</a>.</p>
+<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/django.html">django</a> </p>
+</footer><!-- /.post-info -->      <p>Using Django ORM as a Results Backend</p>
+<p><img alt="django-celery-redis logo" src="/images/django-celery-redis-logo.png"></p>
+<p>In <a href="/posts/django-celery-guide-part-1">part 1</a> we got a celery worker up and
+running, using a redis instance as our celery broker and results backend.</p>
+<p>In this section we're going to explore using <code>django-celery-results</code> as a
+replacement results backend (instead of results being stored in Redis).</p>
+<p>With <code>django-celery-results</code> installed our app is going to instead look like:</p>
+<p><img alt="django celery results diagram" src="/images/django-celery-results-diagram.png"></p>
+<p><code>Redis</code> is still our celery <strong>task broker</strong>, therefore remains responsible for
+distributing tasks amongst celery workers and brokering communication with our
+celery app.</p>
+<p>However, instead of using redis as our <strong>results backend</strong> to save task
+results, we'll be storing results in <code>SQLite</code>, our chosen Django DB
+implementation (the default).</p>
+<h2>Installation</h2>
+<div class="highlight"><pre><span></span><code>pipenv install django-celery-results
+</code></pre></div>
+
+<p>From here, it's a good idea to follow the <a href="https://docs.celeryq.dev/en/latest/django/first-steps-with-django.html#django-celery-results-using-the-django-orm-cache-as-a-result-backend">installation
+instructions</a>
+in the official documentation.</p>
+<p>For us this is essentially the following steps:</p>
+<p><strong>Add <code>django_celery_results</code> to <code>INSTALLED_APPS</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="w"> </span>INSTALLED_APPS = [<span class="w"></span>
+<span class="w"> </span>    &quot;django.contrib.admin&quot;,<span class="w"></span>
+<span class="w"> </span>    &quot;django.contrib.auth&quot;,<span class="w"></span>
+<span class="w"> </span>    &quot;django.contrib.contenttypes&quot;,<span class="w"></span>
+<span class="w"> </span>    &quot;django.contrib.sessions&quot;,<span class="w"></span>
+<span class="w"> </span>    &quot;django.contrib.messages&quot;,<span class="w"></span>
+<span class="w"> </span>    &quot;django.contrib.staticfiles&quot;,<span class="w"></span>
+<span class="gi">+     &quot;django_celery_results&quot;,</span><span class="w"></span>
+<span class="w"> </span>    &quot;posts.apps.PostsConfig&quot;,<span class="w"></span>
+<span class="w"> </span>]<span class="w"></span>
+</code></pre></div>
+
+<p><strong>Run a migration to create necessary database tables</strong></p>
+<div class="highlight"><pre><span></span><code>pipenv run ./manage.py migrate django_celery_results
+</code></pre></div>
+
+<p><strong>Update the <code>CELERY_RESULT_BACKEND</code> variable in <code>blog/settings.py</code></strong></p>
+<div class="highlight"><pre><span></span><code><span class="gd">-CELERY_RESULT_BACKEND = &quot;redis://localhost/0&quot;</span><span class="w"></span>
+<span class="gi">+CELERY_RESULT_BACKEND = &quot;django-db&quot;</span><span class="w"></span>
+</code></pre></div>
+
+<p>After installing, if you head to the admin console you should now be greeted with a new table "CELERY RESULTS"</p>
+<p><img alt="django admin celery-results" src="/images/django-admin-celery-results.png"></p>
+<h2>Testing</h2>
+<p>Once again if we start our celery worker with:</p>
+<div class="highlight"><pre><span></span><code>pipenv run celery -A blog worker
+</code></pre></div>
+
+<p>And trigger a task from the celery shell with:</p>
+<div class="highlight"><pre><span></span><code>pipenv run celery -A blog shell
+</code></pre></div>
+
+<p>And the following Python code:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">square</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">AsyncResult</span><span class="p">:</span> <span class="mi">0</span><span class="n">aeb5a1d</span><span class="o">-</span><span class="mi">157</span><span class="n">d</span><span class="o">-</span><span class="mi">4</span><span class="n">fcd</span><span class="o">-</span><span class="mi">8508</span><span class="o">-</span><span class="n">a8bf70ba2b70</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<p>Once the task has executed, From the Django admin page, navigate through to the
+'Task results' table entry under 'CELERY RESULTS', you should now see celery
+result has been saved in the Django DB:</p>
+<p><img alt="django admin celery-result" src="/images/django-admin-celery-result.png"></p>
+<h2>Including Task Metadata</h2>
+<p>{{&lt; alert &gt;}}
+In the screenshot you'll notice our task row/item is missing data in the <strong>TASK
+NAME</strong> and <strong>WORKER</strong> columns.
+{{&lt; /alert &gt;}}</p>
+<p>To make sure this metadata is included you need to set the
+<code>CELERY_RESULT_EXTENDED</code> value to <code>True</code> in your application settings. Credit
+goes to <a href="https://github.com/celery/django-celery-results/issues/326#issuecomment-11815806">this comment</a></p>
+<div class="highlight"><pre><span></span><code><span class="n">CELERY_RESULT_EXTENDED</span> <span class="o">=</span> <span class="kc">True</span>
+</code></pre></div>
+
+<p>After applying this change and reloading celery this data should now be
+included for any new tasks:</p>
+<p><img alt="django admin celery-result-v2" src="/images/django-admin-celery-result-v2.png"></p>
+<p>If a celery task triggers an exception:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">res</span> <span class="o">=</span> <span class="n">square</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="s2">&quot;10&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># res.get() will raise: TypeError: can&#39;t multiply sequence by non-int of type &#39;str&#39;</span>
+</code></pre></div>
+
+<p>All this data is nicely neatly captured/surfaced inside the Django admin.</p>
+<p><img alt="django-admin-celery-result-failure.png" src="/images/django-admin-celery-result-failure.png"></p>
+<h2>Querying Data</h2>
+<p>Having task data stored in the Django DB makes it straightforward to query data
+and browse/explore/filter tasks using the ORM.</p>
+<p>Additionally, we also get the power of Django's powerful admin interface to
+explore celery tasks &amp; results. All this is possible by the underlying ORM
+integration. No additional redis admin dashboard is required to explore this
+data, it all lives in the same place.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">django_celery_results.models</span> <span class="kn">import</span> <span class="n">TaskResult</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">TaskResult</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">TaskResult</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">Task</span><span class="p">:</span> <span class="n">a24c7342</span><span class="o">-</span><span class="mi">0532</span><span class="o">-</span><span class="mi">4374</span><span class="o">-</span><span class="n">a67d</span><span class="o">-</span><span class="mi">264</span><span class="n">c0e12c082</span> <span class="p">(</span><span class="n">FAILURE</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">TaskResult</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">Task</span><span class="p">:</span> <span class="mi">30864968</span><span class="o">-</span><span class="mi">887</span><span class="n">c</span><span class="o">-</span><span class="mi">4399</span><span class="o">-</span><span class="mi">8</span><span class="n">d88</span><span class="o">-</span><span class="n">b79ae7492f61</span> <span class="p">(</span><span class="n">SUCCESS</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">TaskResult</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">Task</span><span class="p">:</span> <span class="mi">0</span><span class="n">aeb5a1d</span><span class="o">-</span><span class="mi">157</span><span class="n">d</span><span class="o">-</span><span class="mi">4</span><span class="n">fcd</span><span class="o">-</span><span class="mi">8508</span><span class="o">-</span><span class="n">a8bf70ba2b70</span> <span class="p">(</span><span class="n">SUCCESS</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="p">]</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<p>Filter on the <code>status</code> and show the <code>task_args</code> and <code>traceback</code> of the failed task</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">task</span> <span class="o">=</span> <span class="n">TaskResult</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="s1">&#39;FAILURE&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">task</span><span class="o">.</span><span class="n">task_args</span>
+<span class="s1">&#39;&quot;(</span><span class="se">\&#39;</span><span class="s1">10</span><span class="se">\&#39;</span><span class="s1">,)&quot;&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">task</span><span class="o">.</span><span class="n">traceback</span>
+<span class="s1">&#39;Traceback (most recent call last):</span><span class="se">\n</span><span class="s1">  File &quot;/home/jackevans/.local/share/virtualenvs/blog-ZV8xlUiZ/lib/python3.10/site-packages/celery/app/trace.py&quot;, line 451, in trace_task</span><span class="se">\n</span><span class="s1">    R = retval = fun(*args, **kwargs)</span><span class="se">\n</span><span class="s1">  File &quot;/home/jackevans/.local/share/virtualenvs/blog-ZV8xlUiZ/lib/python3.10/site-packages/celery/app/trace.py&quot;, line 734, in __protected_call__</span><span class="se">\n</span><span class="s1">    return self.run(*args, **kwargs)</span><span class="se">\n</span><span class="s1">  File &quot;/home/jackevans/code/blog/blog/celery.py&quot;, line 28, in square</span><span class="se">\n</span><span class="s1">    return n * n</span><span class="se">\n</span><span class="s1">TypeError: can</span><span class="se">\&#39;</span><span class="s1">t multiply sequence by non-int of type </span><span class="se">\&#39;</span><span class="s1">str</span><span class="se">\&#39;\n</span><span class="s1">&#39;</span>
+</code></pre></div>
+
+<h2>Next Time</h2>
+<p>This concludes part 2, in part 3 we'll explore triggering periodic celery tasks
+and integrating this with django using the <code>django-celery-beat</code> package.
+and monitoring.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
+                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

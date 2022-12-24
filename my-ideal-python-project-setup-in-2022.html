@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>My Ideal Python Project Setup in 2022</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+        <meta name="description" content="Unlike newer languages like Rust or Go which provide opinionated tooling out of the box, Python leaves a lot of those decisions up to the..." />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Jack's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="/category/linux.html">Linux</a></li>
+                    <li><a href="/category/neovim.html">Neovim</a></li>
+                    <li><a href="/category/personal.html">Personal</a></li>
+                    <li><a href="/category/programming.html">Programming</a></li>
+                    <li class="active"><a href="/category/python.html">Python</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/my-ideal-python-project-setup-in-2022.html" rel="bookmark"
+           title="Permalink to My Ideal Python Project Setup in 2022">My Ideal Python Project Setup in 2022</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-05-19T00:00:00+01:00">
+                Published: Thu 19 May 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/python.html">Python</a>.</p>
+<p>tags: <a href="/tag/python.html">python</a> </p>
+</footer><!-- /.post-info -->      <p><img alt="The world if everyone Python project used Black/Isort/Mypy" src="https://i.kym-cdn.com/entries/icons/mobile/000/026/738/future.jpg"></p>
+<p>Unlike newer languages like Rust or Go which provide opinionated tooling out of the box, Python leaves a lot of those decisions up to the community. There's a plethora of options out there for type-checking, linting, dependency management and testing. Sometimes the amount of choice might feel overwhelming. Thankfully the community appears to have rallied around a common set of standard packages.</p>
+<p>Here's my attempt at a non exhaustive list of everything I'd consider adopting for any greenfield Python project at the time of writing (2022). Disclaimer: this is just my opinion (formed from my experience writing software), your own opinions might differ.</p>
+<h2><a href="https://black.readthedocs.io/en/stable/">Black</a></h2>
+<p>Life is too short to argue about code formatting preferences. During code review, any discussions surrounding formatting detract from the purpose of the review itself. With that said, I'm thankful the wider Python programming community has settled on Black as the defacto standard.</p>
+<p>Golang was the first major language I encountered that embraced code-autoformatting by default with <code>gofmt</code>. A common mantra heard in this community is: <em>"Gofmt's style is nobody's favourite, but gofmt is everybody's favourite."</em>. I feel the exact same could be said for Black.</p>
+<p>A few other code-formatting tools exist (e.g: <code>yapf</code>, <code>blue</code>), I don't care which one you pick,  as long as it eliminates squables over manual code formatting. I recommend <code>black</code> purely because of it's popularity in the Python community. If a contributor complains you're using X formatter instead of Y, they're kind of missing the point.</p>
+<p>If you're using <code>black</code> alongside <code>flake8</code> remmeber to read the documentation for <a href="https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#flake8">using black with other tools</a></p>
+<div class="highlight"><pre><span></span><code><span class="k">[flake8]</span><span class="w"></span>
+<span class="na">max-line-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">88</span><span class="w"></span>
+<span class="na">extend-ignore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">E203</span><span class="w"></span>
+</code></pre></div>
+
+<h2><a href="https://pycqa.github.io/isort/">Isort</a></h2>
+<p>Despite a few <a href="https://github.com/psf/black/issues/333">open issues</a> on the GH issue tracker Black doesn't yet support sorting imports.</p>
+<p>I've found sorting imports (particularly breaking imports across multiple lines) can sometimes increase the amount of diff-noise in a Pull Request. </p>
+<p>Using <code>isort</code> alongside <code>black</code> might cause a few conflicts. To use both tools alongside each other refer to <a href="https://pycqa.github.io/isort/docs/configuration/black_compatibility.html">https://pycqa.github.io/isort/docs/configuration/black_compatibility.html</a></p>
+<p>Usually I just add the following to my <code>setup.cfg</code></p>
+<div class="highlight"><pre><span></span><code><span class="k">[isort]</span><span class="w"></span>
+<span class="na">profile</span><span class="o">=</span><span class="s">black</span><span class="w"></span>
+</code></pre></div>
+
+<h2><a href="https://mypy.readthedocs.io/en/stable/">Mypy</a></h2>
+<p>Mypy is a static type checker for Python. Adopting static type checking can help identify bugs in your code, preventing an entire category of possible runtime errors in your code. For this reason I'd strongly recommend any greenfield Python project to adopt mypy (or another static type checking tool) in some capacity. </p>
+<p>For an excellent case study I highly recommend you read: <a href="https://sethmlarson.dev/blog/tests-arent-enough-case-study-after-adding-types-to-urllib3">Tests aren’t enough: Case study after adding type hints to urllib3</a></p>
+<p>That being said type checking may not be appropriate in certain situations, i.e. when writing short-scripts, throw away code or quick prototypes. So use your better judgement. One of the major benefits (and arguably also a shortcoming) of <code>mypy</code> and gradual type checking is you get  to choose the extent to which you type-check your code, using type-hints and static analysis only where necessary.</p>
+<p>Not specifically related to <code>mypy</code> itself, but one of the surprising benefits I've found from adding <a href="https://docs.python.org/3/library/typing.html">type annotations</a> to code is that (depending on your editor) it greatly improves auto-complete suggestions. Additionally I've found type-annotations can (in some cases) improve the readability of code. This can be useful in a collaborative environment where you're frequently reading code written by other developers.</p>
+<p>So even if you're not type-checking your code with a tool like <code>mypy</code>, you may wish to sprinkle your code with type annotations for these benefits alone.</p>
+<h2><a href="https://pre-commit.com/">Pre-commit</a></h2>
+<p>I've integrated most of the aforementioned tools in my text-editor. My code typically gets automatically formatted on save and linter/type-checking errors are displayed inline. If you use something like Pycharm or VSCode, this is pretty much the norm. This can help catch most type/linting/formatting issues during development.</p>
+<p>However, its important to realize that not everyone writes code this way. Some might not have configured their editor appropriately or prefer to disable these rules, others might use editors that don't provide this kind of functionality.</p>
+<p>Even with fancy editor tool integrations, sometimes errors slip through the cracks. If we're lucky these errors might get caught in CI. But wouldn't it be better to catch these errors before pushing code up to our remote git server?</p>
+<p>In other circumstances, sometimes it's not practical to have scripts constantly running on file change. Particularly if those scripts are slow or expensive to run (i.e. tests or type-checking). One example that springs to mind is using <code>vulture</code> to check for dead code in your project.</p>
+<p><img alt="Git hooks" src="https://miro.medium.com/max/450/1*bAJrSit_8HoM5sy7ydw0zw.png"></p>
+<p>For this reason, I find it incredibly useful to have tests, formatters &amp; linting rules can as part of a git pre-commit hook (in edition to check integrated with my editor). </p>
+<p>This way myself (and other developers) can catch errors locally (before pushing to the remote) independent of what editors we're using.</p>
+<p>The great thing about <code>pre-commit</code> is that it's entirely opt-in. Only developers that wish to enable it per project will be effected. Not every developer will find this kind of tooling useful in their personal developer workflow, this way we're not forcing arbitrary rules/conventions down peoples throats.</p>
+<h2><a href="https://docs.pytest.org">Pytest</a></h2>
+<p>I suppose this boils down to personal preference more than anything else in this list. I personally prefer how <code>pytest</code> tests feel like they generate less boiler plate. Conceptually I also find it much easier to share fixtures across tests than group related tests by class. </p>
+<p>One of the great things with pytest is it's completely compatible with <code>unittest</code>, so you can simply use <code>pytest</code> as a test-runner for your existing test-suite without having to re-write anything.</p>
+<h2><a href="https://python-poetry.org/">Poetry</a> vs <a href="https://pipenv.pypa.io/en/latest/">Pipenv</a> ???</h2>
+<p><img alt="Jakie Chan What" src="https://i.pinimg.com/originals/c1/3a/2b/c13a2b2e10855bffdc014f121c5eff7e.jpg"></p>
+<p>Weirdly the community doesn't appear to have quite settled on one favoured dependency management solution. I've used both in the past and found both to be perfectly reasonable solutions.</p>
+<p>I've also had success using <a href="https://github.com/jazzband/pip-tools">jazzband/pip-tools</a> within project virtual environments to compile and pin dependencies</p>
+<p>I won't recommend a specific tool here. Any choice is fine providing you do the following:
+- Lock/pin your dependencies
+- Have a mechanism to easily graph, upgrade and audit your dependencies 
+- Distinguish and split between your dev and prod dependencies (optimization)</p>
+<h1>Personal tools</h1>
+<p>There's a few things that I personally like to include (for my own use) when working on Python projects.</p>
+<h2><a href="https://direnv.net/">Dirnev</a></h2>
+<p>Using Direnv enables you to automatically activate python virtual-environments when you enter a new directory, eliminating the need to manually activate/deactivate virtual environments per project.</p>
+<p>Direnv is flexible and unopinionated about the specifics of virtualenv management, supporting <code>pipenv</code>, <code>poetry</code> and <code>virtualenv</code> out of the box. This flexibility should makes it more than suitable for most projects.</p>
+<h2><a href="https://ipython.org/">Ipython</a> &amp; <a href="https://pypi.org/project/ipdb/">ipdb</a></h2>
+<p>This one is another no-brainer (if not already installed). Setting ipdb (ipython-debugger) as the default debugger for Python gives a much better experience over the default <code>pdb</code>. I like to make this the default by setting the builtin <code>PYTHONBREAKPOINT</code> environment variable.</p>
+<p>I couple this with <code>direnv</code> (above) to automatically export the variable per project by including the following setting in my <code>.envrc</code></p>
+<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="n">PYTHONBREAKPOINT</span><span class="o">=</span><span class="n">ipdb</span><span class="o">.</span><span class="n">set_trace</span><span class="w"></span>
+</code></pre></div>
+
+<p>This works great for me but if you're using alternatives like the Pycharm builtin debugger then this approach won't be necessary.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
+                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

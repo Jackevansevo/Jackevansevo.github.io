@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Jack's Blog - Linux</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Jack's Blog</a></h1>
+                <nav><ul>
+                    <li class="active"><a href="/category/linux.html">Linux</a></li>
+                    <li><a href="/category/neovim.html">Neovim</a></li>
+                    <li><a href="/category/personal.html">Personal</a></li>
+                    <li><a href="/category/programming.html">Programming</a></li>
+                    <li><a href="/category/python.html">Python</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="/review-fedora-36-on-the-lenovo-thinkpad-x13-gen-1.html">Review Fedora 36 on the Lenovo Thinkpad X13 (Gen 1) 🐧💻</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2022-08-07T00:00:00+01:00">
+                Published: Sun 07 August 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/linux.html">Linux</a>.</p>
+<p>tags: <a href="/tag/linux.html">linux</a> <a href="/tag/fedora.html">fedora</a> </p>
+</footer><!-- /.post-info --><p><img alt="Thinkpad X13" src="/images/thinkpad-x13.jpg" title="Writing this post with a morning Coffee"></p>
+<p>I recently picked up a used Lenovo Thinkpad X13 from eBay with the intention of
+replacing my well loved Thinkpad X220 which is starting to show its age.</p>
+<p>After a brief stint attempting to exclusively use WSL, frustrations with high
+memory usage and intrusive Windows updates led me to try dual booting Fedora.
+Overall it's been a positive experience and something I wish I'd done sooner.</p>
+<p>This is just a quick run down of my experience with Fedora on the Thinkpad X13.
+This isn't intended to be a review of the hardware, merely a first hand account
+of how the distro performs/interacts when installed on the device.</p>
+<p><img alt="Thinkpad X13" src="/images/thinkpad-x13-top-down.jpg" title="Top down view (ignore the fingerprints)"></p>
+<h1>Upsides</h1>
+<p>A quick rundown of things that have historically plagued Linux in the past, and how this distro compares:
+- ✅ WiFi: works out of the box
+- ✅ Suspend resume appears to work
+- ✅ Closing the lid appears to suspend / hibernate the laptop
+- ✅ Function keys: all work
+- ✅ Fingerprint reader: works out of the box (which surprised me)
+- ✅ External HMDI monitor works when plugged in via USB-C hub</p>
+<h2>Gnome Desktop</h2>
+<p>It's nice to see the Gnome Desktop continues to improve:</p>
+<ul>
+<li>I much prefer the new default horizontal workspace management on Gnome desktop</li>
+<li>Coming from MacOS / Windows (or even alternate Linux desktop) this feels much more intuitive.</li>
+<li>I'm a fan of the new GK4 Libadwaita theming, everything feels nice and consistent (providing you don't install an application outside of the Gnome ecosystem)</li>
+<li>
+<p>System performance feels really snappy, with low idle memory usage
+<img alt="Resource Usage" src="/images/gnome-system-monitor.png" title="Resource usage with typical Django docker compose web-dev workflow"></p>
+</li>
+<li>
+<p>I like the new system wide dark/light theme preference</p>
+</li>
+<li>But I wish that similar to MacOS this could be toggle automatically during the day/night cycle (similar to the way night light works)</li>
+<li>I haven't had a single desktop crash (so far)</li>
+<li>I appreciate the new Gnome power mode settings, which lets me throttle performance to save power when away from my desk</li>
+</ul>
+<p><img alt="Gnome power saver" src="/images/gnome-power-saver.png"></p>
+<h1>Downsides</h1>
+<ul>
+<li>The builtin Gnome desktop screen/video recorder seemed to record choppy/laggy video</li>
+<li>Would have been nice if this had worked smoothly out of the box but I was forced to revert to using OBS</li>
+<li>Firefox struggles with video playback out of the box (perhaps media codecs are required)</li>
+<li>Font rendering feels a bit lackluster on Fedora compared to the default MacOS or even Ubuntu experience</li>
+<li>It's impossible to right click using the touchpad</li>
+</ul>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
+                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

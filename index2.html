@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Jack's Blog</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Jack's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="/category/linux.html">Linux</a></li>
+                    <li><a href="/category/neovim.html">Neovim</a></li>
+                    <li><a href="/category/personal.html">Personal</a></li>
+                    <li><a href="/category/programming.html">Programming</a></li>
+                    <li><a href="/category/python.html">Python</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+                <section id="content" class="body">
+                    <ol id="posts-list" class="hfeed" start="9">
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="/bootstrapping-django-allauth-with-migrations.html" rel="bookmark"
+                           title="Permalink to Bootstrapping django-allauth with migrations">Bootstrapping django-allauth with migrations</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-08-06T00:00:00+01:00">
+                Published: Sat 06 August 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/python.html">Python</a>.</p>
+<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/django.html">django</a> </p>
+</footer><!-- /.post-info -->                <p>Recently I added
+<a href="https://django-allauth.readthedocs.io/en/latest/index.html">django-allauth</a> to
+my site, to enable logging in with third party auth providers (such as Google). </p>
+<h2>Allauth docuemntation</h2>
+<p>As per the <a href="https://django-allauth.readthedocs.io/en/latest/installation.html#post-installation">installation
+instructions</a>
+allauth recommends the following:</p>
+<ul>
+<li>Add a <code>Site</code> for your domain, matching <code>settings.SITE_ID</code> (<code>django.contrib.sites</code> app).</li>
+<li>For each OAuth based provider, either add …</li></ul>
+                <a class="readmore" href="/bootstrapping-django-allauth-with-migrations.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="/an-sqlalchemy-footgun-revisited.html" rel="bookmark"
+                           title="Permalink to An Sqlalchemy Footgun Revisited">An Sqlalchemy Footgun Revisited</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-07-19T00:00:00+01:00">
+                Published: Tue 19 July 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/python.html">Python</a>.</p>
+<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/sqlalchemy.html">sqlalchemy</a> </p>
+</footer><!-- /.post-info -->                <p>In this <a href="/posts/an-sqlalchemy-footgun/">previous post</a> I wrote about shooting myself in the foot 🔫 with Cartesian products in SQLAlchemy.</p>
+<p>Lets visit the SQLAlchemy model example:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;users&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Item&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;owner&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Item</span><span class="p">(</span><span class="n">Base …</span></code></pre></div>
+                <a class="readmore" href="/an-sqlalchemy-footgun-revisited.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="/per-project-ipython-project-history-in-docker-compose.html" rel="bookmark"
+                           title="Permalink to Per project IPython project history in docker compose">Per project IPython project history in docker compose</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-07-13T00:00:00+01:00">
+                Published: Wed 13 July 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/python.html">Python</a>.</p>
+<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/docker.html">docker</a> </p>
+</footer><!-- /.post-info -->                <p>A neat trick I learnt recently (<a href="[https://github.com/cookiecutter/cookiecutter-django/issues/1589">From this Github thread</a>)</p>
+<p>It's possible to store IPython history persistently per project in a docker compose, i.e:</p>
+<div class="highlight"><pre><span></span><code><span class="gh">diff --git a/docker-compose.yml b/docker-compose.yml</span><span class="w"></span>
+<span class="gh">index 043b004..7e6d029 100644</span><span class="w"></span>
+<span class="gd">--- a/docker-compose.yml</span><span class="w"></span>
+<span class="gi">+++ b/docker-compose.yml</span><span class="w"></span>
+<span class="gu">@@ -18,7 +18,7 @@ services:</span><span class="w"></span>
+<span class="w"> </span>    volumes:<span class="w"></span>
+<span class="w"> </span>      - .:/app …</code></pre></div>
+                <a class="readmore" href="/per-project-ipython-project-history-in-docker-compose.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="/python-gracefully-detaching-debuggers-from-running-containers.html" rel="bookmark"
+                           title="Permalink to Python gracefully detaching debuggers from running containers 🐍🐳🪳">Python gracefully detaching debuggers from running containers 🐍🐳🪳</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-07-08T00:00:00+01:00">
+                Published: Fri 08 July 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/python.html">Python</a>.</p>
+<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/docker.html">docker</a> </p>
+</footer><!-- /.post-info -->                <h2>Problem</h2>
+<p>Lets say you have a simple service you want to debug that's running in a docker container. So you add a <code>breakpoint()</code> to the relevant code:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">entries</span> <span class="o">=</span> <span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="nb">breakpoint</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;feeds/index.html&quot;</span> <span class="p">{</span><span class="s2">&quot;entries&quot;</span><span class="p">:</span> <span class="n">entries</span><span class="p">})</span>
+</code></pre></div>
+
+<p>You trigger this logic in your service …</p>
+                <a class="readmore" href="/python-gracefully-detaching-debuggers-from-running-containers.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="/an-sqlalchemy-footgun.html" rel="bookmark"
+                           title="Permalink to An SQLAlchemy Footgun">An SQLAlchemy Footgun</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-06-04T00:00:00+01:00">
+                Published: Sat 04 June 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/python.html">Python</a>.</p>
+<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/sqlalchemy.html">sqlalchemy</a> </p>
+</footer><!-- /.post-info -->                <p>Something I learnt the hard way recently. </p>
+<p>Let's say you have the following SQLAlchemy models, representing a straightforward many-to-one relationship:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;users&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Item&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;owner&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Item</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;items&quot;</span>
+
+    <span class="nb">id …</span></code></pre></div>
+                <a class="readmore" href="/an-sqlalchemy-footgun.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="/psa-breaking-changes-to-neovim-lsp-formatting-filter-on-nightly.html" rel="bookmark"
+                           title="Permalink to PSA: Breaking changes to neovim LSP formatting filter on nightly">PSA: Breaking changes to neovim LSP formatting filter on nightly</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-06-02T00:00:00+01:00">
+                Published: Thu 02 June 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/neovim.html">Neovim</a>.</p>
+<p>tags: <a href="/tag/neovim.html">neovim</a> </p>
+</footer><!-- /.post-info -->                <p>In case anyone else runs into the same issue.</p>
+<p>I ran into an issue this morning installing the latest neovim nightly build: All my onsave formatting appeared to be broken 💥</p>
+<div class="highlight"><pre><span></span><code>Error detected while processing BufWritePre Autocommands for &quot;&lt;buffer=1&gt;&quot;:
+Error executing lua callback: /home/jackevans/Dotfiles/nvim/init.lua:95 …</code></pre></div>
+                <a class="readmore" href="/psa-breaking-changes-to-neovim-lsp-formatting-filter-on-nightly.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="/my-ideal-python-project-setup-in-2022.html" rel="bookmark"
+                           title="Permalink to My Ideal Python Project Setup in 2022">My Ideal Python Project Setup in 2022</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-05-19T00:00:00+01:00">
+                Published: Thu 19 May 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/python.html">Python</a>.</p>
+<p>tags: <a href="/tag/python.html">python</a> </p>
+</footer><!-- /.post-info -->                <p><img alt="The world if everyone Python project used Black/Isort/Mypy" src="https://i.kym-cdn.com/entries/icons/mobile/000/026/738/future.jpg"></p>
+<p>Unlike newer languages like Rust or Go which provide opinionated tooling out of the box, Python leaves a lot of those decisions up to the community. There's a plethora of options out there for type-checking, linting, dependency management and testing. Sometimes the amount of choice might feel overwhelming. Thankfully the …</p>
+                <a class="readmore" href="/my-ideal-python-project-setup-in-2022.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+                </ol><!-- /#posts-list -->
+<p class="paginator">
+        <a href="/index.html">&#8647;</a>
+        <a href="/index.html">&laquo;</a>
+    Page 2 / 2
+</p>
+                </section><!-- /#content -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
+                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

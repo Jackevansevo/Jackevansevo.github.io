@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Jack's Blog - Neovim</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Jack's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="/category/linux.html">Linux</a></li>
+                    <li class="active"><a href="/category/neovim.html">Neovim</a></li>
+                    <li><a href="/category/personal.html">Personal</a></li>
+                    <li><a href="/category/programming.html">Programming</a></li>
+                    <li><a href="/category/python.html">Python</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="/per-project-neovim-config.html">Per Project Neovim Config</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2022-11-16T00:00:00+00:00">
+                Published: Wed 16 November 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/neovim.html">Neovim</a>.</p>
+<p>tags: <a href="/tag/neovim.html">neovim</a> </p>
+</footer><!-- /.post-info --><p>I recently added the following snippet to my <code>init.lua</code> neovim config:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">if</span> <span class="n">vim</span><span class="p">.</span><span class="n">fn</span><span class="p">.</span><span class="n">filereadable</span><span class="p">(</span><span class="s1">&#39;project_config.lua&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="kr">then</span>
+  <span class="nb">require</span><span class="p">(</span><span class="s1">&#39;project_config&#39;</span><span class="p">)</span>
+<span class="kr">end</span>
+</code></pre></div>
+
+<p>Once I've got this file in place I can add per project keybindings. E.g.</p>
+<div class="highlight"><pre><span></span><code><span class="n">vim</span><span class="p">.</span><span class="n">api</span><span class="p">.</span><span class="n">nvim_set_keymap</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;leader&gt;tt&#39;</span><span class="p">,</span> <span class="s1">&#39;:vsplit | term cd %:p:h:h; poetry run pytest --pdb -s -x --ff&lt;CR&gt;&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="n">noremap</span><span class="o">=</span><span class="kc">true</span><span class="p">,</span> <span class="n">silent</span><span class="o">=</span><span class="kc">false</span> <span class="p">})</span>
+<span class="n">vim</span><span class="p">.</span><span class="n">api</span><span class="p">.</span><span class="n">nvim_set_keymap</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;leader&gt;tf&#39;</span><span class="p">,</span> <span class="s1">&#39;:vsplit | term cd %:p:h:h; poetry run pytest --pdb -s -x --ff %:p&lt;CR&gt;&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="n">noremap</span><span class="o">=</span><span class="kc">true</span><span class="p">,</span> <span class="n">silent</span><span class="o">=</span><span class="kc">false</span> <span class="p">})</span>
+</code></pre></div>
+
+<p>I like to bind <code>&lt;leader&gt;tt</code> and <code>&lt;leader&gt;tf</code> to quickly run tests. Placing this
+configuration per project is useful here as the specifics of how tests are ran
+can vary between projects.</p>
+<h2>Security Risks</h2>
+<p>I'm aware this is a potential security risk as I'm loading arbitrary code from
+disk. In an ideal world I'd probably want to prompt first for approval, or have
+a whitelist of safe directories (similar to direnv).</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="/psa-breaking-changes-to-neovim-lsp-formatting-filter-on-nightly.html" rel="bookmark"
+                           title="Permalink to PSA: Breaking changes to neovim LSP formatting filter on nightly">PSA: Breaking changes to neovim LSP formatting filter on nightly</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-06-02T00:00:00+01:00">
+                Published: Thu 02 June 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/neovim.html">Neovim</a>.</p>
+<p>tags: <a href="/tag/neovim.html">neovim</a> </p>
+</footer><!-- /.post-info -->                <p>In case anyone else runs into the same issue.</p>
+<p>I ran into an issue this morning installing the latest neovim nightly build: All my onsave formatting appeared to be broken 💥</p>
+<div class="highlight"><pre><span></span><code>Error detected while processing BufWritePre Autocommands for &quot;&lt;buffer=1&gt;&quot;:
+Error executing lua callback: /home/jackevans/Dotfiles/nvim/init.lua:95 …</code></pre></div>
+                <a class="readmore" href="/psa-breaking-changes-to-neovim-lsp-formatting-filter-on-nightly.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+                </ol><!-- /#posts-list -->
+                </section><!-- /#content -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
+                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

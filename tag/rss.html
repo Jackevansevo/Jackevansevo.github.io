@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Jack's Blog - rss</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Jack's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="/category/linux.html">Linux</a></li>
+                    <li><a href="/category/neovim.html">Neovim</a></li>
+                    <li><a href="/category/personal.html">Personal</a></li>
+                    <li><a href="/category/programming.html">Programming</a></li>
+                    <li><a href="/category/python.html">Python</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="/deploy-miniflux-on-flyio.html">Deploy Miniflux on Flyio</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2022-10-22T00:00:00+01:00">
+                Published: Sat 22 October 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/programming.html">Programming</a>.</p>
+<p>tags: <a href="/tag/rss.html">rss</a> <a href="/tag/flyio.html">flyio</a> </p>
+</footer><!-- /.post-info --><p>In its own words:</p>
+<blockquote>
+<p>Miniflux is a minimalist and opinionated feed reader.</p>
+</blockquote>
+<p><img alt="miniflux screenshot" src="https://miniflux.app/images/overview.png"></p>
+<p>Here’s a quick rundown on how to self-host your own <a href="https://miniflux.app/">Miniflux</a> instance on <a href="fly.io">fly.io</a>.</p>
+<h2>Prerequisites</h2>
+<p>This tutorial assumes you already have a fly.io account and have <code>flyctl</code> installed.</p>
+<p>If not: head over to the <a href="https://fly.io/docs/hands-on/install-flyctl/">getting started documentation</a></p>
+<h2>Create a new app</h2>
+<hr>
+<div class="highlight"><pre><span></span><code>fly launch --no-deploy
+</code></pre></div>
+
+<h2>Create a Postgres database</h2>
+<div class="highlight"><pre><span></span><code>flyctl postgres create
+</code></pre></div>
+
+<p>This should give you a connection string URI of the format:</p>
+<div class="highlight"><pre><span></span><code><span class="l">postgres://</span><span class="p">{</span>username<span class="p">}:{</span>password<span class="p">}@{</span>hostname<span class="p">}:{</span>port<span class="p">}</span><span class="err">/</span><span class="p">{</span>database<span class="p">}</span><span class="o">?</span>options
+</code></pre></div>
+
+<p>E.g. mine looks like:</p>
+<div class="highlight"><pre><span></span><code><span class="nl">postgres</span><span class="p">:</span><span class="o">//</span><span class="nl">postgres</span><span class="p">:</span><span class="n">e85b9898dcb63b1111e4980e8dbc3bbb90c8c79870ee6eca</span><span class="nv">@jacks</span><span class="o">-</span><span class="n">awesome</span><span class="o">-</span><span class="n">example</span><span class="o">-</span><span class="n">db</span><span class="p">.</span><span class="nl">internal</span><span class="p">:</span><span class="mi">5432</span><span class="w"></span>
+</code></pre></div>
+
+<h2>Set some Secrets</h2>
+<p>Following the recommendation from the <a href="https://miniflux.app/docs/installation.html#docker">miniflux docker installation documentation</a>. Take your DB URI and then append <code>?sslmode=disable</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">fly</span><span class="w"> </span><span class="n">secrets</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="n">DATABASE_URL</span><span class="o">=</span><span class="ss">&quot;postgres://postgres:*password*@jack-miniflux-db.internal:5432?sslmode=disable&quot;</span><span class="w"></span>
+</code></pre></div>
+
+<p>E.g. using the connection string from my example above:</p>
+<div class="highlight"><pre><span></span><code><span class="n">fly</span><span class="w"> </span><span class="n">secrets</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="n">DATABASE_URL</span><span class="o">=</span><span class="ss">&quot;postgres://postgres:e85b9898dcb63b1111e4980e8dbc3bbb90c8c79870ee6eca@jacks-awesome-example-db.internal:5432?sslmode=disable&quot;</span><span class="w"></span>
+</code></pre></div>
+
+<p>Then set a default username and password (these can always be changed later)</p>
+<div class="highlight"><pre><span></span><code>fly secrets set ADMIN_USERNAME=&quot;*email*&quot;
+fly secrets set ADMIN_PASSWORD=&quot;*password*&quot;
+</code></pre></div>
+
+<h2>Edit the fly.toml file</h2>
+<p>Edit the <code>fly.toml</code> file to include the following:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[build]</span><span class="w"></span>
+<span class="w">  </span><span class="na">image</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;miniflux/miniflux:latest&quot;</span><span class="w"></span>
+
+<span class="k">[env]</span><span class="w"></span>
+<span class="w">  </span><span class="na">RUN_MIGRATIONS</span><span class="o">=</span><span class="s">1</span><span class="w"></span>
+<span class="w">  </span><span class="na">CREATE_ADMIN</span><span class="o">=</span><span class="s">1</span><span class="w"></span>
+</code></pre></div>
+
+<p>The rest of the auto-generated contents can remain the same.</p>
+<h2>Deploy</h2>
+<div class="highlight"><pre><span></span><code>fly deploy
+</code></pre></div>
+
+<p>You should then be able to access the deployed instance by running:</p>
+<div class="highlight"><pre><span></span><code>fly open
+</code></pre></div>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="/the-struggles-of-building-a-feed-reader.html" rel="bookmark"
+                           title="Permalink to The struggles of building a Feed Reader">The struggles of building a Feed Reader</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-10-05T00:00:00+01:00">
+                Published: Wed 05 October 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/python.html">Python</a>.</p>
+<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/rss.html">rss</a> </p>
+</footer><!-- /.post-info -->                <p><img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/1200px-Feed-icon.svg.png" style="width:18%;"></p>
+<p>I recently I fell down the rabbit hole of building a
+<a href="https://github.com/Jackevansevo/feedreader">feedreader</a>. At the time I was
+unsatisfied with the free tier offering of tools like inoreader and feedly, so
+naturally I figured I'd try and build my own, after all, how hard could it be?</p>
+<p>{{&lt; alert &gt;}}
+<strong>Aside:</strong> This was …</p>
+                <a class="readmore" href="/the-struggles-of-building-a-feed-reader.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+                </ol><!-- /#posts-list -->
+                </section><!-- /#content -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
+                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Simple Django Celery Guide (Part 1)</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+        <meta name="description" content="Getting started with Django Celery and Redis This is part 1 on how to get up and running with Django and celery. It's a fairly opinionated guide..." />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Jack's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="/category/linux.html">Linux</a></li>
+                    <li><a href="/category/neovim.html">Neovim</a></li>
+                    <li><a href="/category/personal.html">Personal</a></li>
+                    <li><a href="/category/programming.html">Programming</a></li>
+                    <li class="active"><a href="/category/python.html">Python</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/simple-django-celery-guide-part-1.html" rel="bookmark"
+           title="Permalink to Simple Django Celery Guide (Part 1)">Simple Django Celery Guide (Part 1)</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-09-17T00:00:00+01:00">
+                Published: Sat 17 September 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/python.html">Python</a>.</p>
+<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/django.html">django</a> </p>
+</footer><!-- /.post-info -->      <p>Getting started with Django Celery and Redis</p>
+<p><img alt="django-celery-redis logo" src="/images/django-celery-redis-logo.png"></p>
+<p>This is part 1 on how to get up and running with Django and celery. It's a fairly opinionated guide and represents what I consider to be the easiest approach.</p>
+<p>To keep things simple, to start with we'll be using <strong>redis</strong> as our <strong>broker</strong> AND our <strong>results backend</strong>.</p>
+<h2>Initial Setup</h2>
+<p>Initialize a new Django project (I'm calling it <code>blog</code>)</p>
+<div class="highlight"><pre><span></span><code>django-admin startproject blog <span class="o">&amp;&amp;</span> <span class="nb">cd</span> blog
+</code></pre></div>
+
+<p>Once inside the project folder initialize a new Pipenv environment</p>
+<div class="highlight"><pre><span></span><code>pipenv shell
+</code></pre></div>
+
+<p>Install some necessary dependencies</p>
+<div class="highlight"><pre><span></span><code>pipenv install django celery<span class="o">[</span>redis<span class="o">]</span>
+</code></pre></div>
+
+<p>Note: I've included <code>redis</code> as an optionally celery dependency, to start with we'll be using redis to broker communication between Django &lt;-&gt; celery workers and to store the results of any tasks</p>
+<p>Next we'll need to start an initial app (will be useful later):</p>
+<div class="highlight"><pre><span></span><code>pipenv run django-admin startapp posts
+</code></pre></div>
+
+<p>Then add the new app to the <code>INSTALLED_APPS</code> in <code>blog/settings</code></p>
+<div class="highlight"><pre><span></span><code><span class="w"> </span>INSTALLED_APPS = [<span class="w"></span>
+<span class="w"> </span>    &quot;django.contrib.admin&quot;,<span class="w"></span>
+<span class="w"> </span>    &quot;django.contrib.auth&quot;,<span class="w"></span>
+<span class="w"> </span>    &quot;django.contrib.contenttypes&quot;,<span class="w"></span>
+<span class="w"> </span>    &quot;django.contrib.sessions&quot;,<span class="w"></span>
+<span class="w"> </span>    &quot;django.contrib.messages&quot;,<span class="w"></span>
+<span class="w"> </span>    &quot;django.contrib.staticfiles&quot;,<span class="w"></span>
+<span class="gi">+    &quot;posts.apps.PostsConfig&quot;,</span><span class="w"></span>
+<span class="w"> </span>]<span class="w"></span>
+</code></pre></div>
+
+<p>We then need to run some standard Django post initialization setup, which is typically the same for all projects:</p>
+<p>Run some initial migrations:</p>
+<div class="highlight"><pre><span></span><code>pipenv run ./manage.py migrate
+</code></pre></div>
+
+<p>Create a superuser account (in order to view the admin page)</p>
+<div class="highlight"><pre><span></span><code>pipenv run ./manage.py createsuperuser
+</code></pre></div>
+
+<h2>Configuring Our Celery Application</h2>
+<p>Create a new file <code>blog/celery.py</code> and add the following code:</p>
+<p>(this is stolen directly from the <a href="https://docs.celeryq.dev/en/stable/django/first-steps-with-django.html">django-celery docs</a>)</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">celery</span> <span class="kn">import</span> <span class="n">Celery</span>
+
+<span class="c1"># Set the default Django settings module for the &#39;celery&#39; program.</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;DJANGO_SETTINGS_MODULE&quot;</span><span class="p">,</span> <span class="s2">&quot;blog.settings&quot;</span><span class="p">)</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Celery</span><span class="p">(</span><span class="s2">&quot;blog&quot;</span><span class="p">)</span>
+
+<span class="c1"># Using a string here means the worker doesn&#39;t have to serialize</span>
+<span class="c1"># the configuration object to child processes.</span>
+<span class="c1"># - namespace=&#39;CELERY&#39; means all celery-related configuration keys</span>
+<span class="c1">#   should have a `CELERY_` prefix.</span>
+<span class="n">app</span><span class="o">.</span><span class="n">config_from_object</span><span class="p">(</span><span class="s2">&quot;django.conf:settings&quot;</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="s2">&quot;CELERY&quot;</span><span class="p">)</span>
+
+<span class="c1"># Load task modules from all registered Django apps.</span>
+<span class="n">app</span><span class="o">.</span><span class="n">autodiscover_tasks</span><span class="p">()</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">task</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">debug_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Request: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<h2>Configure Celery Broker (redis)</h2>
+<h3>Dev</h3>
+<p><img alt="diagram displaying dev architecture layout" src="/images/django-celery-dev-diagram.png">.</p>
+<p>In our local development environment we'll have the following three things:
+- one instance of Django running locally <code>./manage.py runserver</code>,
+- one instance of celery <code>celery worker -A blog worker</code>
+- one instance of redis (running somewhere i.e: in a docker container)</p>
+<p>Running all these things together can become cumbersome, thankfully there's a
+number of solutions out there to manage this complexity (which I hope to address in future articles).</p>
+<h3>Prod</h3>
+<p>Unlike during development (where everything is running locally), in
+production there's a good chance that celery worker(s) may not be running on
+the same machine.</p>
+<p>Furthermore you might even want to run multiple instances of celery. In this case
+celery will distribute tasks evenly amongst the worker pool.</p>
+<p><img alt="diagram displaying architecture layout" src="/images/django-celery-diagram.png"></p>
+<h3>Starting a Redis Instance</h3>
+<p>This next few steps of this tutorial assume you have an instance of Redis running <em>somewhere</em></p>
+<p>It doesn't particularly matter where/how you run your Redis instance, as long as you're able to connect to this instance from your machine.</p>
+<p>Which option you choose will largely depend on your own project constraints and personal preferences. But to help I've presented a few possible options below.</p>
+<h4>Running Locally</h4>
+<p>If you want to run redis on your own machine <a href="https://redis.io/docs/getting-started/">official documentation</a>.</p>
+<h4>Running within docker</h4>
+<p>Alternatively if you have <code>docker</code> installed, you can quickly spin up a containerised redis instance instead:</p>
+<div class="highlight"><pre><span></span><code>docker run --rm -d -p <span class="m">6379</span>:6379 redis
+</code></pre></div>
+
+<p>If your project uses <code>docker-compose</code> you can add a relevant entry in the docker compose file instead.</p>
+<h4>Using a managed instance</h4>
+<p>One option is to quickly spin up a free redis instance on <a href="https://console.upstash.com/">console.upstash.com</a></p>
+<p><img alt="upstash redis dashboard example" src="/images/upstash-redis.png"></p>
+<p>I.e. in the example above I quickly spun up a Redis instance, from here I'm able to copy the Redis URL</p>
+<div class="highlight"><pre><span></span><code><span class="n">redis</span><span class="o">-</span><span class="n">cli</span><span class="w"> </span><span class="o">-</span><span class="n">u</span><span class="w"> </span><span class="nl">redis</span><span class="p">:</span><span class="o">/</span><span class="cm">/******@usw2-able-adder-30254.upstash.io:30254</span>
+</code></pre></div>
+
+<h3>Updating project settings</h3>
+<p>At this point we're ready to update our broker URL in <code>blog/settings.py</code> to match our Redis URL.</p>
+<p>In my case because I'm running Redis locally on my machine, I'm going to use <code>redis://</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">CELERY_BROKER_URL</span> <span class="o">=</span> <span class="s2">&quot;redis://&quot;</span>
+</code></pre></div>
+
+<p>And run:</p>
+<div class="highlight"><pre><span></span><code>pipenv run celery -A blog worker -l INFO
+</code></pre></div>
+
+<p>Celery is smart enough to fall-back to a default <code>hostname</code> and <code>port</code> when not specified in the <code>BROKER_URL</code>, as it evident from the logs:</p>
+<div class="highlight"><pre><span></span><code><span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="n">celery</span><span class="nv">@fedora</span><span class="w"> </span><span class="n">v5</span><span class="mf">.2.7</span><span class="w"> </span><span class="p">(</span><span class="n">dawn</span><span class="o">-</span><span class="n">chorus</span><span class="p">)</span><span class="w"></span>
+<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span><span class="w"></span>
+<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="n">Linux</span><span class="o">-</span><span class="mf">5.19.8</span><span class="o">-</span><span class="mf">200.</span><span class="n">fc36</span><span class="p">.</span><span class="n">x86_64</span><span class="o">-</span><span class="n">x86_64</span><span class="o">-</span><span class="k">with</span><span class="o">-</span><span class="n">glibc2</span><span class="mf">.35</span><span class="w"> </span><span class="mi">2022</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">17</span><span class="w"> </span><span class="mi">15</span><span class="err">:</span><span class="mi">10</span><span class="err">:</span><span class="mi">35</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="o">[</span><span class="n">config</span><span class="o">]</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">app</span><span class="p">:</span><span class="w">         </span><span class="nl">blog</span><span class="p">:</span><span class="mh">0x7f9aeee67a90</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">transport</span><span class="p">:</span><span class="w">   </span><span class="nl">redis</span><span class="p">:</span><span class="o">//</span><span class="nl">localhost</span><span class="p">:</span><span class="mi">6379</span><span class="o">//</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">results</span><span class="p">:</span><span class="w">     </span><span class="nl">disabled</span><span class="p">:</span><span class="o">//</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">concurrency</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">(</span><span class="n">prefork</span><span class="p">)</span><span class="w"></span>
+<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">task</span><span class="w"> </span><span class="nl">events</span><span class="p">:</span><span class="w"> </span><span class="k">OFF</span><span class="w"> </span><span class="p">(</span><span class="n">enable</span><span class="w"> </span><span class="o">-</span><span class="n">E</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">monitor</span><span class="w"> </span><span class="n">tasks</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">worker</span><span class="p">)</span><span class="w"></span>
+<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span><span class="w"></span>
+<span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="o">[</span><span class="n">queues</span><span class="o">]</span><span class="w"></span>
+<span class="w">                </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">celery</span><span class="w">           </span><span class="n">exchange</span><span class="o">=</span><span class="n">celery</span><span class="p">(</span><span class="n">direct</span><span class="p">)</span><span class="w"> </span><span class="k">key</span><span class="o">=</span><span class="n">celery</span><span class="w"></span>
+
+
+<span class="o">[</span><span class="n">tasks</span><span class="o">]</span><span class="w"></span>
+<span class="w">  </span><span class="p">.</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="n">debug_task</span><span class="w"></span>
+
+<span class="o">[</span><span class="n">2022-09-17 15:10:35,249: WARNING/MainProcess</span><span class="o">]</span><span class="w"> </span><span class="k">No</span><span class="w"> </span><span class="n">hostname</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="n">supplied</span><span class="p">.</span><span class="w"> </span><span class="n">Reverting</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="s1">&#39;localhost&#39;</span><span class="w"></span>
+<span class="o">[</span><span class="n">2022-09-17 15:10:35,249: INFO/MainProcess</span><span class="o">]</span><span class="w"> </span><span class="n">Connected</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nl">redis</span><span class="p">:</span><span class="o">//</span><span class="nl">localhost</span><span class="p">:</span><span class="mi">6379</span><span class="o">//</span><span class="w"></span>
+</code></pre></div>
+
+<p>{{&lt; alert &gt;}}
+<strong>Note:</strong> if you forget to configure the <code>CELERY_BROKER_URL</code> you'll likely be greeted by the following error:
+{{&lt; /alert &gt;}}</p>
+<div class="highlight"><pre><span></span><code><span class="p">[</span><span class="mi">2022-09-17</span><span class="w"> </span><span class="mi">14</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mi">55</span><span class="p">,</span><span class="mi">224</span><span class="o">:</span><span class="w"> </span><span class="n">WARNING</span><span class="o">/</span><span class="n">MainProcess</span><span class="p">]</span><span class="w"> </span><span class="n">No</span><span class="w"> </span><span class="n">hostname</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="n">supplied</span><span class="p">.</span><span class="w"> </span><span class="n">Reverting</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="err">&#39;</span><span class="n">localhost</span><span class="err">&#39;</span><span class="w"></span>
+
+<span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="n">celery</span><span class="p">@</span><span class="n">fedora</span><span class="w"> </span><span class="n">v5</span><span class="mf">.2.7</span><span class="w"> </span><span class="p">(</span><span class="n">dawn</span><span class="o">-</span><span class="n">chorus</span><span class="p">)</span><span class="w"></span>
+<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span><span class="w"></span>
+<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="n">Linux</span><span class="mf">-5.19.8-200.f</span><span class="n">c36</span><span class="p">.</span><span class="n">x86_64</span><span class="o">-</span><span class="n">x86_64</span><span class="o">-</span><span class="n">with</span><span class="o">-</span><span class="n">glibc2</span><span class="mf">.35</span><span class="w"> </span><span class="mi">2022-09-17</span><span class="w"> </span><span class="mi">14</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mi">55</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">[</span><span class="n">config</span><span class="p">]</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">app</span><span class="o">:</span><span class="w">         </span><span class="n">blog</span><span class="o">:</span><span class="mh">0x7fb8a1067a90</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">transport</span><span class="o">:</span><span class="w">   </span><span class="n">amqp</span><span class="o">:</span><span class="c1">//guest:**@localhost:5672//</span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">results</span><span class="o">:</span><span class="w">     </span><span class="n">disabled</span><span class="o">:</span><span class="c1">//</span>
+<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">concurrency</span><span class="o">:</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">(</span><span class="n">prefork</span><span class="p">)</span><span class="w"></span>
+<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">task</span><span class="w"> </span><span class="n">events</span><span class="o">:</span><span class="w"> </span><span class="n">OFF</span><span class="w"> </span><span class="p">(</span><span class="n">enable</span><span class="w"> </span><span class="o">-</span><span class="n">E</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">monitor</span><span class="w"> </span><span class="n">tasks</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">worker</span><span class="p">)</span><span class="w"></span>
+<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span><span class="w"></span>
+<span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="p">[</span><span class="n">queues</span><span class="p">]</span><span class="w"></span>
+<span class="w">                </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">celery</span><span class="w">           </span><span class="n">exchange</span><span class="o">=</span><span class="n">celery</span><span class="p">(</span><span class="n">direct</span><span class="p">)</span><span class="w"> </span><span class="n">key</span><span class="o">=</span><span class="n">celery</span><span class="w"></span>
+
+
+<span class="p">[</span><span class="n">tasks</span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="p">.</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="n">debug_task</span><span class="w"></span>
+
+<span class="p">[</span><span class="mi">2022-09-17</span><span class="w"> </span><span class="mi">14</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mi">55</span><span class="p">,</span><span class="mi">443</span><span class="o">:</span><span class="w"> </span><span class="n">ERROR</span><span class="o">/</span><span class="n">MainProcess</span><span class="p">]</span><span class="w"> </span><span class="n">consumer</span><span class="o">:</span><span class="w"> </span><span class="n">Cannot</span><span class="w"> </span><span class="n">connect</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">amqp</span><span class="o">:</span><span class="c1">//guest:**@127.0.0.1:5672//: [Errno 111] Connection refused.</span>
+<span class="n">Trying</span><span class="w"> </span><span class="n">again</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mf">2.00</span><span class="w"> </span><span class="n">seconds</span><span class="p">...</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span><span class="w"></span>
+</code></pre></div>
+
+<p>This is because the default broker URL: <code>amqp://guest:**@127.0.0.1:5672//:</code>
+isn't available. For this to work we'd have to configure a local instance of RabbitMQ.</p>
+<h2>Monitoring Celery Workers</h2>
+<p>Once you're started your celery worker(s), you can monitor their status with:</p>
+<div class="highlight"><pre><span></span><code>pipenv run celery -A blog status
+</code></pre></div>
+
+<p>i.e:</p>
+<div class="highlight"><pre><span></span><code>$ pipenv run celery -A blog status
+-&gt;  celery@fedora: OK
+
+<span class="m">1</span> node online.
+</code></pre></div>
+
+<p>Or via the celery shell:</p>
+<div class="highlight"><pre><span></span><code>pipenv run celery -A blog shell
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">app</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">inspect</span><span class="p">()</span><span class="o">.</span><span class="n">stats</span><span class="p">()</span>
+<span class="p">{</span><span class="s1">&#39;celery@fedora&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;total&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;pid&#39;</span><span class="p">:</span> <span class="mi">44068</span><span class="p">,</span> <span class="s1">&#39;clock&#39;</span><span class="p">:</span> <span class="s1">&#39;7&#39;</span><span class="p">,</span> <span class="s1">&#39;uptime&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s1">&#39;pool&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;max-concurrency&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;processes&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">44070</span><span class="p">,</span> <span class="mi">44071</span><span class="p">,</span> <span class="mi">44072</span><span class="p">,</span> <span class="mi">44073</span><span class="p">,</span> <span class="mi">44074</span><span class="p">,</span> <span class="mi">44075</span><span class="p">,</span> <span class="mi">44076</span><span class="p">,</span> <span class="mi">44077</span><span class="p">],</span> <span class="s1">&#39;max-tasks-per-child&#39;</span><span class="p">:</span> <span class="s1">&#39;N/A&#39;</span><span class="p">,</span> <span class="s1">&#39;put-guarded-by-semaphore&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;timeouts&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;writes&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;total&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;avg&#39;</span><span class="p">:</span> <span class="s1">&#39;0.00&#39;</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;raw&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;strategy&#39;</span><span class="p">:</span> <span class="s1">&#39;fair&#39;</span><span class="p">,</span> <span class="s1">&#39;inqueues&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;total&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;active&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}}},</span> <span class="s1">&#39;broker&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;hostname&#39;</span><span class="p">:</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="s1">&#39;userid&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;virtual_host&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="mi">6379</span><span class="p">,</span> <span class="s1">&#39;insist&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;ssl&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;transport&#39;</span><span class="p">:</span> <span class="s1">&#39;redis&#39;</span><span class="p">,</span> <span class="s1">&#39;connect_timeout&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;transport_options&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;login_method&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;uri_prefix&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;heartbeat&#39;</span><span class="p">:</span> <span class="mf">120.0</span><span class="p">,</span> <span class="s1">&#39;failover_strategy&#39;</span><span class="p">:</span> <span class="s1">&#39;round-robin&#39;</span><span class="p">,</span> <span class="s1">&#39;alternates&#39;</span><span class="p">:</span> <span class="p">[]},</span> <span class="s1">&#39;prefetch_count&#39;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span> <span class="s1">&#39;rusage&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;utime&#39;</span><span class="p">:</span> <span class="mf">0.9573699999999999</span><span class="p">,</span> <span class="s1">&#39;stime&#39;</span><span class="p">:</span> <span class="mf">0.196535</span><span class="p">,</span> <span class="s1">&#39;maxrss&#39;</span><span class="p">:</span> <span class="mi">57784</span><span class="p">,</span> <span class="s1">&#39;ixrss&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;idrss&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;isrss&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;minflt&#39;</span><span class="p">:</span> <span class="mi">66085</span><span class="p">,</span> <span class="s1">&#39;majflt&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;nswap&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;inblock&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;oublock&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;msgsnd&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;msgrcv&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;nsignals&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;nvcsw&#39;</span><span class="p">:</span> <span class="mi">52</span><span class="p">,</span> <span class="s1">&#39;nivcsw&#39;</span><span class="p">:</span> <span class="mi">19</span><span class="p">}}}</span>
+</code></pre></div>
+
+<h2>Triggering Tasks</h2>
+<p>We can now start to trigger tasks via the celery shell. In a process process run:</p>
+<div class="highlight"><pre><span></span><code>pipenv run celery -A blog shell
+</code></pre></div>
+
+<p>Launching the shell session gives us access to all the currently registered tasks, you can see whats available with:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">app</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">inspect</span><span class="p">()</span><span class="o">.</span><span class="n">registered</span><span class="p">()</span>
+<span class="p">{</span><span class="s1">&#39;celery@fedora&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;blog.celery.debug_task&#39;</span><span class="p">]}</span>
+</code></pre></div>
+
+<p>As you can see from the namespace, this is the same task we defined in <code>blog/celery.py</code></p>
+<div class="highlight"><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">task</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">debug_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Request: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>We can trigger the <code>debug_task</code> with:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">debug_task</span><span class="o">.</span><span class="n">delay</span><span class="p">()</span>
+<span class="o">&lt;</span><span class="n">AsyncResult</span><span class="p">:</span> <span class="mi">55</span><span class="n">d109d4</span><span class="o">-</span><span class="n">cef1</span><span class="o">-</span><span class="mi">477</span><span class="n">a</span><span class="o">-</span><span class="n">bbbf</span><span class="o">-</span><span class="mi">6</span><span class="n">baf5acf2857</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<p>If you check back on your celery worker process this task should have been received + executed</p>
+<div class="highlight"><pre><span></span><code><span class="o">[</span><span class="n">2022-09-17 15:45:31,460: INFO/MainProcess</span><span class="o">]</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="n">debug_task</span><span class="o">[</span><span class="n">55d109d4-cef1-477a-bbbf-6baf5acf2857</span><span class="o">]</span><span class="w"> </span><span class="n">received</span><span class="w"></span>
+<span class="o">[</span><span class="n">2022-09-17 15:45:31,461: WARNING/ForkPoolWorker-8</span><span class="o">]</span><span class="w"> </span><span class="nl">Request</span><span class="p">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nl">Context</span><span class="p">:</span><span class="w"> </span><span class="err">{</span><span class="s1">&#39;lang&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;py&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;task&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;blog.celery.debug_task&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;id&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;55d109d4-cef1-477a-bbbf-6baf5acf2857&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;shadow&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;eta&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;expires&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;group&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;group_index&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;retries&#39;</span><span class="err">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;timelimit&#39;</span><span class="err">:</span><span class="w"> </span><span class="o">[</span><span class="n">None, None</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;root_id&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;55d109d4-cef1-477a-bbbf-6baf5acf2857&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;parent_id&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;argsrepr&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;()&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;kwargsrepr&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;{}&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;origin&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;gen42154@fedora&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;ignore_result&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">False</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;properties&#39;</span><span class="err">:</span><span class="w"> </span><span class="err">{</span><span class="s1">&#39;correlation_id&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;55d109d4-cef1-477a-bbbf-6baf5acf2857&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;reply_to&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;a9e82ead-2c56-3682-883c-421d7ac5d9d1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;delivery_mode&#39;</span><span class="err">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;delivery_info&#39;</span><span class="err">:</span><span class="w"> </span><span class="err">{</span><span class="s1">&#39;exchange&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;routing_key&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;celery&#39;</span><span class="err">}</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;priority&#39;</span><span class="err">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;body_encoding&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;base64&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;delivery_tag&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;5191f0a6-d448-4fd8-ace1-a23fa674c25a&#39;</span><span class="err">}</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;reply_to&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;a9e82ead-2c56-3682-883c-421d7ac5d9d1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;correlation_id&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;55d109d4-cef1-477a-bbbf-6baf5acf2857&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;hostname&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;celery@fedora&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;delivery_info&#39;</span><span class="err">:</span><span class="w"> </span><span class="err">{</span><span class="s1">&#39;exchange&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;routing_key&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;celery&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;priority&#39;</span><span class="err">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;redelivered&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="err">}</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;args&#39;</span><span class="err">:</span><span class="w"> </span><span class="err">[]</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;kwargs&#39;</span><span class="err">:</span><span class="w"> </span><span class="err">{}</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;is_eager&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">False</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;callbacks&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;errbacks&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;chain&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;chord&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;called_directly&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">False</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_protected&#39;</span><span class="err">:</span><span class="w"> </span><span class="mi">1</span><span class="err">}</span><span class="o">&gt;</span><span class="w"></span>
+<span class="o">[</span><span class="n">2022-09-17 15:45:31,461: INFO/ForkPoolWorker-8</span><span class="o">]</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="n">debug_task</span><span class="o">[</span><span class="n">55d109d4-cef1-477a-bbbf-6baf5acf2857</span><span class="o">]</span><span class="w"> </span><span class="n">succeeded</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mf">0.0006546240001625847</span><span class="nl">s</span><span class="p">:</span><span class="w"> </span><span class="k">None</span><span class="w"></span>
+</code></pre></div>
+
+<h2>Configure Celery Results Backend (redis)</h2>
+<p>The <code>debug_taks</code> doesn't return any useful information, but what if we wanted to perform some log running computation and save the results somewhere?</p>
+<p>To store results we need to configure a <a href="https://docs.celeryq.dev/en/stable/getting-started/first-steps-with-celery.html#keeping-results">results
+backend</a>.
+Luckily, celery supports using redis as both a results backend and a broker, so
+we can re-use the redis instance we have already. </p>
+<p>{{&lt; alert &gt;}}
+<strong>Note:</strong> In part 2 I'll be demonstrating how to use django (and it's
+configured DB instance) as a results backend instead.
+{{&lt; /alert &gt;}}</p>
+<p>In <code>blog/settings.py</code> define <code>CELERY_RESULT_BACKEND</code> (it should be the same value as <code>CELERY_BROKER_URL</code>)</p>
+<div class="highlight"><pre><span></span><code><span class="n">CELERY_BROKER_URL</span> <span class="o">=</span> <span class="s2">&quot;redis://localhost/0&quot;</span>
+<span class="n">CELERY_RESULT_BACKEND</span> <span class="o">=</span> <span class="s2">&quot;redis://localhost/0&quot;</span>
+</code></pre></div>
+
+<h2>Triggering Tasks (With Reults)</h2>
+<p>Lets define a new example function in <code>blog/celery.py</code> called <code>square</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">task</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span>
+</code></pre></div>
+
+<p>After making this change you will need to restart celery. Once you've done so the new <code>blog.celery.square</code>
+task should appear under <code>[tasks]</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="n">celery</span><span class="nv">@fedora</span><span class="w"> </span><span class="n">v5</span><span class="mf">.2.7</span><span class="w"> </span><span class="p">(</span><span class="n">dawn</span><span class="o">-</span><span class="n">chorus</span><span class="p">)</span><span class="w"></span>
+<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span><span class="w"></span>
+<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="n">Linux</span><span class="o">-</span><span class="mf">5.19.8</span><span class="o">-</span><span class="mf">200.</span><span class="n">fc36</span><span class="p">.</span><span class="n">x86_64</span><span class="o">-</span><span class="n">x86_64</span><span class="o">-</span><span class="k">with</span><span class="o">-</span><span class="n">glibc2</span><span class="mf">.35</span><span class="w"> </span><span class="mi">2022</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">17</span><span class="w"> </span><span class="mi">15</span><span class="err">:</span><span class="mi">52</span><span class="err">:</span><span class="mi">57</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="o">[</span><span class="n">config</span><span class="o">]</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">app</span><span class="p">:</span><span class="w">         </span><span class="nl">blog</span><span class="p">:</span><span class="mh">0x7f48c5467a90</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">transport</span><span class="p">:</span><span class="w">   </span><span class="nl">redis</span><span class="p">:</span><span class="o">//</span><span class="nl">localhost</span><span class="p">:</span><span class="mi">6379</span><span class="o">/</span><span class="mi">0</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">results</span><span class="p">:</span><span class="w">     </span><span class="nl">disabled</span><span class="p">:</span><span class="o">//</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">concurrency</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">(</span><span class="n">prefork</span><span class="p">)</span><span class="w"></span>
+<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">task</span><span class="w"> </span><span class="nl">events</span><span class="p">:</span><span class="w"> </span><span class="k">OFF</span><span class="w"> </span><span class="p">(</span><span class="n">enable</span><span class="w"> </span><span class="o">-</span><span class="n">E</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">monitor</span><span class="w"> </span><span class="n">tasks</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">worker</span><span class="p">)</span><span class="w"></span>
+<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span><span class="w"></span>
+<span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="o">[</span><span class="n">queues</span><span class="o">]</span><span class="w"></span>
+<span class="w">                </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">celery</span><span class="w">           </span><span class="n">exchange</span><span class="o">=</span><span class="n">celery</span><span class="p">(</span><span class="n">direct</span><span class="p">)</span><span class="w"> </span><span class="k">key</span><span class="o">=</span><span class="n">celery</span><span class="w"></span>
+
+
+<span class="o">[</span><span class="n">tasks</span><span class="o">]</span><span class="w"></span>
+<span class="w">  </span><span class="p">.</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="n">debug_task</span><span class="w"></span>
+<span class="w">  </span><span class="p">.</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="nf">square</span><span class="w"></span>
+</code></pre></div>
+
+<p>Just as before, (inside a celery shell process) lets trigger our new <code>square</code> task:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">res</span> <span class="o">=</span> <span class="n">square</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="mi">25</span>
+</code></pre></div>
+
+<p>{{&lt; alert &gt;}}
+<strong>Note:</strong> If forget to configure a result backend you'll encounter an error like this:
+{{&lt; /alert &gt;}}</p>
+<div class="highlight"><pre><span></span><code><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s2">&quot;&lt;console&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+  <span class="n">File</span> <span class="s2">&quot;/home/jackevans/.local/share/virtualenvs/blog-ZV8xlUiZ/lib/python3.10/site-packages/celery/result.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">224</span><span class="p">,</span> <span class="ow">in</span> <span class="n">get</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">wait_for_pending</span><span class="p">(</span>
+  <span class="n">File</span> <span class="s2">&quot;/home/jackevans/.local/share/virtualenvs/blog-ZV8xlUiZ/lib/python3.10/site-packages/celery/backends/base.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">756</span><span class="p">,</span> <span class="ow">in</span> <span class="n">wait_for_pending</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span>
+  <span class="n">File</span> <span class="s2">&quot;/home/jackevans/.local/share/virtualenvs/blog-ZV8xlUiZ/lib/python3.10/site-packages/celery/backends/base.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1087</span><span class="p">,</span> <span class="ow">in</span> <span class="n">_is_disabled</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="n">E_NO_BACKEND</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+<span class="ne">NotImplementedError</span><span class="p">:</span> <span class="n">No</span> <span class="n">result</span> <span class="n">backend</span> <span class="ow">is</span> <span class="n">configured</span><span class="o">.</span>
+<span class="n">Please</span> <span class="n">see</span> <span class="n">the</span> <span class="n">documentation</span> <span class="k">for</span> <span class="n">more</span> <span class="n">information</span><span class="o">.</span>
+</code></pre></div>
+
+<h2>Next Time</h2>
+<p>This concludes part 1, in part 2 we've explore using the
+<code>django-celery-results</code> package to configure Djagno as a results backend and
+discuss cases where this might be necessary.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
+                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

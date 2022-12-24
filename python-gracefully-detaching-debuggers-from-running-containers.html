@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Python gracefully detaching debuggers from running containers 🐍🐳🪳</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+        <meta name="description" content="Problem Lets say you have a simple service you want to debug that's running in a docker container. So you add a breakpoint() to the relevant code:..." />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Jack's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="/category/linux.html">Linux</a></li>
+                    <li><a href="/category/neovim.html">Neovim</a></li>
+                    <li><a href="/category/personal.html">Personal</a></li>
+                    <li><a href="/category/programming.html">Programming</a></li>
+                    <li class="active"><a href="/category/python.html">Python</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/python-gracefully-detaching-debuggers-from-running-containers.html" rel="bookmark"
+           title="Permalink to Python gracefully detaching debuggers from running containers 🐍🐳🪳">Python gracefully detaching debuggers from running containers 🐍🐳🪳</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-07-08T00:00:00+01:00">
+                Published: Fri 08 July 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/python.html">Python</a>.</p>
+<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/docker.html">docker</a> </p>
+</footer><!-- /.post-info -->      <h2>Problem</h2>
+<p>Lets say you have a simple service you want to debug that's running in a docker container. So you add a <code>breakpoint()</code> to the relevant code:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">entries</span> <span class="o">=</span> <span class="n">Entry</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="nb">breakpoint</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;feeds/index.html&quot;</span> <span class="p">{</span><span class="s2">&quot;entries&quot;</span><span class="p">:</span> <span class="n">entries</span><span class="p">})</span>
+</code></pre></div>
+
+<p>You trigger this logic in your service, and attempt to attach to your running container:</p>
+<div class="highlight"><pre><span></span><code>docker attach my-service
+</code></pre></div>
+
+<p>And the breakpoint gets hit:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;</span><span class="w"> </span><span class="o">/</span><span class="n">app</span><span class="o">/</span><span class="n">feeds</span><span class="o">/</span><span class="n">views</span><span class="p">.</span><span class="n">py</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span><span class="nf">index</span><span class="p">()</span><span class="w"></span>
+<span class="w">    </span><span class="mi">132</span><span class="w">     </span><span class="n">breakpoint</span><span class="p">()</span><span class="w"></span>
+<span class="o">--&gt;</span><span class="w"> </span><span class="mi">133</span><span class="w">     </span><span class="n">entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Entry</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="kr">all</span><span class="p">()</span><span class="w"></span>
+
+<span class="n">ipdb</span><span class="o">&gt;</span><span class="w"> </span><span class="n">c</span><span class="w"></span>
+</code></pre></div>
+
+<p>At this point you want to end your debugging session and gracefully detach from the attached process without killing the parent container.</p>
+<p>So you attempt to hit <code>&lt;Ctrl+c&gt;</code> to exit the debugger how you normally would. </p>
+<p>But this kills your service ... (forcing you to manually restart)</p>
+<div class="highlight"><pre><span></span><code>❯ docker ps -a
+CONTAINER ID   IMAGE               COMMAND                  CREATED       
+1f45e69a2836   my_service      &quot;python manage.py ru…&quot;   2 hours ago   Exited (0) 20 seconds ago                                      feedreader_app_1
+</code></pre></div>
+
+<p><br></p>
+<p><img alt="Dead Docker" src="https://leoh0.github.io/images/dead_docker.png"></p>
+<hr>
+<h2>Solution</h2>
+<p>Recently I discovered you can specify an exit sequence:</p>
+<div class="highlight"><pre><span></span><code>docker attach --detach-keys=&quot;ctrl-c&quot; my_service
+</code></pre></div>
+
+<p>Now when you hit the <code>&lt;Ctrl+c&gt;</code> escape sequence in your debugger session the app will close as exepected</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;</span><span class="w"> </span><span class="o">/</span><span class="n">app</span><span class="o">/</span><span class="n">feeds</span><span class="o">/</span><span class="n">views</span><span class="p">.</span><span class="n">py</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span><span class="nf">index</span><span class="p">()</span><span class="w"></span>
+<span class="w">    </span><span class="mi">132</span><span class="w">     </span><span class="n">breakpoint</span><span class="p">()</span><span class="w"></span>
+<span class="o">--&gt;</span><span class="w"> </span><span class="mi">133</span><span class="w">     </span><span class="n">entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Entry</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="kr">all</span><span class="p">()</span><span class="w"></span>
+
+<span class="n">ipdb</span><span class="o">&gt;</span><span class="w"> </span><span class="n">c</span><span class="w"></span>
+<span class="p">[</span><span class="mi">08</span><span class="o">/</span><span class="n">Jul</span><span class="o">/</span><span class="mi">2022</span><span class="w"> </span><span class="mi">12</span><span class="o">:</span><span class="mi">12</span><span class="o">:</span><span class="mo">06</span><span class="p">]</span><span class="w"> </span><span class="s">&quot;GET / HTTP/1.1&quot;</span><span class="w"> </span><span class="mi">200</span><span class="w"> </span><span class="mi">34757</span><span class="w"></span>
+<span class="n">read</span><span class="w"> </span><span class="n">escape</span><span class="w"> </span><span class="n">sequence</span><span class="w"></span>
+</code></pre></div>
+
+<h2>Alternative</h2>
+<p>Or you can modify the <code>restart</code> policy of your service, e.g:</p>
+<div class="highlight"><pre><span></span><code>docker run -it -d --restart always my_service
+</code></pre></div>
+
+<p>For example I have the following in my <code>docker-compose.yml</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">services</span><span class="o">:</span><span class="w"></span>
+<span class="w">  </span><span class="n">app</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="n">restart</span><span class="o">:</span><span class="w"> </span><span class="n">always</span><span class="w"></span>
+<span class="w">    </span><span class="n">stdin_open</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+<span class="w">    </span><span class="n">tty</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+<span class="w">    </span><span class="n">command</span><span class="o">:</span><span class="w"> </span><span class="n">python</span><span class="w"> </span><span class="n">manage</span><span class="o">.</span><span class="na">py</span><span class="w"> </span><span class="n">runserver</span><span class="w"> </span><span class="mf">0.0</span><span class="o">.</span><span class="mf">0.0</span><span class="o">:</span><span class="mi">8000</span><span class="w"></span>
+<span class="w">    </span><span class="n">ports</span><span class="o">:</span><span class="w"></span>
+<span class="w">      </span><span class="o">-</span><span class="w"> </span><span class="s2">&quot;8000:8000&quot;</span><span class="w"></span>
+</code></pre></div>
+
+<p>This way even if you trigger the <code>&lt;Ctrl+C&gt;</code> exit sequence in your attached container and kill the parent, the service will automatically restart.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
+                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

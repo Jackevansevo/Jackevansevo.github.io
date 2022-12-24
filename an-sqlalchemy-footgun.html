@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>An SQLAlchemy Footgun</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+        <meta name="description" content="Something I learnt the hard way recently. Let's say you have the following SQLAlchemy models, representing a straightforward many-to-one..." />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Jack's Blog</a></h1>
+                <nav><ul>
+                    <li><a href="/category/linux.html">Linux</a></li>
+                    <li><a href="/category/neovim.html">Neovim</a></li>
+                    <li><a href="/category/personal.html">Personal</a></li>
+                    <li><a href="/category/programming.html">Programming</a></li>
+                    <li class="active"><a href="/category/python.html">Python</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/an-sqlalchemy-footgun.html" rel="bookmark"
+           title="Permalink to An SQLAlchemy Footgun">An SQLAlchemy Footgun</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-06-04T00:00:00+01:00">
+                Published: Sat 04 June 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+        </address>
+<p>In <a href="/category/python.html">Python</a>.</p>
+<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/sqlalchemy.html">sqlalchemy</a> </p>
+</footer><!-- /.post-info -->      <p>Something I learnt the hard way recently. </p>
+<p>Let's say you have the following SQLAlchemy models, representing a straightforward many-to-one relationship:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;users&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Item&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;owner&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Item</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;items&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">owner_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;users.id&quot;</span><span class="p">))</span>
+
+    <span class="n">owner</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;items&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Each <code>Item</code> has a parent <code>User</code>, each <code>User</code> can have multiple <code>items</code>.</p>
+<p>In my DB I've got the following data (x2 Users (Homer &amp; Marge), and x2 Items associated with Homer)</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;homer.simpson@gmail.com&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;marge.simpson@gmail.com&#39;</span><span class="p">)]</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Item</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">Item</span><span class="o">.</span><span class="n">owner_id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="p">[(</span><span class="s1">&#39;Duff Beer&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Lard Lad Donut&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+
+<span class="c1"># Items associated with homer</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">items</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">reddit</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Item</span> <span class="n">at</span> <span class="mh">0x7f338ea97730</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="o">&lt;</span><span class="n">reddit</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Item</span> <span class="n">at</span> <span class="mh">0x7f338ea96e00</span><span class="o">&gt;</span><span class="p">]</span>
+
+<span class="c1"># Items associated with marge</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">items</span>
+<span class="p">[]</span>
+</code></pre></div>
+
+<p><img alt="Homer Simpson eating a donut" src="https://upload.wikimedia.org/wikipedia/en/0/02/Homer_Simpson_2006.png"></p>
+<p><br></p>
+<p>Lets say I want to write a query to fetch me all the <code>Items</code> associated with <code>marge.simpson@gmail.com</code></p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Item</span><span class="o">.</span><span class="n">title</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span><span class="o">==</span><span class="n">marge</span><span class="o">.</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="p">[(</span><span class="s1">&#39;Duff Beer&#39;</span><span class="p">,),</span> <span class="p">(</span><span class="s1">&#39;Lard Lad Donut&#39;</span><span class="p">,)]</span>
+</code></pre></div>
+
+<p><br></p>
+<blockquote>
+<p>🤔 Hold on, this looks to have returned all the items associated with Homer, what's going on here?</p>
+</blockquote>
+<p><br>
+Lets peek under the hood by printing the generated SQL.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Item</span><span class="o">.</span><span class="n">title</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span><span class="o">==</span><span class="n">marge</span><span class="o">.</span><span class="n">email</span><span class="p">))</span>
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">items</span><span class="p">.</span><span class="n">title</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">items_title</span><span class="w"></span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="p">,</span><span class="w"> </span><span class="n">users</span><span class="w"></span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">users</span><span class="p">.</span><span class="n">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">?</span><span class="w"></span>
+</code></pre></div>
+
+<p>Looks like the above is missing a <code>.join</code> clause, and its absence can be disastrous. Turns out SQLAlchemy will happily let you <code>filter</code> by a clause for a column you've not joined on.</p>
+<p>What you need to do is explicitly <code>.join()</code> on the <code>user</code> table:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Item</span><span class="o">.</span><span class="n">title</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span><span class="o">==</span><span class="n">marge</span><span class="o">.</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="p">[]</span>
+</code></pre></div>
+
+<p>We can prove this is doing the right thing:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Item</span><span class="o">.</span><span class="n">title</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span><span class="o">==</span><span class="n">marge</span><span class="o">.</span><span class="n">email</span><span class="p">))</span>
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">items</span><span class="p">.</span><span class="n">title</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">items_title</span><span class="w"></span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">users</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">items</span><span class="p">.</span><span class="n">owner_id</span><span class="w"></span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">users</span><span class="p">.</span><span class="n">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">?</span><span class="w"></span>
+</code></pre></div>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
+                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

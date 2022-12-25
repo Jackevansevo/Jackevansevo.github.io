@@ -1,252 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+        <title>Jack's Blog - django tag</title>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="generator" content="Pelican" />
-        <title>Jack's Blog - django</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/main.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="/theme/favicon.ico">
 </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
+<body>
+        <header>
                 <h1><a href="/">Jack's Blog</a></h1>
-                <nav><ul>
-                    <li><a href="/category/linux.html">Linux</a></li>
-                    <li><a href="/category/neovim.html">Neovim</a></li>
-                    <li><a href="/category/personal.html">Personal</a></li>
-                    <li><a href="/category/programming.html">Programming</a></li>
-                    <li><a href="/category/python.html">Python</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
+        </header>
+        <nav><ul>
+        </ul></nav>
+        <main>
+<section id="content">
+<h1>Articles tagged with django</h1>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="/django-manage-multiple-processes-with-procfiles.html">Django - Manage Multiple Processes with Procfiles</a></h1>
-<footer class="post-info">
-        <abbr class="published" title="2022-09-25T00:00:00+01:00">
-                Published: Sun 25 September 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/python.html">Python</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/django.html">django</a> </p>
-</footer><!-- /.post-info --><h2>Backstory</h2>
-<p>I have a little feedreader Django application that I run on fly.io. This primarily consists* of:
-- a Django app (a couple gunicorn workers) that serves the main app
-- a celery worker (to asynchronously update the feeds)
-- a celerybeat process (to periodically triggers the scraping task)</p>
-<p>Previously I was spinning up one new VM instance per process, this caused x2 issues:</p>
-<ol>
-<li>I had a pretty complex docker-compose setup to emulate this locally.</li>
-<li>This resulted in some unnecessarily high billing for what is in reality a
-   tiny service.</li>
-</ol>
-<p><img alt="Mr Krabs money" src="https://static.fandomspot.com/images/11/10476/00-featured-mr-krabs-counting-money-screenshot.jpg"></p>
-<p>*Alongside this I also run:
-- a sqlite volume
-- a redis instance (my celery task broker)</p>
-<p>Recently I wanted to simplify things a little and scale back the number of VMs
-I was running, by configuring Django + celery to coexist on a single instance.</p>
-<h2>(Re)-Discovering Procfiles</h2>
-<p>Reading the fly.io documentation for <a href="https://fly.io/docs/app-guides/multiple-processes/">Running Multiple Processes Inside A
-Fly.io App</a> they
-recommended using a <a href="https://fly.io/docs/app-guides/multiple-processes/#use-a-procfile-manager">Procfile
-Manager</a>.
-One of the Procfile managers they recommend is
-<a href="https://github.com/DarthSim/overmind">overmind</a>, so I decided to give this a
-go.</p>
-<p>I first remember using Procfiles back when I started my developer journey
-deploying apps to Heroku 🪦</p>
-<p>Then for whatever reason, suddenly tooling like docker and minikube seemed to
-take over the world and suddenly the dev experience started to get pretty
-complicated.</p>
-<h2>Using Overmind</h2>
-<p>It was pretty refreshing to replace a bunch of separate containers and their
-respective Dockerfile scripts with the following:</p>
-<div class="highlight"><pre><span></span><code><span class="n">app</span><span class="o">:</span><span class="w"> </span><span class="n">gunicorn</span><span class="w"> </span><span class="o">--</span><span class="n">bind</span><span class="w"> </span><span class="mf">0.0</span><span class="o">.</span><span class="mf">0.0</span><span class="o">:</span><span class="mi">8080</span><span class="w"> </span><span class="n">feedreader</span><span class="o">.</span><span class="na">asgi</span><span class="o">:</span><span class="n">application</span><span class="w"> </span><span class="o">-</span><span class="n">k</span><span class="w"> </span><span class="n">uvicorn</span><span class="o">.</span><span class="na">workers</span><span class="o">.</span><span class="na">UvicornWorker</span><span class="w"></span>
-<span class="n">celery</span><span class="o">:</span><span class="w"> </span><span class="n">celery</span><span class="w"> </span><span class="o">-</span><span class="n">A</span><span class="w"> </span><span class="n">feedreader</span><span class="w"> </span><span class="n">worker</span><span class="w"> </span><span class="o">-</span><span class="n">l</span><span class="w"> </span><span class="n">info</span><span class="w"> </span><span class="o">-</span><span class="n">E</span><span class="w"></span>
-<span class="n">beat</span><span class="o">:</span><span class="w"> </span><span class="n">celery</span><span class="w"> </span><span class="o">-</span><span class="n">A</span><span class="w"> </span><span class="n">feedreader</span><span class="w"> </span><span class="n">beat</span><span class="w"> </span><span class="o">-</span><span class="n">l</span><span class="w"> </span><span class="n">info</span><span class="w"> </span><span class="o">-</span><span class="n">S</span><span class="w"> </span><span class="n">django</span><span class="w"></span>
-</code></pre></div>
-
-<p>As a bonus, overmind supports using <code>Procfile.dev</code> during local development
-This nicely replaces a lot of the docker-compose cruft I'd accumulated to run
-my app locally:</p>
-<div class="highlight"><pre><span></span><code>app: ./manage.py runserver
-beat: celery -A feedreader beat -S django -l INFO
-celery: watchfiles &#39;celery -A feedreader worker -l INFO -E&#39; --ignore-paths db.sqlite
-</code></pre></div>
-
-<h2>Developing</h2>
-<p>During local development I start my entire project with <code>overmind s -D</code>, which
-will run overmind in the background (as a demonized process).</p>
-<p>This starts all the processes I need at the same time with a single command.</p>
-<p>When it comes to debugging or viewing the logs I'll connect to overmind with:</p>
-<p><code>overmind c</code></p>
-<p>This will attach me to a tmux session for my project, with one pane per
-process.</p>
-<p>Here's an example below:</p>
-<video controls>
-  <source src="https://user-images.githubusercontent.com/4996338/192102128-c04169e9-48a9-4c30-985f-1346501be753.mov" type="video/webm" />
-</video>
-
-<h2>Advantages 📈</h2>
-<ul>
-<li>It's faster and more convenient than opening up x3 terminal tabs/splits/processes and starting each process manually by hand</li>
-<li>It integrates nicely with tmux, a technology I was already comfortable with, so supplements my existing workflow</li>
-<li>Is much simpler than using docker + docker-compose</li>
-</ul>
-<h2>Disadvantages 📉</h2>
-<p>Unlike docker this setup isn't 100% portable to another machine / development
-environment. Instead some initial setup is required.</p>
-<p>For example: Python dependencies have to be installed locally and redis has to
-be configured on the host.</p>
-<p>It's not quite as seamless as running <code>docker-compose up</code> and everything
-magically working first time. But given it's just me contributing + working on
-my little personal project, this feels like an acceptable trade-off</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/django-celery-guide-part-2.html" rel="bookmark"
-                           title="Permalink to Django Celery Guide (Part 2)">Django Celery Guide (Part 2)</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-09-24T00:00:00+01:00">
-                Published: Sat 24 September 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/python.html">Python</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/django.html">django</a> </p>
-</footer><!-- /.post-info -->                <p>Using Django ORM as a Results Backend</p>
-<p><img alt="django-celery-redis logo" src="/images/django-celery-redis-logo.png"></p>
-<p>In <a href="/posts/django-celery-guide-part-1">part 1</a> we got a celery worker up and
-running, using a redis instance as our celery broker and results backend.</p>
-<p>In this section we're going to explore using <code>django-celery-results</code> as a
-replacement results backend (instead of results being stored in Redis …</p>
-                <a class="readmore" href="/django-celery-guide-part-2.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/the-state-of-django-autoreloading.html" rel="bookmark"
-                           title="Permalink to The State of Django Autoreloading">The State of Django Autoreloading</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-09-19T00:00:00+01:00">
-                Published: Mon 19 September 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/python.html">Python</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/django.html">django</a> </p>
-</footer><!-- /.post-info -->                <p>Encountering a bug in <code>pywatchman</code> and exploring an alterate file reloading solution.</p>
-<p><strong>TLDR:</strong> On Python-3.10 watchman bindings are broken. My recommendation is to
-use: <a href="https://pypi.org/project/django-watchfiles/">django-watchfiles</a></p>
-<h2>What the Docs Say</h2>
-<p>I recently went down a bit of a rabbit hole debugging auto reloading in Django.</p>
-<p>The <a href="https://docs.djangoproject.com/en/4.1/ref/django-admin/#runserver">official documentation</a> for Django …</p>
-                <a class="readmore" href="/the-state-of-django-autoreloading.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/simple-django-celery-guide-part-1.html" rel="bookmark"
-                           title="Permalink to Simple Django Celery Guide (Part 1)">Simple Django Celery Guide (Part 1)</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-09-17T00:00:00+01:00">
-                Published: Sat 17 September 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/python.html">Python</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/django.html">django</a> </p>
-</footer><!-- /.post-info -->                <p>Getting started with Django Celery and Redis</p>
-<p><img alt="django-celery-redis logo" src="/images/django-celery-redis-logo.png"></p>
-<p>This is part 1 on how to get up and running with Django and celery. It's a fairly opinionated guide and represents what I consider to be the easiest approach.</p>
-<p>To keep things simple, to start with we'll be using <strong>redis</strong> as our …</p>
-                <a class="readmore" href="/simple-django-celery-guide-part-1.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/bootstrapping-django-allauth-with-migrations.html" rel="bookmark"
-                           title="Permalink to Bootstrapping django-allauth with migrations">Bootstrapping django-allauth with migrations</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-08-06T00:00:00+01:00">
-                Published: Sat 06 August 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/python.html">Python</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/django.html">django</a> </p>
-</footer><!-- /.post-info -->                <p>Recently I added
-<a href="https://django-allauth.readthedocs.io/en/latest/index.html">django-allauth</a> to
-my site, to enable logging in with third party auth providers (such as Google). </p>
-<h2>Allauth docuemntation</h2>
-<p>As per the <a href="https://django-allauth.readthedocs.io/en/latest/installation.html#post-installation">installation
-instructions</a>
-allauth recommends the following:</p>
-<ul>
-<li>Add a <code>Site</code> for your domain, matching <code>settings.SITE_ID</code> (<code>django.contrib.sites</code> app).</li>
-<li>For each OAuth based provider, either add …</li></ul>
-                <a class="readmore" href="/bootstrapping-django-allauth-with-migrations.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-                </section><!-- /#content -->
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
-
-                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
-                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
-
-        <footer id="contentinfo" class="body">
+<ol id="post-list">
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/django-manage-multiple-processes-with-procfiles.html" rel="bookmark" title="Permalink to Django - Manage Multiple Processes with Procfiles">Django - Manage Multiple Processes with Procfiles</a></h2> </header>
+        </article></li>
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/django-celery-guide-part-2.html" rel="bookmark" title="Permalink to Django Celery Guide (Part 2)">Django Celery Guide (Part 2)</a></h2> </header>
+        </article></li>
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/the-state-of-django-autoreloading.html" rel="bookmark" title="Permalink to The State of Django Autoreloading">The State of Django Autoreloading</a></h2> </header>
+        </article></li>
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/simple-django-celery-guide-part-1.html" rel="bookmark" title="Permalink to Simple Django Celery Guide (Part 1)">Simple Django Celery Guide (Part 1)</a></h2> </header>
+        </article></li>
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/bootstrapping-django-allauth-with-migrations.html" rel="bookmark" title="Permalink to Bootstrapping django-allauth with migrations">Bootstrapping django-allauth with migrations</a></h2> </header>
+        </article></li>
+</ol><!-- /#posts-list -->
+</section><!-- /#content -->
+        </main>
+        <footer>
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="https://www.python.org/">Python</a>.
                 </address><!-- /#about -->
-
-                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
+        </footer>
 </body>
 </html>

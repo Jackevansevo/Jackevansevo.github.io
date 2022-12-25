@@ -1,45 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+          <title>Jack's Blog - Bootstrapping django-allauth with migrations</title>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="generator" content="Pelican" />
-        <title>Bootstrapping django-allauth with migrations</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
-        <meta name="description" content="Recently I added django-allauth to my site, to enable logging in with third party auth providers (such as Google). Allauth docuemntation As per..." />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/main.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="/theme/favicon.ico">
+
+
+
+
+    <meta name="tags" content="python" />
+    <meta name="tags" content="django" />
+
 </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
+<body>
+        <header>
                 <h1><a href="/">Jack's Blog</a></h1>
-                <nav><ul>
-                    <li><a href="/category/linux.html">Linux</a></li>
-                    <li><a href="/category/neovim.html">Neovim</a></li>
-                    <li><a href="/category/personal.html">Personal</a></li>
-                    <li><a href="/category/programming.html">Programming</a></li>
-                    <li class="active"><a href="/category/python.html">Python</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
-<section id="content" class="body">
+        </header>
+        <nav><ul>
+        </ul></nav>
+        <main>
+  <header>
+    <h1 class="entry-title">
+      <a href="/bootstrapping-django-allauth-with-migrations.html" rel="bookmark"
+         title="Permalink to Bootstrapping django-allauth with migrations">Bootstrapping django-allauth with migrations</a></h1>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2022-08-06T00:00:00+01:00">
+      Sat 06 August 2022
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+    </address>
+    <div class="category">
+        Category: <a href="/category/python.html">Python</a>
+    </div>
+    <div class="tags">
+        Tags:
+            <a href="/tag/python.html">python</a>
+            <a href="/tag/django.html">django</a>
+    </div>
+  </footer><!-- /.post-info -->
   <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="/bootstrapping-django-allauth-with-migrations.html" rel="bookmark"
-           title="Permalink to Bootstrapping django-allauth with migrations">Bootstrapping django-allauth with migrations</a></h1>
-    </header>
-
-    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-08-06T00:00:00+01:00">
-                Published: Sat 06 August 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/python.html">Python</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/django.html">django</a> </p>
-</footer><!-- /.post-info -->      <p>Recently I added
+    <p>Recently I added
 <a href="https://django-allauth.readthedocs.io/en/latest/index.html">django-allauth</a> to
 my site, to enable logging in with third party auth providers (such as Google). </p>
 <h2>Allauth docuemntation</h2>
@@ -150,34 +157,13 @@ $ ./manage.py migrate
 
 <p>And Google login (via allauth) should work out of the box (example below)</p>
 <p>{{&lt; youtube N_wsfTYaRJI &gt;}}</p>
-    </div><!-- /.entry-content -->
-
   </article>
-</section>
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
-
-                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
-                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
-
-        <footer id="contentinfo" class="body">
+        </main>
+        <footer>
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="https://www.python.org/">Python</a>.
                 </address><!-- /#about -->
-
-                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
+        </footer>
 </body>
 </html>

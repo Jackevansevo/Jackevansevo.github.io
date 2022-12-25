@@ -1,45 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+          <title>Jack's Blog - Simple Django Celery Guide (Part 1)</title>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="generator" content="Pelican" />
-        <title>Simple Django Celery Guide (Part 1)</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
-        <meta name="description" content="Getting started with Django Celery and Redis This is part 1 on how to get up and running with Django and celery. It's a fairly opinionated guide..." />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/main.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="/theme/favicon.ico">
+
+
+
+
+    <meta name="tags" content="python" />
+    <meta name="tags" content="django" />
+
 </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
+<body>
+        <header>
                 <h1><a href="/">Jack's Blog</a></h1>
-                <nav><ul>
-                    <li><a href="/category/linux.html">Linux</a></li>
-                    <li><a href="/category/neovim.html">Neovim</a></li>
-                    <li><a href="/category/personal.html">Personal</a></li>
-                    <li><a href="/category/programming.html">Programming</a></li>
-                    <li class="active"><a href="/category/python.html">Python</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
-<section id="content" class="body">
+        </header>
+        <nav><ul>
+        </ul></nav>
+        <main>
+  <header>
+    <h1 class="entry-title">
+      <a href="/simple-django-celery-guide-part-1.html" rel="bookmark"
+         title="Permalink to Simple Django Celery Guide (Part 1)">Simple Django Celery Guide (Part 1)</a></h1>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2022-09-17T00:00:00+01:00">
+      Sat 17 September 2022
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+    </address>
+    <div class="category">
+        Category: <a href="/category/python.html">Python</a>
+    </div>
+    <div class="tags">
+        Tags:
+            <a href="/tag/python.html">python</a>
+            <a href="/tag/django.html">django</a>
+    </div>
+  </footer><!-- /.post-info -->
   <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="/simple-django-celery-guide-part-1.html" rel="bookmark"
-           title="Permalink to Simple Django Celery Guide (Part 1)">Simple Django Celery Guide (Part 1)</a></h1>
-    </header>
-
-    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-09-17T00:00:00+01:00">
-                Published: Sat 17 September 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/python.html">Python</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/django.html">django</a> </p>
-</footer><!-- /.post-info -->      <p>Getting started with Django Celery and Redis</p>
+    <p>Getting started with Django Celery and Redis</p>
 <p><img alt="django-celery-redis logo" src="/images/django-celery-redis-logo.png"></p>
 <p>This is part 1 on how to get up and running with Django and celery. It's a fairly opinionated guide and represents what I consider to be the easiest approach.</p>
 <p>To keep things simple, to start with we'll be using <strong>redis</strong> as our <strong>broker</strong> AND our <strong>results backend</strong>.</p>
@@ -177,9 +184,7 @@ celery will distribute tasks evenly amongst the worker pool.</p>
 <span class="o">[</span><span class="n">2022-09-17 15:10:35,249: INFO/MainProcess</span><span class="o">]</span><span class="w"> </span><span class="n">Connected</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nl">redis</span><span class="p">:</span><span class="o">//</span><span class="nl">localhost</span><span class="p">:</span><span class="mi">6379</span><span class="o">//</span><span class="w"></span>
 </code></pre></div>
 
-<p>{{&lt; alert &gt;}}
-<strong>Note:</strong> if you forget to configure the <code>CELERY_BROKER_URL</code> you'll likely be greeted by the following error:
-{{&lt; /alert &gt;}}</p>
+<p><strong>Note:</strong> if you forget to configure the <code>CELERY_BROKER_URL</code> you'll likely be greeted by the following error:</p>
 <div class="highlight"><pre><span></span><code><span class="p">[</span><span class="mi">2022-09-17</span><span class="w"> </span><span class="mi">14</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mi">55</span><span class="p">,</span><span class="mi">224</span><span class="o">:</span><span class="w"> </span><span class="n">WARNING</span><span class="o">/</span><span class="n">MainProcess</span><span class="p">]</span><span class="w"> </span><span class="n">No</span><span class="w"> </span><span class="n">hostname</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="n">supplied</span><span class="p">.</span><span class="w"> </span><span class="n">Reverting</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="err">&#39;</span><span class="n">localhost</span><span class="err">&#39;</span><span class="w"></span>
 
 <span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="n">celery</span><span class="p">@</span><span class="n">fedora</span><span class="w"> </span><span class="n">v5</span><span class="mf">.2.7</span><span class="w"> </span><span class="p">(</span><span class="n">dawn</span><span class="o">-</span><span class="n">chorus</span><span class="p">)</span><span class="w"></span>
@@ -259,10 +264,8 @@ isn't available. For this to work we'd have to configure a local instance of Rab
 backend</a>.
 Luckily, celery supports using redis as both a results backend and a broker, so
 we can re-use the redis instance we have already. </p>
-<p>{{&lt; alert &gt;}}
-<strong>Note:</strong> In part 2 I'll be demonstrating how to use django (and it's
-configured DB instance) as a results backend instead.
-{{&lt; /alert &gt;}}</p>
+<p><strong>Note:</strong> In part 2 I'll be demonstrating how to use django (and it's
+configured DB instance) as a results backend instead.</p>
 <p>In <code>blog/settings.py</code> define <code>CELERY_RESULT_BACKEND</code> (it should be the same value as <code>CELERY_BROKER_URL</code>)</p>
 <div class="highlight"><pre><span></span><code><span class="n">CELERY_BROKER_URL</span> <span class="o">=</span> <span class="s2">&quot;redis://localhost/0&quot;</span>
 <span class="n">CELERY_RESULT_BACKEND</span> <span class="o">=</span> <span class="s2">&quot;redis://localhost/0&quot;</span>
@@ -303,9 +306,7 @@ task should appear under <code>[tasks]</code>:</p>
 <span class="mi">25</span>
 </code></pre></div>
 
-<p>{{&lt; alert &gt;}}
-<strong>Note:</strong> If forget to configure a result backend you'll encounter an error like this:
-{{&lt; /alert &gt;}}</p>
+<p><strong>Note:</strong> If forget to configure a result backend you'll encounter an error like this:</p>
 <div class="highlight"><pre><span></span><code><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
   <span class="n">File</span> <span class="s2">&quot;&lt;console&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
   <span class="n">File</span> <span class="s2">&quot;/home/jackevans/.local/share/virtualenvs/blog-ZV8xlUiZ/lib/python3.10/site-packages/celery/result.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">224</span><span class="p">,</span> <span class="ow">in</span> <span class="n">get</span>
@@ -322,34 +323,13 @@ task should appear under <code>[tasks]</code>:</p>
 <p>This concludes part 1, in part 2 we've explore using the
 <code>django-celery-results</code> package to configure Djagno as a results backend and
 discuss cases where this might be necessary.</p>
-    </div><!-- /.entry-content -->
-
   </article>
-</section>
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
-
-                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
-                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
-
-        <footer id="contentinfo" class="body">
+        </main>
+        <footer>
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="https://www.python.org/">Python</a>.
                 </address><!-- /#about -->
-
-                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
+        </footer>
 </body>
 </html>

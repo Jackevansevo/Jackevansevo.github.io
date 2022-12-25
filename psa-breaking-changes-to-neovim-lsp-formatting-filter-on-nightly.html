@@ -1,45 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+          <title>Jack's Blog - PSA: Breaking changes to neovim LSP formatting filter on nightly</title>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="generator" content="Pelican" />
-        <title>PSA: Breaking changes to neovim LSP formatting filter on nightly</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
-        <meta name="description" content="In case anyone else runs into the same issue. I ran into an issue this morning installing the latest neovim nightly build: All my onsave..." />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/main.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="/theme/favicon.ico">
+
+
+
+
+    <meta name="tags" content="neovim" />
+
 </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
+<body>
+        <header>
                 <h1><a href="/">Jack's Blog</a></h1>
-                <nav><ul>
-                    <li><a href="/category/linux.html">Linux</a></li>
-                    <li class="active"><a href="/category/neovim.html">Neovim</a></li>
-                    <li><a href="/category/personal.html">Personal</a></li>
-                    <li><a href="/category/programming.html">Programming</a></li>
-                    <li><a href="/category/python.html">Python</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
-<section id="content" class="body">
+        </header>
+        <nav><ul>
+        </ul></nav>
+        <main>
+  <header>
+    <h1 class="entry-title">
+      <a href="/psa-breaking-changes-to-neovim-lsp-formatting-filter-on-nightly.html" rel="bookmark"
+         title="Permalink to PSA: Breaking changes to neovim LSP formatting filter on nightly">PSA: Breaking changes to neovim LSP formatting filter on nightly</a></h1>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2022-06-02T00:00:00+01:00">
+      Thu 02 June 2022
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+    </address>
+    <div class="category">
+        Category: <a href="/category/neovim.html">Neovim</a>
+    </div>
+    <div class="tags">
+        Tags:
+            <a href="/tag/neovim.html">neovim</a>
+    </div>
+  </footer><!-- /.post-info -->
   <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="/psa-breaking-changes-to-neovim-lsp-formatting-filter-on-nightly.html" rel="bookmark"
-           title="Permalink to PSA: Breaking changes to neovim LSP formatting filter on nightly">PSA: Breaking changes to neovim LSP formatting filter on nightly</a></h1>
-    </header>
-
-    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-06-02T00:00:00+01:00">
-                Published: Thu 02 June 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/neovim.html">Neovim</a>.</p>
-<p>tags: <a href="/tag/neovim.html">neovim</a> </p>
-</footer><!-- /.post-info -->      <p>In case anyone else runs into the same issue.</p>
+    <p>In case anyone else runs into the same issue.</p>
 <p>I ran into an issue this morning installing the latest neovim nightly build: All my onsave formatting appeared to be broken 💥</p>
 <div class="highlight"><pre><span></span><code>Error detected while processing BufWritePre Autocommands for &quot;&lt;buffer=1&gt;&quot;:
 Error executing lua callback: /home/jackevans/Dotfiles/nvim/init.lua:95: attempt to index local
@@ -111,34 +116,13 @@ stack traceback:
 - If you're using nightly builds: things are probably going to break (and that's okay)
 - Don't be scared to browse commits and investigate for yourself, this is the power of open source!
 - The Neovim documentation is great</p>
-    </div><!-- /.entry-content -->
-
   </article>
-</section>
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
-
-                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
-                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
-
-        <footer id="contentinfo" class="body">
+        </main>
+        <footer>
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="https://www.python.org/">Python</a>.
                 </address><!-- /#about -->
-
-                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
+        </footer>
 </body>
 </html>

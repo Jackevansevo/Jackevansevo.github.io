@@ -1,45 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+          <title>Jack's Blog - Django - Manage Multiple Processes with Procfiles</title>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="generator" content="Pelican" />
-        <title>Django - Manage Multiple Processes with Procfiles</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
-        <meta name="description" content="Backstory I have a little feedreader Django application that I run on fly.io. This primarily consists* of: - a Django app (a couple gunicorn..." />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/main.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="/theme/favicon.ico">
+
+
+
+
+    <meta name="tags" content="python" />
+    <meta name="tags" content="django" />
+
 </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
+<body>
+        <header>
                 <h1><a href="/">Jack's Blog</a></h1>
-                <nav><ul>
-                    <li><a href="/category/linux.html">Linux</a></li>
-                    <li><a href="/category/neovim.html">Neovim</a></li>
-                    <li><a href="/category/personal.html">Personal</a></li>
-                    <li><a href="/category/programming.html">Programming</a></li>
-                    <li class="active"><a href="/category/python.html">Python</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
-<section id="content" class="body">
+        </header>
+        <nav><ul>
+        </ul></nav>
+        <main>
+  <header>
+    <h1 class="entry-title">
+      <a href="/django-manage-multiple-processes-with-procfiles.html" rel="bookmark"
+         title="Permalink to Django - Manage Multiple Processes with Procfiles">Django - Manage Multiple Processes with Procfiles</a></h1>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2022-09-25T00:00:00+01:00">
+      Sun 25 September 2022
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+    </address>
+    <div class="category">
+        Category: <a href="/category/python.html">Python</a>
+    </div>
+    <div class="tags">
+        Tags:
+            <a href="/tag/python.html">python</a>
+            <a href="/tag/django.html">django</a>
+    </div>
+  </footer><!-- /.post-info -->
   <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="/django-manage-multiple-processes-with-procfiles.html" rel="bookmark"
-           title="Permalink to Django - Manage Multiple Processes with Procfiles">Django - Manage Multiple Processes with Procfiles</a></h1>
-    </header>
-
-    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-09-25T00:00:00+01:00">
-                Published: Sun 25 September 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/python.html">Python</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/django.html">django</a> </p>
-</footer><!-- /.post-info -->      <h2>Backstory</h2>
+    <h2>Backstory</h2>
 <p>I have a little feedreader Django application that I run on fly.io. This primarily consists* of:
 - a Django app (a couple gunicorn workers) that serves the main app
 - a celery worker (to asynchronously update the feeds)
@@ -112,34 +119,13 @@ be configured on the host.</p>
 <p>It's not quite as seamless as running <code>docker-compose up</code> and everything
 magically working first time. But given it's just me contributing + working on
 my little personal project, this feels like an acceptable trade-off</p>
-    </div><!-- /.entry-content -->
-
   </article>
-</section>
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
-
-                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
-                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
-
-        <footer id="contentinfo" class="body">
+        </main>
+        <footer>
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="https://www.python.org/">Python</a>.
                 </address><!-- /#about -->
-
-                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
+        </footer>
 </body>
 </html>

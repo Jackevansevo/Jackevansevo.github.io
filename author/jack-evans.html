@@ -1,338 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+        <title>Jack's Blog - Articles by Jack Evans</title>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="generator" content="Pelican" />
-        <title>Jack's Blog - Jack Evans</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/main.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="/theme/favicon.ico">
 </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
+<body>
+        <header>
                 <h1><a href="/">Jack's Blog</a></h1>
-                <nav><ul>
-                    <li><a href="/category/linux.html">Linux</a></li>
-                    <li><a href="/category/neovim.html">Neovim</a></li>
-                    <li><a href="/category/personal.html">Personal</a></li>
-                    <li><a href="/category/programming.html">Programming</a></li>
-                    <li><a href="/category/python.html">Python</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
+        </header>
+        <nav><ul>
+        </ul></nav>
+        <main>
+<section id="content">
+<h1>Articles by Jack Evans</h1>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="/2022-reading-list.html">📚 2022 Reading List</a></h1>
-<footer class="post-info">
-        <abbr class="published" title="2022-12-14T00:00:00+00:00">
-                Published: Wed 14 December 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/personal.html">Personal</a>.</p>
-<p>tags: <a href="/tag/books.html">books</a> </p>
-</footer><!-- /.post-info --><p>One of my goals this year was to read more and to make a regular habit of
-reading before bedtime. Particularly because I find reading before bed
-significantly improves my quality of sleep.</p>
-<p>I'm pleased as I managed to read a total of 15 books this year (an increase
-from just 9 last year).</p>
-<p>It's still not as many as I'd hoped to read, but there's always next year...</p>
-<p>I have a suspicion I actually read more than this, but I just failed to track
-certain books via good-reads. Next year I'll try to be more vigilant about
-tracking which books I'm currently reading/read.</p>
-<p>You can find a full breakdown
-<a href="https://www.goodreads.com/user/year_in_books/2022/41733297">here</a></p>
-<p>From this list the ones I most enjoyed are:
-- Project Hail Mary (by the author of the Martian)
-- Chaos Monkeys
-- Disrupted</p>
-<p><img alt="Reading List 20222" src="/images/www.goodreads.com_user_year_in_books_2022.png"></p>
-<p>There's already some books on my radar for next year. I'd like 2023 to be the
-year I finally conquer the Lord of the Ring trilogy. As a massive fan of the
-films I think I owe it to myself to actually read the source material.</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/per-project-neovim-config.html" rel="bookmark"
-                           title="Permalink to Per Project Neovim Config">Per Project Neovim Config</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-11-16T00:00:00+00:00">
-                Published: Wed 16 November 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/neovim.html">Neovim</a>.</p>
-<p>tags: <a href="/tag/neovim.html">neovim</a> </p>
-</footer><!-- /.post-info -->                <p>I recently added the following snippet to my <code>init.lua</code> neovim config:</p>
-<div class="highlight"><pre><span></span><code><span class="kr">if</span> <span class="n">vim</span><span class="p">.</span><span class="n">fn</span><span class="p">.</span><span class="n">filereadable</span><span class="p">(</span><span class="s1">&#39;project_config.lua&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="kr">then</span>
-  <span class="nb">require</span><span class="p">(</span><span class="s1">&#39;project_config&#39;</span><span class="p">)</span>
-<span class="kr">end</span>
-</code></pre></div>
-
-<p>Once I've got this file in place I can add per project keybindings. E.g.</p>
-<div class="highlight"><pre><span></span><code><span class="n">vim</span><span class="p">.</span><span class="n">api</span><span class="p">.</span><span class="n">nvim_set_keymap</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;leader&gt;tt&#39;</span><span class="p">,</span> <span class="s1">&#39;:vsplit | term cd %:p:h:h …</span></code></pre></div>
-                <a class="readmore" href="/per-project-neovim-config.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/deploy-miniflux-on-flyio.html" rel="bookmark"
-                           title="Permalink to Deploy Miniflux on Flyio">Deploy Miniflux on Flyio</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-10-22T00:00:00+01:00">
-                Published: Sat 22 October 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/programming.html">Programming</a>.</p>
-<p>tags: <a href="/tag/rss.html">rss</a> <a href="/tag/flyio.html">flyio</a> </p>
-</footer><!-- /.post-info -->                <p>In its own words:</p>
-<blockquote>
-<p>Miniflux is a minimalist and opinionated feed reader.</p>
-</blockquote>
-<p><img alt="miniflux screenshot" src="https://miniflux.app/images/overview.png"></p>
-<p>Here’s a quick rundown on how to self-host your own <a href="https://miniflux.app/">Miniflux</a> instance on <a href="fly.io">fly.io</a>.</p>
-<h2>Prerequisites</h2>
-<p>This tutorial assumes you already have a fly.io account and have <code>flyctl</code> installed.</p>
-<p>If not: head over to the <a href="https://fly.io/docs/hands-on/install-flyctl/">getting …</a></p>
-                <a class="readmore" href="/deploy-miniflux-on-flyio.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/observations-of-a-gringo-in-brazil.html" rel="bookmark"
-                           title="Permalink to Observations of a Gringo in Brazil 🇬🇧 ✈️ 🇧🇷">Observations of a Gringo in Brazil 🇬🇧 ✈️  🇧🇷</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-10-15T00:00:00+01:00">
-                Published: Sat 15 October 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/personal.html">Personal</a>.</p>
-
-</footer><!-- /.post-info -->                <p>Recently I made the ambitious decision to move from the UK to Brazil to live
-with my girlfriend. I just passed the one month milestone so wanted publish
-something to mark the occasion. </p>
-<p>It's my first time living abroad in a foreign country so thought it would be
-fun to …</p>
-                <a class="readmore" href="/observations-of-a-gringo-in-brazil.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/the-struggles-of-building-a-feed-reader.html" rel="bookmark"
-                           title="Permalink to The struggles of building a Feed Reader">The struggles of building a Feed Reader</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-10-05T00:00:00+01:00">
-                Published: Wed 05 October 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/python.html">Python</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/rss.html">rss</a> </p>
-</footer><!-- /.post-info -->                <p><img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/1200px-Feed-icon.svg.png" style="width:18%;"></p>
-<p>I recently I fell down the rabbit hole of building a
-<a href="https://github.com/Jackevansevo/feedreader">feedreader</a>. At the time I was
-unsatisfied with the free tier offering of tools like inoreader and feedly, so
-naturally I figured I'd try and build my own, after all, how hard could it be?</p>
-<p>{{&lt; alert &gt;}}
-<strong>Aside:</strong> This was …</p>
-                <a class="readmore" href="/the-struggles-of-building-a-feed-reader.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/django-manage-multiple-processes-with-procfiles.html" rel="bookmark"
-                           title="Permalink to Django - Manage Multiple Processes with Procfiles">Django - Manage Multiple Processes with Procfiles</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-09-25T00:00:00+01:00">
-                Published: Sun 25 September 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/python.html">Python</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/django.html">django</a> </p>
-</footer><!-- /.post-info -->                <h2>Backstory</h2>
-<p>I have a little feedreader Django application that I run on fly.io. This primarily consists* of:
-- a Django app (a couple gunicorn workers) that serves the main app
-- a celery worker (to asynchronously update the feeds)
-- a celerybeat process (to periodically triggers the scraping task)</p>
-<p>Previously I was …</p>
-                <a class="readmore" href="/django-manage-multiple-processes-with-procfiles.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/django-celery-guide-part-2.html" rel="bookmark"
-                           title="Permalink to Django Celery Guide (Part 2)">Django Celery Guide (Part 2)</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-09-24T00:00:00+01:00">
-                Published: Sat 24 September 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/python.html">Python</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/django.html">django</a> </p>
-</footer><!-- /.post-info -->                <p>Using Django ORM as a Results Backend</p>
-<p><img alt="django-celery-redis logo" src="/images/django-celery-redis-logo.png"></p>
-<p>In <a href="/posts/django-celery-guide-part-1">part 1</a> we got a celery worker up and
-running, using a redis instance as our celery broker and results backend.</p>
-<p>In this section we're going to explore using <code>django-celery-results</code> as a
-replacement results backend (instead of results being stored in Redis …</p>
-                <a class="readmore" href="/django-celery-guide-part-2.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/the-state-of-django-autoreloading.html" rel="bookmark"
-                           title="Permalink to The State of Django Autoreloading">The State of Django Autoreloading</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-09-19T00:00:00+01:00">
-                Published: Mon 19 September 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/python.html">Python</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/django.html">django</a> </p>
-</footer><!-- /.post-info -->                <p>Encountering a bug in <code>pywatchman</code> and exploring an alterate file reloading solution.</p>
-<p><strong>TLDR:</strong> On Python-3.10 watchman bindings are broken. My recommendation is to
-use: <a href="https://pypi.org/project/django-watchfiles/">django-watchfiles</a></p>
-<h2>What the Docs Say</h2>
-<p>I recently went down a bit of a rabbit hole debugging auto reloading in Django.</p>
-<p>The <a href="https://docs.djangoproject.com/en/4.1/ref/django-admin/#runserver">official documentation</a> for Django …</p>
-                <a class="readmore" href="/the-state-of-django-autoreloading.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/simple-django-celery-guide-part-1.html" rel="bookmark"
-                           title="Permalink to Simple Django Celery Guide (Part 1)">Simple Django Celery Guide (Part 1)</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-09-17T00:00:00+01:00">
-                Published: Sat 17 September 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/python.html">Python</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/django.html">django</a> </p>
-</footer><!-- /.post-info -->                <p>Getting started with Django Celery and Redis</p>
-<p><img alt="django-celery-redis logo" src="/images/django-celery-redis-logo.png"></p>
-<p>This is part 1 on how to get up and running with Django and celery. It's a fairly opinionated guide and represents what I consider to be the easiest approach.</p>
-<p>To keep things simple, to start with we'll be using <strong>redis</strong> as our …</p>
-                <a class="readmore" href="/simple-django-celery-guide-part-1.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/review-fedora-36-on-the-lenovo-thinkpad-x13-gen-1.html" rel="bookmark"
-                           title="Permalink to Review Fedora 36 on the Lenovo Thinkpad X13 (Gen 1) 🐧💻">Review Fedora 36 on the Lenovo Thinkpad X13 (Gen 1) 🐧💻</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-08-07T00:00:00+01:00">
-                Published: Sun 07 August 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/linux.html">Linux</a>.</p>
-<p>tags: <a href="/tag/linux.html">linux</a> <a href="/tag/fedora.html">fedora</a> </p>
-</footer><!-- /.post-info -->                <p><img alt="Thinkpad X13" src="/images/thinkpad-x13.jpg" title="Writing this post with a morning Coffee"></p>
-<p>I recently picked up a used Lenovo Thinkpad X13 from eBay with the intention of
-replacing my well loved Thinkpad X220 which is starting to show its age.</p>
-<p>After a brief stint attempting to exclusively use WSL, frustrations with high
-memory usage and intrusive Windows updates led me to try …</p>
-                <a class="readmore" href="/review-fedora-36-on-the-lenovo-thinkpad-x13-gen-1.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
+<ol id="post-list">
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/2022-reading-list.html" rel="bookmark" title="Permalink to 📚 2022 Reading List">📚 2022 Reading List</a></h2> </header>
+        </article></li>
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/per-project-neovim-config.html" rel="bookmark" title="Permalink to Per Project Neovim Config">Per Project Neovim Config</a></h2> </header>
+        </article></li>
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/deploy-miniflux-on-flyio.html" rel="bookmark" title="Permalink to Deploy Miniflux on Flyio">Deploy Miniflux on Flyio</a></h2> </header>
+        </article></li>
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/observations-of-a-gringo-in-brazil.html" rel="bookmark" title="Permalink to Observations of a Gringo in Brazil 🇬🇧 ✈️ 🇧🇷">Observations of a Gringo in Brazil 🇬🇧 ✈️  🇧🇷</a></h2> </header>
+        </article></li>
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/the-struggles-of-building-a-feed-reader.html" rel="bookmark" title="Permalink to The struggles of building a Feed Reader">The struggles of building a Feed Reader</a></h2> </header>
+        </article></li>
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/django-manage-multiple-processes-with-procfiles.html" rel="bookmark" title="Permalink to Django - Manage Multiple Processes with Procfiles">Django - Manage Multiple Processes with Procfiles</a></h2> </header>
+        </article></li>
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/django-celery-guide-part-2.html" rel="bookmark" title="Permalink to Django Celery Guide (Part 2)">Django Celery Guide (Part 2)</a></h2> </header>
+        </article></li>
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/the-state-of-django-autoreloading.html" rel="bookmark" title="Permalink to The State of Django Autoreloading">The State of Django Autoreloading</a></h2> </header>
+        </article></li>
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/simple-django-celery-guide-part-1.html" rel="bookmark" title="Permalink to Simple Django Celery Guide (Part 1)">Simple Django Celery Guide (Part 1)</a></h2> </header>
+        </article></li>
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/review-fedora-36-on-the-lenovo-thinkpad-x13-gen-1.html" rel="bookmark" title="Permalink to Review Fedora 36 on the Lenovo Thinkpad X13 (Gen 1) 🐧💻">Review Fedora 36 on the Lenovo Thinkpad X13 (Gen 1) 🐧💻</a></h2> </header>
+        </article></li>
+</ol><!-- /#posts-list -->
 <p class="paginator">
     Page 1 / 2
         <a href="/author/jack-evans2.html">&raquo;</a>
         <a href="/author/jack-evans2.html">&#8649;</a>
 </p>
-                </section><!-- /#content -->
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
-
-                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
-                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
-
-        <footer id="contentinfo" class="body">
+</section><!-- /#content -->
+        </main>
+        <footer>
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="https://www.python.org/">Python</a>.
                 </address><!-- /#about -->
-
-                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
+        </footer>
 </body>
 </html>

@@ -1,55 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+          <title>Jack's Blog - The struggles of building a Feed Reader</title>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="generator" content="Pelican" />
-        <title>The struggles of building a Feed Reader</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
-        <meta name="description" content="I recently I fell down the rabbit hole of building a feedreader. At the time I was unsatisfied with the free tier offering of tools like inoreader..." />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/main.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="/theme/favicon.ico">
+
+
+
+
+    <meta name="tags" content="python" />
+    <meta name="tags" content="rss" />
+
 </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
+<body>
+        <header>
                 <h1><a href="/">Jack's Blog</a></h1>
-                <nav><ul>
-                    <li><a href="/category/linux.html">Linux</a></li>
-                    <li><a href="/category/neovim.html">Neovim</a></li>
-                    <li><a href="/category/personal.html">Personal</a></li>
-                    <li><a href="/category/programming.html">Programming</a></li>
-                    <li class="active"><a href="/category/python.html">Python</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
-<section id="content" class="body">
+        </header>
+        <nav><ul>
+        </ul></nav>
+        <main>
+  <header>
+    <h1 class="entry-title">
+      <a href="/the-struggles-of-building-a-feed-reader.html" rel="bookmark"
+         title="Permalink to The struggles of building a Feed Reader">The struggles of building a Feed Reader</a></h1>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2022-10-05T00:00:00+01:00">
+      Wed 05 October 2022
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+    </address>
+    <div class="category">
+        Category: <a href="/category/python.html">Python</a>
+    </div>
+    <div class="tags">
+        Tags:
+            <a href="/tag/python.html">python</a>
+            <a href="/tag/rss.html">rss</a>
+    </div>
+  </footer><!-- /.post-info -->
   <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="/the-struggles-of-building-a-feed-reader.html" rel="bookmark"
-           title="Permalink to The struggles of building a Feed Reader">The struggles of building a Feed Reader</a></h1>
-    </header>
-
-    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-10-05T00:00:00+01:00">
-                Published: Wed 05 October 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/python.html">Python</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/rss.html">rss</a> </p>
-</footer><!-- /.post-info -->      <p><img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/1200px-Feed-icon.svg.png" style="width:18%;"></p>
+    <p><img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/1200px-Feed-icon.svg.png" style="width:18%;"></p>
 <p>I recently I fell down the rabbit hole of building a
 <a href="https://github.com/Jackevansevo/feedreader">feedreader</a>. At the time I was
 unsatisfied with the free tier offering of tools like inoreader and feedly, so
 naturally I figured I'd try and build my own, after all, how hard could it be?</p>
-<p>{{&lt; alert &gt;}}
-<strong>Aside:</strong> This was well before discovering <a href="https://miniflux.app/">miniflux</a>,
+<p><strong>Aside:</strong> This was well before discovering <a href="https://miniflux.app/">miniflux</a>,
 which is a fantastic piece of software. I've since decommissioned <a href="https://github.com/Jackevansevo/feedreader">my own
 attempt</a> and now happily self host
-my own miniflux instance instead.
-{{&lt; /alert &gt;}}</p>
+my own miniflux instance instead.</p>
 <hr>
 <p>Here's a non exhaustive list of issues I've encountered along the way.</p>
 <h2>1. Atom vs RSS</h2>
@@ -408,34 +413,13 @@ repeatedly.</p>
 <p>If the feed is being polled periodically, but doesn't change on regular basis
 this can be wasted computation + bandwidth. When you're polling many feeds in
 bulk this can start to add up.</p>
-    </div><!-- /.entry-content -->
-
   </article>
-</section>
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
-
-                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
-                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
-
-        <footer id="contentinfo" class="body">
+        </main>
+        <footer>
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="https://www.python.org/">Python</a>.
                 </address><!-- /#about -->
-
-                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
+        </footer>
 </body>
 </html>

@@ -1,45 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+          <title>Jack's Blog - Django Celery Guide (Part 2)</title>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="generator" content="Pelican" />
-        <title>Django Celery Guide (Part 2)</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
-        <meta name="description" content="Using Django ORM as a Results Backend In part 1 we got a celery worker up and running, using a redis instance as our celery broker and results..." />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/main.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="/theme/favicon.ico">
+
+
+
+
+    <meta name="tags" content="python" />
+    <meta name="tags" content="django" />
+
 </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
+<body>
+        <header>
                 <h1><a href="/">Jack's Blog</a></h1>
-                <nav><ul>
-                    <li><a href="/category/linux.html">Linux</a></li>
-                    <li><a href="/category/neovim.html">Neovim</a></li>
-                    <li><a href="/category/personal.html">Personal</a></li>
-                    <li><a href="/category/programming.html">Programming</a></li>
-                    <li class="active"><a href="/category/python.html">Python</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
-<section id="content" class="body">
+        </header>
+        <nav><ul>
+        </ul></nav>
+        <main>
+  <header>
+    <h1 class="entry-title">
+      <a href="/django-celery-guide-part-2.html" rel="bookmark"
+         title="Permalink to Django Celery Guide (Part 2)">Django Celery Guide (Part 2)</a></h1>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2022-09-24T00:00:00+01:00">
+      Sat 24 September 2022
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
+    </address>
+    <div class="category">
+        Category: <a href="/category/python.html">Python</a>
+    </div>
+    <div class="tags">
+        Tags:
+            <a href="/tag/python.html">python</a>
+            <a href="/tag/django.html">django</a>
+    </div>
+  </footer><!-- /.post-info -->
   <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="/django-celery-guide-part-2.html" rel="bookmark"
-           title="Permalink to Django Celery Guide (Part 2)">Django Celery Guide (Part 2)</a></h1>
-    </header>
-
-    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-09-24T00:00:00+01:00">
-                Published: Sat 24 September 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/python.html">Python</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/django.html">django</a> </p>
-</footer><!-- /.post-info -->      <p>Using Django ORM as a Results Backend</p>
+    <p>Using Django ORM as a Results Backend</p>
 <p><img alt="django-celery-redis logo" src="/images/django-celery-redis-logo.png"></p>
 <p>In <a href="/posts/django-celery-guide-part-1">part 1</a> we got a celery worker up and
 running, using a redis instance as our celery broker and results backend.</p>
@@ -104,10 +111,8 @@ in the official documentation.</p>
 result has been saved in the Django DB:</p>
 <p><img alt="django admin celery-result" src="/images/django-admin-celery-result.png"></p>
 <h2>Including Task Metadata</h2>
-<p>{{&lt; alert &gt;}}
-In the screenshot you'll notice our task row/item is missing data in the <strong>TASK
-NAME</strong> and <strong>WORKER</strong> columns.
-{{&lt; /alert &gt;}}</p>
+<p>In the screenshot you'll notice our task row/item is missing data in the <strong>TASK
+NAME</strong> and <strong>WORKER</strong> columns.</p>
 <p>To make sure this metadata is included you need to set the
 <code>CELERY_RESULT_EXTENDED</code> value to <code>True</code> in your application settings. Credit
 goes to <a href="https://github.com/celery/django-celery-results/issues/326#issuecomment-11815806">this comment</a></p>
@@ -148,34 +153,13 @@ data, it all lives in the same place.</p>
 <p>This concludes part 2, in part 3 we'll explore triggering periodic celery tasks
 and integrating this with django using the <code>django-celery-beat</code> package.
 and monitoring.</p>
-    </div><!-- /.entry-content -->
-
   </article>
-</section>
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
-
-                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
-                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
-
-        <footer id="contentinfo" class="body">
+        </main>
+        <footer>
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="https://www.python.org/">Python</a>.
                 </address><!-- /#about -->
-
-                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
+        </footer>
 </body>
 </html>

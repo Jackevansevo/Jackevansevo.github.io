@@ -1,181 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+        <title>Jack's Blog - sqlalchemy tag</title>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="generator" content="Pelican" />
-        <title>Jack's Blog - sqlalchemy</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/main.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="/theme/favicon.ico">
 </head>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
+<body>
+        <header>
                 <h1><a href="/">Jack's Blog</a></h1>
-                <nav><ul>
-                    <li><a href="/category/linux.html">Linux</a></li>
-                    <li><a href="/category/neovim.html">Neovim</a></li>
-                    <li><a href="/category/personal.html">Personal</a></li>
-                    <li><a href="/category/programming.html">Programming</a></li>
-                    <li><a href="/category/python.html">Python</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
+        </header>
+        <nav><ul>
+        </ul></nav>
+        <main>
+<section id="content">
+<h1>Articles tagged with sqlalchemy</h1>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="/an-sqlalchemy-footgun-revisited.html">An Sqlalchemy Footgun Revisited</a></h1>
-<footer class="post-info">
-        <abbr class="published" title="2022-07-19T00:00:00+01:00">
-                Published: Tue 19 July 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/python.html">Python</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/sqlalchemy.html">sqlalchemy</a> </p>
-</footer><!-- /.post-info --><p>In this <a href="/posts/an-sqlalchemy-footgun/">previous post</a> I wrote about shooting myself in the foot 🔫 with Cartesian products in SQLAlchemy.</p>
-<p>Lets visit the SQLAlchemy model example:</p>
-<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;users&quot;</span>
-
-    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">email</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">items</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Item&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;owner&quot;</span><span class="p">)</span>
-
-
-<span class="k">class</span> <span class="nc">Item</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;items&quot;</span>
-
-    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">owner_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s2">&quot;users.id&quot;</span><span class="p">))</span>
-
-    <span class="n">owner</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;items&quot;</span><span class="p">)</span>
-</code></pre></div>
-
-<h2>Database Setup</h2>
-<p>Recall: in the DB we had x2 <code>User</code>(s) (Homer &amp; Marge), and x2 <code>Item</code>(s) associated with Homer</p>
-<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;homer.simpson@gmail.com&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;marge.simpson@gmail.com&#39;</span><span class="p">)]</span>
-
-<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Item</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">Item</span><span class="o">.</span><span class="n">owner_id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="p">[(</span><span class="s1">&#39;Duff Beer&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Lard Lad Donut&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
-
-<span class="c1"># Items associated with homer</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">items</span>
-<span class="o">&gt;&gt;&gt;</span>
-<span class="p">[</span><span class="o">&lt;</span><span class="n">reddit</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Item</span> <span class="n">at</span> <span class="mh">0x7f338ea97730</span><span class="o">&gt;</span><span class="p">,</span>
- <span class="o">&lt;</span><span class="n">reddit</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Item</span> <span class="n">at</span> <span class="mh">0x7f338ea96e00</span><span class="o">&gt;</span><span class="p">]</span>
-
-<span class="c1"># Items associated with marge</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">items</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="p">[]</span>
-</code></pre></div>
-
-<h2>Old Behaviour</h2>
-<p>In the previous post we wanted to write a query to fetch all the <code>Item</code>(s) associated with <code>marge.simpson@gmail.com</code></p>
-<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Item</span><span class="o">.</span><span class="n">title</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span><span class="o">==</span><span class="n">marge</span><span class="o">.</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-<span class="p">[(</span><span class="s1">&#39;Duff Beer&#39;</span><span class="p">,),</span> <span class="p">(</span><span class="s1">&#39;Lard Lad Donut&#39;</span><span class="p">,)]</span>
-</code></pre></div>
-
-<p>In the background SQLAlchemy would silently perform a cartesian join, sometimes
-having unintentional results (in this case returning ALL <code>Item</code>(s)).</p>
-<h2>New Behaviour</h2>
-<p>If we're using SQLalchemy 2.0 and we attempt to execute this query without first joining on the <code>User</code> table we now get a warning:</p>
-<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Item</span><span class="o">.</span><span class="n">title</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">marge</span><span class="o">.</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="n">d6991ed67293</span><span class="o">&gt;</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span> <span class="n">SAWarning</span><span class="p">:</span> <span class="n">SELECT</span> <span class="n">statement</span> <span class="n">has</span> <span class="n">a</span> <span class="n">cartesian</span> <span class="n">product</span> <span class="n">between</span> <span class="n">FROM</span> <span class="n">element</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="s2">&quot;users&quot;</span> <span class="ow">and</span> <span class="n">FROM</span> <span class="n">element</span> <span class="s2">&quot;items&quot;</span><span class="o">.</span>  <span class="n">Apply</span> <span class="n">join</span> <span class="n">condition</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="n">between</span> <span class="n">each</span> <span class="n">element</span> <span class="n">to</span> <span class="n">resolve</span><span class="o">.</span>
-  <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Item</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">Item</span><span class="o">.</span><span class="n">owner_id</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">marge</span><span class="o">.</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-<span class="p">[(</span><span class="s1">&#39;Duff Beer&#39;</span><span class="p">,),</span> <span class="p">(</span><span class="s1">&#39;Lard Lad Donut&#39;</span><span class="p">,</span> <span class="p">)]</span>
-</code></pre></div>
-
-<div class="highlight"><pre><span></span><code><span class="n">SAWarning</span><span class="o">:</span><span class="w"> </span><span class="n">SELECT</span><span class="w"> </span><span class="n">statement</span><span class="w"> </span><span class="n">has</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">cartesian</span><span class="w"> </span><span class="n">product</span><span class="w"> </span><span class="n">between</span><span class="w"> </span><span class="n">FROM</span><span class="w"> </span><span class="n">element</span><span class="o">(</span><span class="n">s</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;users&quot;</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">FROM</span><span class="w"> </span><span class="n">element</span><span class="w"> </span><span class="s2">&quot;items&quot;</span><span class="o">.</span><span class="w">  </span><span class="n">Apply</span><span class="w"> </span><span class="n">join</span><span class="w"> </span><span class="n">condition</span><span class="o">(</span><span class="n">s</span><span class="o">)</span><span class="w"> </span><span class="n">between</span><span class="w"> </span><span class="k">each</span><span class="w"> </span><span class="n">element</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">resolve</span><span class="o">.</span><span class="w"></span>
-</code></pre></div>
-
-<p>Which I think this is really awesome 🥳</p>
-<hr>
-<p>Aside: Here's the equivalent query rewritten in the newer SQLALchemy 2.0 query style:</p>
-<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">marge</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-
-<span class="o">&gt;&gt;&gt;</span> <span class="n">stmt</span> <span class="o">=</span> <span class="n">select</span><span class="p">(</span><span class="n">Item</span><span class="o">.</span><span class="n">title</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">marge</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
-
-<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">5</span><span class="o">-</span><span class="mi">971</span><span class="n">dc4667e1f</span><span class="o">&gt;</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span> <span class="n">SAWarning</span><span class="p">:</span> <span class="n">SELECT</span> <span class="n">statement</span> <span class="n">has</span> <span class="n">a</span> <span class="n">cartesian</span> <span class="n">product</span> <span class="n">between</span> <span class="n">FROM</span> <span class="n">element</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="s2">&quot;users&quot;</span> <span class="ow">and</span> <span class="n">FROM</span> <span class="n">element</span> <span class="s2">&quot;items&quot;</span><span class="o">.</span>  <span class="n">Apply</span> <span class="n">join</span> <span class="n">condition</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="n">between</span> <span class="n">each</span> <span class="n">element</span> <span class="n">to</span> <span class="n">resolve</span><span class="o">.</span>
-  <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-<span class="p">[(</span><span class="s1">&#39;Duff Beer&#39;</span><span class="p">,),</span> <span class="p">(</span><span class="s1">&#39;Lard Lad Donut&#39;</span><span class="p">,)]</span>
-</code></pre></div>
-
-<p>As discussed in the previous post, what we really want is:</p>
-<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">stmt</span> <span class="o">=</span> <span class="n">select</span><span class="p">(</span><span class="n">Item</span><span class="o">.</span><span class="n">title</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="n">marge</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
-
-<span class="o">&gt;&gt;&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-<span class="p">[]</span>
-</code></pre></div>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/an-sqlalchemy-footgun.html" rel="bookmark"
-                           title="Permalink to An SQLAlchemy Footgun">An SQLAlchemy Footgun</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2022-06-04T00:00:00+01:00">
-                Published: Sat 04 June 2022
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-        </address>
-<p>In <a href="/category/python.html">Python</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/sqlalchemy.html">sqlalchemy</a> </p>
-</footer><!-- /.post-info -->                <p>Something I learnt the hard way recently. </p>
-<p>Let's say you have the following SQLAlchemy models, representing a straightforward many-to-one relationship:</p>
-<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;users&quot;</span>
-
-    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">email</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">items</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Item&quot;</span><span class="p">,</span> <span class="n">back_populates</span><span class="o">=</span><span class="s2">&quot;owner&quot;</span><span class="p">)</span>
-
-
-<span class="k">class</span> <span class="nc">Item</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;items&quot;</span>
-
-    <span class="nb">id …</span></code></pre></div>
-                <a class="readmore" href="/an-sqlalchemy-footgun.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-                </section><!-- /#content -->
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>links</h2>
-                        <ul>
-                            <li><a href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub">Resume</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
-
-                            <li><a href="https://twitter.com/ThisIsJackEvans">Twitter</a></li>
-                            <li><a href="https://github.com/Jackevansevo">Github</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
-
-        <footer id="contentinfo" class="body">
+<ol id="post-list">
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/an-sqlalchemy-footgun-revisited.html" rel="bookmark" title="Permalink to An Sqlalchemy Footgun Revisited">An Sqlalchemy Footgun Revisited</a></h2> </header>
+        </article></li>
+        <li><article class="hentry">
+                <header> <h2 class="entry-title"><a href="/an-sqlalchemy-footgun.html" rel="bookmark" title="Permalink to An SQLAlchemy Footgun">An SQLAlchemy Footgun</a></h2> </header>
+        </article></li>
+</ol><!-- /#posts-list -->
+</section><!-- /#content -->
+        </main>
+        <footer>
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="https://www.python.org/">Python</a>.
                 </address><!-- /#about -->
-
-                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
-
+        </footer>
 </body>
 </html>

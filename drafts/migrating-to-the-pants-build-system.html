@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="en" bs-theme="auto">
+  <head>
+        <title>Jack's Blog - Migrating to the Pants Build System</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" type="text/css" href="https://jackevansevo.github.io/theme/css/pygments.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <link rel="shortcut icon" type="image/x-icon" href="https://jackevansevo.github.io/theme/favicon.ico">
+      <script src="https://cdn.counter.dev/script.js" data-id="91e2f16c-845b-4d6d-95f5-ec7838cee876" data-utcoffset="-3"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+<style>
+main {
+	font-family: "Signika Negative" !important;
+	font-weight: 300;
+}
+</style>
+
+        <link href="https://jackevansevo.github.io/index.xml" type="application/atom+xml" rel="alternate" title="Jack's Blog Full Atom Feed" />
+  <style>
+    .content {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+    }
+  </style>
+
+
+  <style>
+    article > h2, h3, h4, h5 {
+      padding: 1rem 0;
+    }
+    article > div.highlight > pre {
+      border: solid 0.1rem; rgb(33, 37, 41);
+      background-color: #fdf6e3;
+      padding: 0.5rem;
+      border-radius: 0.4rem;
+    }
+  </style>
+
+
+
+    <meta name="tags" content="Python" />
+
+    <script>
+/*!
+ * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+ * Copyright 2011-2023 The Bootstrap Authors
+ * Licensed under the Creative Commons Attribution 3.0 Unported License.
+ */
+
+      (() => {
+        'use strict'
+
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme) {
+            return storedTheme
+          }
+
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+          if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark')
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+          }
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme')
+
+          if (!themeSwitcher) {
+            return
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text')
+          const activeThemeIcon = document.querySelector('.theme-icon-active use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+          const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href')
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+            element.setAttribute('aria-pressed', 'false')
+          })
+
+          btnToActive.classList.add('active')
+          btnToActive.setAttribute('aria-pressed', 'true')
+          activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+          const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
+          themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+
+          if (focus) {
+            themeSwitcher.focus()
+          }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme !== 'light' && storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme())
+
+          document.querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+              toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+              })
+            })
+        })
+      })()
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://jackevansevo.github.io/">Jack's Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/"><i class="bi bi-house-fill"></i>&nbsp;&nbsp;Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://jackevansevo.github.io/index.xml"><i class="bi bi-rss-fill"></i>&nbsp;&nbsp;Feed</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://twitter.com/Thisisjackevans"><i class="bi bi-twitter"></i>&nbsp;&nbsp;Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://fosstodon.org/@JackEvans"><i class="bi bi-mastodon"></i>&nbsp;&nbsp;Mastodon</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://www.youtube.com/channel/UC4yxFC8_z8-DeYLeHXKtdHg"><i class="bi bi-youtube"></i>&nbsp;&nbsp;Youtube</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub"><i class="bi bi-pen-fill"></i>&nbsp;&nbsp;Resume</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container p-lg-5 p-3">
+<div class="content">
+  <h1>
+    <a href="https://jackevansevo.github.io/drafts/migrating-to-the-pants-build-system.html" rel="bookmark" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover" title="Permalink to Migrating to the Pants Build System">Migrating to the Pants Build System</a>
+  </h1>
+  <header>
+    
+  </header>
+  <footer>
+    <time datetime="2023-01-18T00:00:00+00:00">
+	    <i class="bi bi-clock"></i><b>Published:</b> Wed 18 January 2023
+    </time>
+<div>
+<i class="bi bi-tags"></i>&nbsp;<b>Tags</b>:
+  <a href="https://jackevansevo.github.io/tag/python.html"><span class="badge text-bg-warning">Python</span></a>
+</div>
+  </footer><!-- /.post-info -->
+  <hr>
+  <article>
+    <h1>Current Approach</h1>
+<p>At my workplace we maintain multiple different services. Often we'll want to
+share common code between services, to facilitate this we keep various
+libraries inside a top level <code>lib/</code> directory. This approach allows us to
+easily share code between projects.</p>
+<p>To manage dependencies each individual library/service maintains its own
+<code>pyproject.toml</code> file declaring any dependencies required. These dependencies
+are installed per project using <a href="https://python-poetry.org/">Poetry</a>.</p>
+<p>When a service requires code from a library, we include the path to that
+library in that services <code>pyproject.toml</code> file, here's a contrived example for
+<code>services/example/pyptoject.toml</code></p>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.poetry]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;example&quot;</span>
+
+<span class="k">[tool.poetry.dependencies]</span>
+<span class="n">python</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;^3.8&quot;</span>
+<span class="s">&quot;company.azure&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;../../lib/azure&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">develop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">true</span><span class="p">}</span>
+</code></pre></div>
+
+<p>The corresponding <code>lib/azure/pyproject.toml</code> contains the following:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.poetry]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;company.azure&quot;</span>
+<span class="n">packages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">include</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;company&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="p">]</span>
+
+<span class="k">[tool.poetry.dependencies]</span>
+<span class="n">python</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;^3.11&quot;</span>
+<span class="n">azure-identity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;*&quot;</span>
+<span class="s">&quot;company.coms&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;../../lib/coms&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">develop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">true</span><span class="p">}</span>
+</code></pre></div>
+
+<p>Note: we can chain together dependencies, so <code>service/example</code> depends on
+<code>lib/azure</code> which in term depends on <code>lib/coms</code>.</p>
+<p>Altogether the (simplified) directory structure shown from the repository root
+might look something like:</p>
+<div class="highlight"><pre><span></span><code>.
+├── lib
+│  ├── azure
+│  │  ├── company
+│  │  │  └── azure
+│  │  │     └── __init__.py
+│  │  ├── poetry.lock
+│  │  └── pyproject.toml
+│  └── coms
+│     ├── company
+│     │  └── coms
+│     │     └── __init__.py
+│     ├── poetry.lock
+│     └── pyproject.toml
+└── services
+   └── example
+      ├── main.py
+      ├── poetry.lock
+      └── pyproject.toml
+</code></pre></div>
+
+<p>We can see <code>services/example</code> has access to the <code>lib/azure</code> and any of its sub
+dependencies by running the following:</p>
+<div class="highlight"><pre><span></span><code>➜<span class="w">  </span>example<span class="w"> </span>git:<span class="o">(</span>main<span class="o">)</span><span class="w"> </span>poetry<span class="w"> </span>show<span class="w"> </span>company-azure
+<span class="w"> </span>name<span class="w">         </span>:<span class="w"> </span>company-azure
+<span class="w"> </span>version<span class="w">      </span>:<span class="w"> </span><span class="m">0</span>.1.0
+<span class="w"> </span>description<span class="w">  </span>:
+
+dependencies
+<span class="w"> </span>-<span class="w"> </span>azure-identity<span class="w"> </span>*
+<span class="w"> </span>-<span class="w"> </span>company.coms<span class="w"> </span>*
+</code></pre></div>
+
+<p>We can use built in Poetry tools to determine why certain dependencies are included:</p>
+<div class="highlight"><pre><span></span><code>➜  example git:(main) poetry show --why --tree company-coms
+company-azure 0.1.0
+└── company-coms <span class="gs">*</span>
+<span class="gs">    └── requests *</span>
+        ├── certifi &gt;=2017.4.17
+        ├── charset-normalizer &gt;=2,&lt;4
+        ├── idna &gt;=2.5,&lt;4
+        └── urllib3 &gt;=1.21.1,&lt;1.27
+</code></pre></div>
+
+<p>We can verify everything is working by importing from these packages, as well
+as importing any sub-dependencies of each package (known as transitive
+dependencies):</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">company.azure</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">company</span><span class="o">.</span><span class="n">azure</span><span class="o">.</span><span class="n">__version__</span>
+<span class="s1">&#39;0.1.0&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">azure</span> <span class="kn">import</span> <span class="n">identity</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">identity</span><span class="o">.</span><span class="n">__version__</span>
+<span class="s1">&#39;1.12.0&#39;</span>
+</code></pre></div>
+
+<p>Inspecting <code>sys.path</code> shows what's going on:</p>
+<div class="highlight"><pre><span></span><code>➜<span class="w">  </span>example<span class="w"> </span>git:<span class="o">(</span>main<span class="o">)</span><span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-i<span class="w"> </span>main.py
+hello<span class="w"> </span>world
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">sys</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">pprint</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+<span class="p">[</span><span class="s1">&#39;/home/jackevans/code/example/services/example&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;/home/jackevans/.pyenv/versions/3.11.1/lib/python311.zip&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;/home/jackevans/.pyenv/versions/3.11.1/lib/python3.11&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;/home/jackevans/.pyenv/versions/3.11.1/lib/python3.11/lib-dynload&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;/home/jackevans/.cache/pypoetry/virtualenvs/example-fpnVLQHn-py3.11/lib/python3.11/site-packages&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;/home/jackevans/code/example/lib/azure&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;/home/jackevans/code/example/lib/coms&#39;</span><span class="p">]</span>
+</code></pre></div>
+
+<p>In summary, using the <code>"company.azure" {path = "../../lib/azure"}</code> directive
+allows us to import code from <code>lib/azure</code> in <code>services/example</code> as if that
+package lived inside our service.</p>
+<h1>Downsides Of This Approach</h1>
+<p>This approach serves us well, but has a few trade-offs.</p>
+<h2>No Automation</h2>
+<p>Unfortunately the process of including library code isn't automatic, you can't
+reference local library code without first specifying it in the services
+<code>pyproject.toml</code> file. Likewise, if we no longer use a library and forget to
+remove this declaration, its code (and dependencies) will still be include.</p>
+<p>Because there's no concept of tree shaking (i.e. detecting and removing unused
+packages), we have to carefully manage our dependencies to prevent unwanted
+packages ending up in our deployment artifacts. To work around this we specify
+<a href="https://python-poetry.org/docs/pyproject/#extras">optional</a> dependencies. This
+is useful in scenarios where a library only requires a package under certain
+conditions.</p>
+<h2>Isolated Islands</h2>
+<p>In a sense each library or project is it's own isolated island. Although
+libraries might know about each other, there's no repo wide picture of the
+world.</p>
+<p>Consequently performing common operations like, running tests, upgrading a
+dependency or running a linter have to be ran on a service by service basis. To
+combat this, we maintain some custom tooling that enables these operations to be
+carried out repo-wide.</p>
+<p>Due to our repository structure, Poetry workflow and associated import syntax
+it's impossible to run commands at the project root, i.e. <code>python</code> or <code>pytest</code>.
+Instead commands have to run from each individual Poetry project. Consequently
+we have to maintain custom tooling to bulk test/build and deploy our services.</p>
+<p><img alt="Each package is its own island" src="https://media.istockphoto.com/id/1050232806/vector/vector-illustration-set-of-different-scenes-of-tropical-islands-with-palm-trees-and.jpg?s=612x612&amp;w=0&amp;k=20&amp;c=tKGaV_tnyw2d1jBMsjvCNhyR2tidOd3Qif0nhldjl3U="></p>
+<h2>Editor Tooling</h2>
+<p>Because each service/library</p>
+<blockquote>
+<p>TODO Finish this section</p>
+</blockquote>
+<p>These aforementioned mismatches also degrade the editor tooling experience as
+it's difficult for intellisense/LSP/other tools to know which version to use
+when a developer is jumping between projects within the repo.</p>
+<h2>Explicit Build Step</h2>
+<p>In the earlier example demonstrating reference relative paths, Poetry handles
+everything fine during development, but in order to deploy services we require a
+separate build step to copy directories that mirrors this behaviour. Once the
+build step is complete, our directory structure looks as follows:</p>
+<div class="highlight"><pre><span></span><code>services/example
+├── company
+│  ├── azure
+│  │  └── __init__.py
+│  └── coms
+│     └── __init__.py
+├── main.py
+├── poetry.lock
+└── pyproject.toml
+</code></pre></div>
+
+<p>We have some additional tooling to build and test each service/library. This
+starts by traversing the entire repository and running <code>poetry install</code>.
+Unfortunately can be quite slow as dependencies potentially have to be
+resolved/installed multiple times.</p>
+<h2>'Version Drift'</h2>
+<p>Because each service/library has it's own <code>pyproject.toml</code> and <code>poetry.lock</code> it
+can sometimes be difficult to keep dependencies consistent across the
+repository.</p>
+<p>Various services/libraries had been created at different times, E.g. some
+services might specify <code>Blah = "^2.0.0"</code> in their <code>pyproject.toml</code>. However the
+lockfile for ServiceA might contain <code>Blah==2.0.0</code> whereas another lockfile for
+ServiceB created at a later date might contain a newer version <code>Blah==2.2.3</code>.</p>
+<p>If lockfiles aren't regularly updated in a uniform fashion this can lead to
+dependencies getting out of sync across the repo. With different services having
+conflicting ideas of what locked version to use for the same dependency.</p>
+<p>In a worst scenario this "version drift" can make it tricky to determine which
+services are affected by certain bugs.</p>
+<hr>
+<h1>Evaluating Pants</h1>
+<p>We wanted to explore and see if there was any better tooling out there to
+manage this kind of workflow. I'm an avid listener of the <a href="https://talkpython.fm/">Talk Python To Me
+Podcast</a> where they recently aired an
+<a href="https://talkpython.fm/episodes/show/387/build-all-the-things-with-pants-build-system">episode</a>
+about <a href="https://www.pantsbuild.org/">Pants</a>.</p>
+<p>The conversation on the podcast immediately struck a chord, many of the
+features pants offered were things we'd struggled with.</p>
+<p>According to the <a href="https://www.pantsbuild.org/docs">Pants documentation</a></p>
+<blockquote>
+<p>Pants installs, orchestrates and runs dozens of standard underlying tools -
+compilers, code generators, dependency resolvers, test runners, linters,
+formatters, packagers, REPLs and more - composing them into a single stable,
+hermetic toolchain, and speeding up your workflows via caching and
+concurrency.</p>
+</blockquote>
+<p>Having a single tool that could format, lint and run tests across the entire
+repository alone would already be an improvement over the custom tooling that
+we maintian.</p>
+<p>So after some initial reading and research I quickly decided to try a proof of
+concept adopting pants in our repo.</p>
+<p>Aside: The name 'pants' makes us chuckle at my workplace, in British English
+'pants' means 🩲 (underwear) not the American English equivalent of 👖.</p>
+<h2>Step 1 - Pre-Requisite (Resolve Version Madness)</h2>
+<p>From my research into pants, a common community recommendation is to strive
+towards a <a href="https://www.pantsbuild.org/docs/python-third-party-dependencies#multiple-lockfiles">single lockfile
+</a>.
+The only exception to this rule being where a service explicitly requires a
+different version of a dependency. In this specific service can have it's own
+separate lockfile.</p>
+<p>To make adopting pants easier, I figured it would be a good first step to make
+sure our dependencies in both <code>pyproject.toml</code> and <code>poetry.lock</code> were consistent
+across the repo.</p>
+<p><img alt="All Services Agreeing What Dependency Version To Use" src="https://cdn11.bigcommerce.com/s-jyvxk5hzsq/images/stencil/1280x1280/products/5040/43025/5327L__83797.1539347627.jpg?c=2"></p>
+<p>In order to create a single unified lockfile it was a useful starting point to
+eliminate any differences and try to enforce (as close to) identical versions
+across the board.</p>
+<p>Taking our earlier example, (i.e. ServiceA includes Blah==2.0.0 in its lockfile,
+and ServiceB includes Blah==2.2.3). If the author of our third party library
+above is a good citizen, then we should (in theory) be able to use later version
+of our dependency (2.2.3) for both serviceA and serviceB.</p>
+<p>However there's no guarantee things will just work⟨™⟩ if we choose to upgrade.
+So it was vital that were upgraded these dependency incrementally, uniformly
+upgrading individual dependencies across the repo to be consistent and testing
+as we went along to ensure nothing was broken.</p>
+<p>In more extreme cases, services might not even agree what major version of a
+dependency to use i.e. <code>Blah = "^2.0.0"</code> vs <code>Blah = "^1.0.0"</code>, in which case
+more leg work might be required to upgrade to the latest major version, as
+breaking changes are likely to be involved.</p>
+<p>To achieve this we wrote some tooling to identity where we had miss-matched
+dependency versions across the repo. This tool simply traversed each
+service/library, looked in each <code>pyproject.toml</code> file, recorded what it found
+for each then dumped the output of each dependency across all projects.</p>
+<p>A simplified version of this tool is shown below:</p>
+<div class="highlight"><pre><span></span><code><span class="n">all_deps</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">poetry_files</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">toml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">parsed_deps</span> <span class="o">=</span> <span class="n">parsed</span><span class="p">[</span><span class="s1">&#39;tool&#39;</span><span class="p">][</span><span class="s1">&#39;poetry&#39;</span><span class="p">][</span><span class="s1">&#39;dependencies&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">dep</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">parsed_deps</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">dep</span> <span class="o">==</span> <span class="s1">&#39;python&#39;</span> <span class="ow">or</span> <span class="n">dep</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;company.&#39;</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">all_deps</span><span class="p">[</span><span class="n">dep</span><span class="p">][</span><span class="n">info</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">dep</span><span class="p">,</span> <span class="n">versions</span> <span class="ow">in</span> <span class="n">all_deps</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">versions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Found multiple versions of </span><span class="si">{</span><span class="n">dep</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">version</span><span class="p">,</span> <span class="n">usages</span> <span class="ow">in</span> <span class="n">versions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">usage</span> <span class="ow">in</span> <span class="n">usages</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="n">usage</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The same tool could be used to check both <code>pyproject.toml</code> files and
+<code>poetry.lock</code> files. Once we'd identified where we had version mismatches, we
+could go in and update the <code>pyproject.toml</code> files, and update lockfiles where
+appropriate until versions were consistent across all projects.</p>
+<h2>Step 2 - One Lockfile to Rule Them All</h2>
+<p>Pants is actually able to consume any <code>poetry.lock</code> files created by Poetry, but
+I decided I would abandon these in favour of using the lockfiles generated by
+pants instead. The pre-requisite work to update/align all the <code>poetry.lock</code>
+files would still be useful if my POC wasn't adopted.</p>
+<p>Now, with dependency versions consistent across the repo, if multiple services
+each depend on the same dependency, and all declare an identical version of it
+in their <code>poetry.lock</code>. We could extract this dependency to a global
+<code>pyproject.toml</code> and have each service refer to this global version instead, and
+then remove the original duplicates.</p>
+<p><img alt="One Lockfile to Rule Them All" src="https://glampinghub.com/blog/wp-content/uploads/2021/02/The-One-Ring-to-Rule-Them-All.jpg"></p>
+<p>Once we've recorded all the 'global' dependencies (dependencies used more than
+once) into a shared location, we can again traverse all the <code>pyproject.toml</code> and
+remove any dependencies already referenced in our globally scoped lockfile,
+alongside removing any <code>pyproject.toml</code> files that don't have any unique
+dependencies left to declare.</p>
+<p>In theory once we're done, we should be able to run <code>./pants generate-lockfiles</code>
+to create one single lockfile, and then run <code>./pants export ::</code> to create a
+single virtual-environment containing all the third party dependencies across
+the entire project.</p>
+<div class="highlight"><pre><span></span><code><span class="n">dependency_occurrences</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+<span class="n">project_info</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># &#39;Collection&#39; stage</span>
+<span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">pyproject_files</span><span class="p">:</span>
+    <span class="c1"># Ignore root pyproject.toml</span>
+    <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;pyproject.toml&quot;</span><span class="p">:</span>
+        <span class="k">continue</span>
+
+    <span class="k">with</span> <span class="n">Path</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="k">as</span> <span class="n">pyproject</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">toml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">pyproject</span><span class="p">)</span>
+
+        <span class="n">project_deps</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">dep</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tool&quot;</span><span class="p">][</span><span class="s2">&quot;poetry&quot;</span><span class="p">][</span><span class="s2">&quot;dependencies&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">dep</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;company.&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">project_deps</span><span class="p">[</span><span class="n">dep</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span>
+            <span class="n">dependency_occurrences</span><span class="p">[</span><span class="n">dep</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">version</span><span class="p">)</span>
+
+        <span class="n">poetry_section</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tool&quot;</span><span class="p">][</span><span class="s2">&quot;poetry&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Only keep a subset of the original pyproject.toml</span>
+        <span class="n">project_info</span><span class="p">[</span><span class="n">pyproject</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;tool&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;poetry&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;dependencies&quot;</span><span class="p">:</span> <span class="n">project_deps</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+<span class="c1"># &#39;Resolver&#39; stage</span>
+<span class="k">for</span> <span class="n">pyproject</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">project_info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">deps</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tool&quot;</span><span class="p">][</span><span class="s2">&quot;poetry&quot;</span><span class="p">][</span><span class="s2">&quot;dependencies&quot;</span><span class="p">]</span>
+    <span class="n">unique_deps</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">dep</span><span class="p">,</span> <span class="n">version</span> <span class="ow">in</span> <span class="n">deps</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dependency_occurrences</span><span class="p">[</span><span class="n">dep</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">unique_deps</span><span class="p">[</span><span class="n">dep</span><span class="p">]</span> <span class="o">=</span> <span class="n">version</span>
+
+    <span class="k">if</span> <span class="n">unique_deps</span> <span class="o">==</span> <span class="p">{}:</span>
+        <span class="c1"># If a project has no unique dependencies</span>
+        <span class="c1"># delete the pyproject.toml file</span>
+        <span class="n">pyproject</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tool&quot;</span><span class="p">][</span><span class="s2">&quot;poetry&quot;</span><span class="p">][</span><span class="s2">&quot;dependencies&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique_deps</span>
+        <span class="n">pyproject</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">toml</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+</code></pre></div>
+
+<h2>Step 3 - Code Transformation</h2>
+<p>With dependencies organised, the next step to adopt pants was to make all
+library imports absolute instead of relative.</p>
+<p>Recall, with Poetry: using the <code>"company.azure" {path = "../../lib/azure"}</code>
+directive allowed us to import code from <code>lib/azure</code> in <code>services/example</code> using
+the <code>company.azure</code> namespace.</p>
+<p>With Pants, the toolchain expects commands to be executed from the project root,
+and import paths to be absolute. This meant we'd have to type <code>from
+lib.azure.company.azure</code>. Furthermore the disjointed structure separates the
+<code>pyproject.toml</code> file from the actual library contents.</p>
+<p>Because this nested directory hierarchy was no longer necessary I decided to
+flatten the repository, moving any nested library code closer to the project
+root.</p>
+<p>Recall this is what our directory structure looked like before:</p>
+<div class="highlight"><pre><span></span><code>.
+├── lib
+│  ├── azure
+│  │  ├── company
+│  │  │  └── azure
+│  │  │     └── __init__.py
+│  │  ├── poetry.lock
+│  │  └── pyproject.toml
+│  └── coms
+│     ├── company
+│     │  └── coms
+│     │     └── __init__.py
+│     ├── poetry.lock
+│     └── pyproject.toml
+└── services
+   └── example
+      ├── main.py
+      ├── poetry.lock
+      └── pyproject.toml
+</code></pre></div>
+
+<p>I wrote another script (again the real thing was more comprehensive) that
+essentially performed the following code transformation across the repository.</p>
+<div class="highlight"><pre><span></span><code>➜<span class="w">  </span>example<span class="w"> </span>git:<span class="o">(</span>main<span class="o">)</span><span class="w"> </span>mv<span class="w"> </span>lib/coms/company/coms/*<span class="w"> </span>lib/coms
+➜<span class="w">  </span>example<span class="w"> </span>git:<span class="o">(</span>main<span class="o">)</span><span class="w"> </span>rm<span class="w"> </span>-r<span class="w"> </span>lib/coms/company
+➜<span class="w">  </span>example<span class="w"> </span>git:<span class="o">(</span>main<span class="o">)</span><span class="w"> </span>mv<span class="w"> </span>lib/azure/company/azure/*<span class="w"> </span>lib/azure
+➜<span class="w">  </span>example<span class="w"> </span>git:<span class="o">(</span>main<span class="o">)</span><span class="w"> </span>rm<span class="w"> </span>-r<span class="w"> </span>lib/azure/company
+</code></pre></div>
+
+<p>After the code transformation step:</p>
+<div class="highlight"><pre><span></span><code>.
+├── lib
+│  ├── azure
+│  │  ├── __init__.py
+│  │  ├── poetry.lock
+│  │  └── pyproject.toml
+│  └── coms
+│     ├── __init__.py
+│     ├── poetry.lock
+│     └── pyproject.toml
+└── services
+   └── example
+      ├── main.py
+      ├── poetry.lock
+      └── pyproject.toml
+</code></pre></div>
+
+<p>We no longer required nested <code>company</code> folders for every library (i.e.
+<code>lib/azure/company/azure -&gt; lib/azure</code>).</p>
+<p>After flattening the repository, I had to go through and rename any existing
+imports accordingly, to match the new repository layout. This involved a lot of
+find-and-replace using <code>sed</code>:</p>
+<div class="highlight"><pre><span></span><code>sed -i &#39;s/company\.\(\w\+\)/lib.\1/&#39; $(egrep -r -l &quot;company\.\w+&quot; services lib)
+</code></pre></div>
+
+<p>This snippet replaces occurrences of <code>company.&lt;word&gt;</code> with <code>lib.word</code> across the
+repo.</p>
+<p>There's a possibility this entire stage could have been avoided if I'd just been
+creative and renamed <code>lib</code> -&gt; <code>company</code> instead. But I wanted to keep the <code>lib</code>
+folder to avoid confusion.</p>
+<h2>Step 3 - Putting on Pants 👖</h2>
+<p>With the dependencies organised, our repository structure flattened, and imports
+transformed, we were ready to try Pants.</p>
+<p>The first stage was to run the following:</p>
+<div class="highlight"><pre><span></span><code>./pants tailor ::
+</code></pre></div>
+
+<p>This runs some static analysis tool that scans your repo and automatically
+creates Pants Build files in each directory based on heuristics checking the
+contents.</p>
+<p>I.e. if a directory contains a <code>pyproject.toml</code> file with Poetry dependencies.
+The tool will automatically create a build file with the following contents:</p>
+<div class="highlight"><pre><span></span><code>python_sources()
+
+poetry_requirements()
+</code></pre></div>
+
+<p>These build files provide some build time information for Pants, informing it on
+the state of the repository.</p>
+<div class="highlight"><pre><span></span><code>./pants generate-lockfiles
+</code></pre></div>
+
+<p>And then:</p>
+<div class="highlight"><pre><span></span><code><span class="o">./</span><span class="n">pants</span><span class="w"> </span><span class="k">export</span>
+</code></pre></div>
+
+<h1>Results</h1>
+<p>We were fortunate as we could generate a single lockfile for the entire project.
+We didn't have any instance where service A specifically depended on a
+newer/later version of the same dependency as used by service B or C. In this
+scenario I believe you'd have to create a separate lockfile for service A.</p>
+<p>We can generate a single virtual environment which contains all the possible
+dependencies across the project.</p>
+<p>We can run tests in parallel against the entire repository. Services with tests
+that require databases setup/tear-down are batched into the same pytest process
+and have access to a unique database name.</p>
+  </article>
+</div>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
+</html>

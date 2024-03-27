@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en" bs-theme="auto">
+  <head>
+        <title>Jack's Blog - Revisiting KDE</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" type="text/css" href="https://jackevansevo.github.io/theme/css/pygments.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <link rel="shortcut icon" type="image/x-icon" href="https://jackevansevo.github.io/theme/favicon.ico">
+      <script src="https://cdn.counter.dev/script.js" data-id="91e2f16c-845b-4d6d-95f5-ec7838cee876" data-utcoffset="-3"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+<style>
+main {
+	font-family: "Signika Negative" !important;
+	font-weight: 300;
+}
+</style>
+
+        <link href="https://jackevansevo.github.io/index.xml" type="application/atom+xml" rel="alternate" title="Jack's Blog Full Atom Feed" />
+  <style>
+    .content {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+    }
+  </style>
+
+
+  <style>
+    article > h2, h3, h4, h5 {
+      padding: 1rem 0;
+    }
+    article > div.highlight > pre {
+      border: solid 0.1rem; rgb(33, 37, 41);
+      background-color: #fdf6e3;
+      padding: 0.5rem;
+      border-radius: 0.4rem;
+    }
+  </style>
+
+
+
+    <meta name="tags" content="Linux" />
+
+    <script>
+/*!
+ * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+ * Copyright 2011-2023 The Bootstrap Authors
+ * Licensed under the Creative Commons Attribution 3.0 Unported License.
+ */
+
+      (() => {
+        'use strict'
+
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme) {
+            return storedTheme
+          }
+
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+          if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark')
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+          }
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme')
+
+          if (!themeSwitcher) {
+            return
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text')
+          const activeThemeIcon = document.querySelector('.theme-icon-active use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+          const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href')
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+            element.setAttribute('aria-pressed', 'false')
+          })
+
+          btnToActive.classList.add('active')
+          btnToActive.setAttribute('aria-pressed', 'true')
+          activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+          const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
+          themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+
+          if (focus) {
+            themeSwitcher.focus()
+          }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme !== 'light' && storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme())
+
+          document.querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+              toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+              })
+            })
+        })
+      })()
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://jackevansevo.github.io/">Jack's Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/"><i class="bi bi-house-fill"></i>&nbsp;&nbsp;Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://jackevansevo.github.io/index.xml"><i class="bi bi-rss-fill"></i>&nbsp;&nbsp;Feed</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://twitter.com/Thisisjackevans"><i class="bi bi-twitter"></i>&nbsp;&nbsp;Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://fosstodon.org/@JackEvans"><i class="bi bi-mastodon"></i>&nbsp;&nbsp;Mastodon</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://www.youtube.com/channel/UC4yxFC8_z8-DeYLeHXKtdHg"><i class="bi bi-youtube"></i>&nbsp;&nbsp;Youtube</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub"><i class="bi bi-pen-fill"></i>&nbsp;&nbsp;Resume</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container p-lg-5 p-3">
+<div class="content">
+  <h1>
+    <a href="https://jackevansevo.github.io/revisiting-kde.html" rel="bookmark" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover" title="Permalink to Revisiting KDE">Revisiting KDE</a>
+  </h1>
+  <header>
+    
+  </header>
+  <footer>
+    <time datetime="2023-01-15T00:00:00+00:00">
+	    <i class="bi bi-clock"></i><b>Published:</b> Sun 15 January 2023
+    </time>
+<div>
+<i class="bi bi-tags"></i>&nbsp;<b>Tags</b>:
+  <a href="https://jackevansevo.github.io/tag/linux.html"><span class="badge text-bg-dark">Linux</span></a>
+</div>
+  </footer><!-- /.post-info -->
+  <hr>
+  <article>
+    <h1>Background</h1>
+<p>It's been years since I last used the KDE desktop environment. Unfortunately, I
+don't have an exact screenshot of my desktop when I last used KDE, but from
+memory it probably looked a lot like this:</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/KDE_4.png/1024px-KDE_4.png" alt="KDE Oxygen desktop"/></p>
+<p>Looking back I'm not sure the Oxygen theme has aged particularly well, but this
+picture fills me with nostalgia and so will always have a special place in my
+heart.</p>
+<p>Over the years KDE has (unfairly in my eyes) had a fairly negative reputation,
+and stereotyped for being quite buggy and resource hungry. I don't recall being
+affected by these issues described first hand, but hearing critical sentiments
+like this left me with a negative impression and drove me away from using KDE.
+So although I do have fond memories of this desktop, they were tainted by the
+opinions of a few vocal Linux enthusiasts at the time. I was young and
+impressionable, and wanted to use to use the 'best' thing, even if that meant
+not being able to form my own independent assessment.</p>
+<p>Consequently I was content to stay on Gnome desktop (and various forks) for most
+of my time on Linux. But that all changed pretty recently. I wanted to revisit
+KDE and see if this reputation was still warranted. I think part of me wanted to
+make amends and give some love to a Desktop environment I felt I'd never really
+given an honest chance.</p>
+<p>Largely I was inspired to give KDE another try after seeing some pretty positive
+recent momentum in the community. A prime example is TechHut releasing this
+video:</p>
+<div class="ratio ratio-21x9">
+<iframe
+src="https://www.youtube.com/embed/3nX1YEQg5Z0" title="10 ways KDE is just
+BETTER" frameborder="0" allow="accelerometer; autoplay; clipboard-write;
+encrypted-media; gyroscope; picture-in-picture; web-share"
+allowfullscreen></iframe>
+</div>
+
+<p><br></p>
+<p>I follow Nate Graham on his blog <a href="https://pointieststick.com">"Adventures in Linux and
+KDE"</a> who's posts frequently hit the front-page of
+<a href="https://reddit.com/r/linux">/r/linux</a>, which makes developments in KDE
+impossible to ignore. It's really impressive to see the volume of improvements
+that go into the desktop each week.</p>
+<p>All of this positive sustained coverage culminated in me caving and deciding to
+see what all the fuss was about.</p>
+<p>I opted to install Open SUSE Tumbleweed because I fancied trying out a rolling
+release distribution and wanted an up-to-date KDE experience without having to
+jump through hoops. I briefly toyed with the idea of trying KDE Neon, but
+ultimately wanted something different then another Ubuntu based distribution.</p>
+<blockquote>
+<p>Disclaimer At the time of writing I'm on KDE Plasma version 5.26.5.</p>
+</blockquote>
+<hr>
+<h1>The Good</h1>
+<h2>Applets</h2>
+<p>I always found the applets on Gnome to be a bit frustrating, and find much great
+utility from their KDE counterparts. Frequently on Gnome I'd be forced to open
+up system settings to perform some basic action, like switching/connecting a
+Bluetooth device or altering specific device volume.</p>
+<p><img src="https://pointieststick.files.wordpress.com/2023/01/kscreen-applet-in-system-tray.jpg?w=650&h=172" alt="KDE applets"/></p>
+<p>Whereas on KDE applets typically quickly allow me to to perform the required
+action without having to dive into the full settings. On Gnome there's a
+patchwork of <a href="https://extensions.gnome.org/extension/1401/bluetooth-quick-connect/">3rd party
+extensions</a> that <a href="https://www.omgubuntu.co.uk/2022/09/bluetooth-quick-connect-gnome-extension">fill this niche</a> but I find myself much preferring the out of the box
+experience offered by KDE.</p>
+<p><img src="https://jackevansevo.github.io/images/kde-bluetooth-applet.png" alt="KDE Bluetooth applet"/></p>
+<h2>Multi Monitor Support</h2>
+<p>To my surprise everything just works, I haven't had a single issue with
+multi-monitor support so far. All this is even before some <a href="https://notmart.org/blog/2022/12/multi-screen/">multi-screen
+improvements</a> due to arrive in
+Plasma
+5.27</p>
+<p>Often I'll plug my laptop in to drive a primary display but then close the lip
+on my laptop, running just one display. When I do this all the windows open on
+my laptop automatically switch over to the main display.</p>
+<p>The Display Configuration Applet makes it really easily to quickly kill the
+laptop screen and work from the Primary monitor even when the laptop lid is
+open. Traditionally multi-monitor configuration on Linux has been a nightmare, but
+this has been working a charm for me.</p>
+<h2>KWin Customisation (Disabling Borders Per Application)</h2>
+<p>A small thing that might be possible in other environments, but KDE makes super
+trivial. I'll often configure this when I have two windows side by side. This
+sort of mirrors the way I used to use the i3 tiling window manager, allowing me
+to arrange borderless windwos for maximum vertical space.</p>
+<p><img alt="KWin hide boders" src="https://jackevansevo.github.io/images/kde-hide-borders.png"></p>
+<h2>Theming</h2>
+<p>I quickly switched from the default openSUSE theme to default Breeze
+implementation. I'm a big fan, everything ends up looking nice and consistent
+across the desktop. The ability to inherit the accent colour from the current
+wallpaper is a nice touch. Although I do wish there was a nice way to
+automatically to switch from Light/Dark mode based on the current locale
+(similar to the way android works).</p>
+<p><img alt="Breeze Theme Switcher" src="https://jackevansevo.github.io/images/breeze-themes.png"></p>
+<h2>KDE Apps</h2>
+<h3>Kate</h3>
+<p>It's been a while since I tried out this editor and I'm pleased to see it's
+developed a bunch of useful new features since. Now it's got builtin LSP
+support, git integration, session support and a quick 'Quick Open Search' fuzzy
+file searcher. What more could you need from a modern lightweight editor
+(without reaching for a full IDE).</p>
+<p>The comprehensive vi input mode, combined with the rest of the editor experience
+means it's so good that I'll stray from my typical neovim terminal setup (which
+is high praise). It would be absolutely fantastic if at some point neovim gets a
+proper headless mode to allow it to be easily integrated with GUI-editors. If
+Kate, (or similar) ever developed this feature I'd love to use the editor as a
+front-end UI for neovim. But I'm unsure whether this is within the scope of the
+project.</p>
+<p>I've had a few issues configuring the LSP integration from within a Python
+virtual-environment, but aside from this the experience has been very positive.</p>
+<p><img src="https://jackevansevo.github.io/images/kate.png" alt="Kate editor"/></p>
+<h2>Stability</h2>
+<p>This one is surprising to me and I'm on Open SUSE tumbleweed, which pulls
+up-to-date versions of software from upstream repositories. I expected lots of
+crashes, everything to be bug-ridden, constantly encountering little regressions
+with each update. I'm pleased to say this hasn't been the case, I've only had a
+single crash (albeit a pretty serious one) so far which I'll touch on in the
+next section.</p>
+<h1>The Not So Good</h1>
+<p>Most of my experience has been pleasant, but I did encounter a few minor issues,
+which I've documented below.</p>
+<h2><em>Krashes</em></h2>
+<p>When I came to wake my laptop from sleep I was greeted by the following (fairly
+intimidating) error message screen. Instead of following the instructions on
+screen I just hard rebooted my machine 🥱.</p>
+<p><img src="https://jackevansevo.github.io/images/PXL_20230105_192004711.jpg" alt="Kate editor"/></p>
+<h2>Application Task Switchers (Alt+Tab Switcher) Styles</h2>
+<p>My most recently used desktop environments before trying KDE have been MacOSX,
+Gnome and Cinnamon. A common trait they share is that each have a pretty similar
+Alt+Tab look and feel, a style I appreciate.</p>
+<p>KDE has a variety of application launchers to choose from, but in my opinion
+none of them look quite as visually appealing. With the Large Icons the spacing
+sometimes looks off, and app icons will occasionally look blurry or missing
+completely, on the other hand the Small Icons switcher is simply way too small.
+I've settled on using the default Breeze switcher, which I initially had an
+aversion to due to it's placement on the left hand side of the screen.</p>
+<p><img src="https://jackevansevo.github.io/images/kde-icon-task-switcher.png" alt="KDE Task Switcher"/></p>
+<p>I think this is partially my fault for using Flatpak applications and expecting
+the desktop integration be 100% seamless. I strongly suspect it might also be an
+upstream issue (and not the fault of KDE itself), but I've not encountered
+similar issues on Gnome/Cinnamon.</p>
+<h2>App Launcher Search Relevancy</h2>
+<h3>Krunner vs Application Launcher vs Overview</h3>
+<p>The functionality offered by all of these launchers appears to completely
+overlap. So I'm not sure when I'd opt to use one over the other? This is
+obviously just a skill issue, but I think I prefer the unified search
+implementation offered by Gnome shell which removes any ambiguity.</p>
+<h3>Search Relevancy</h3>
+<p>Occasionally I'll search for something and what I'm looking for will be the
+second most relevant result, which can be frustrating.</p>
+<p><strong>Example A:</strong> If I type word <em>"mouse"</em> to bring up the settings panel to configure my
+mouse, the first two characters "mo" returns a list of results where Htop is the
+most relevant.</p>
+<p><img alt="KDE Mouse Search" src="https://jackevansevo.github.io/images/kde-search-mouse.png"></p>
+<p><strong>Example B:</strong> If I type <em>"settings"</em> the top result is Steam settings. In 99% of
+cases, this is never the result I want. I feel like KDE built-ins should take
+precedence here. Or perhaps there should be reserve words that prevent
+third-party applications from appearing as the top result.</p>
+<p><img alt="KDE Settings Search" src="https://jackevansevo.github.io/images/kde-search-settings.png"></p>
+<p><strong>Example C:</strong> If I type <em>"Downloads"</em> I get x3 results. If I want to open my
+~/Downloads folder in Dolphin which one is correct?</p>
+<p>In this scenario the first result opens up a KDE Settings Panel to change the
+default Download location (unlikely what I want). The second two results are
+equivalent, likely from two search plugins returning the same thing.</p>
+<p><img alt="KDE Downloads Search" src="https://jackevansevo.github.io/images/kde-search-downloads.png"></p>
+<p>All very minor things, but it frequently makes me double take before I hit the
+&lt;enter&gt; when searching, which can be annoying.</p>
+<p>I disabled a majority of the enabled search plugins very early on to try and
+improve the experience, speed up the search and provide more relevant
+results. But I still run into occasional issues like this.</p>
+<p>There's a good chance that my muscle memory from other desktops is tainting my
+experience on KDE. But I do think both the Gnome and Cinnamon desktops to a
+better job of this out of the box. On Cinnamon I would blindly hit &lt;super&gt;
+start typing then slam &lt;enter&gt; without thinking and it would somehow always do
+the right thing.</p>
+<h1>Conclusion</h1>
+<p>Overall my experience so far with KDE has been overwhelmingly positive, despite
+some of the criticism covered in this article. It's great to see how far the
+desktop has improved since I last used it, and I'm excited to see where the
+project goes in the future, especially with KDE 6 on the horizon.</p>
+<p>I plan to stick with KDE for the foreseeable future, or until I get the nagging
+urge to jump ship and try something new :P</p>
+  </article>
+</div>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
+</html>

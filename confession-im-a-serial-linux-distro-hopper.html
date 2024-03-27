@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en" bs-theme="auto">
+  <head>
+        <title>Jack's Blog - Confession: I'm a serial Linux Distro hopper</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" type="text/css" href="https://jackevansevo.github.io/theme/css/pygments.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <link rel="shortcut icon" type="image/x-icon" href="https://jackevansevo.github.io/theme/favicon.ico">
+      <script src="https://cdn.counter.dev/script.js" data-id="91e2f16c-845b-4d6d-95f5-ec7838cee876" data-utcoffset="-3"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+<style>
+main {
+	font-family: "Signika Negative" !important;
+	font-weight: 300;
+}
+</style>
+
+        <link href="https://jackevansevo.github.io/index.xml" type="application/atom+xml" rel="alternate" title="Jack's Blog Full Atom Feed" />
+  <style>
+    .content {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+    }
+  </style>
+
+
+  <style>
+    article > h2, h3, h4, h5 {
+      padding: 1rem 0;
+    }
+    article > div.highlight > pre {
+      border: solid 0.1rem; rgb(33, 37, 41);
+      background-color: #fdf6e3;
+      padding: 0.5rem;
+      border-radius: 0.4rem;
+    }
+  </style>
+
+
+
+    <meta name="tags" content="Linux" />
+
+    <script>
+/*!
+ * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+ * Copyright 2011-2023 The Bootstrap Authors
+ * Licensed under the Creative Commons Attribution 3.0 Unported License.
+ */
+
+      (() => {
+        'use strict'
+
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme) {
+            return storedTheme
+          }
+
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+          if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark')
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+          }
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme')
+
+          if (!themeSwitcher) {
+            return
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text')
+          const activeThemeIcon = document.querySelector('.theme-icon-active use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+          const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href')
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+            element.setAttribute('aria-pressed', 'false')
+          })
+
+          btnToActive.classList.add('active')
+          btnToActive.setAttribute('aria-pressed', 'true')
+          activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+          const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
+          themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+
+          if (focus) {
+            themeSwitcher.focus()
+          }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme !== 'light' && storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme())
+
+          document.querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+              toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+              })
+            })
+        })
+      })()
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://jackevansevo.github.io/">Jack's Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/"><i class="bi bi-house-fill"></i>&nbsp;&nbsp;Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://jackevansevo.github.io/index.xml"><i class="bi bi-rss-fill"></i>&nbsp;&nbsp;Feed</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://twitter.com/Thisisjackevans"><i class="bi bi-twitter"></i>&nbsp;&nbsp;Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://fosstodon.org/@JackEvans"><i class="bi bi-mastodon"></i>&nbsp;&nbsp;Mastodon</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://www.youtube.com/channel/UC4yxFC8_z8-DeYLeHXKtdHg"><i class="bi bi-youtube"></i>&nbsp;&nbsp;Youtube</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub"><i class="bi bi-pen-fill"></i>&nbsp;&nbsp;Resume</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container p-lg-5 p-3">
+<div class="content">
+  <h1>
+    <a href="https://jackevansevo.github.io/confession-im-a-serial-linux-distro-hopper.html" rel="bookmark" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover" title="Permalink to Confession: I'm a serial Linux Distro hopper">Confession: I'm a serial Linux Distro hopper</a>
+  </h1>
+  <header>
+    
+  </header>
+  <footer>
+    <time datetime="2023-01-08T00:00:00+00:00">
+	    <i class="bi bi-clock"></i><b>Published:</b> Sun 08 January 2023
+    </time>
+<div>
+<i class="bi bi-tags"></i>&nbsp;<b>Tags</b>:
+  <a href="https://jackevansevo.github.io/tag/linux.html"><span class="badge text-bg-dark">Linux</span></a>
+</div>
+  </footer><!-- /.post-info -->
+  <hr>
+  <article>
+    <p>It's time to admit. I have a problem... I am a serial Linux distro hopper. I've
+sunk a disproportionate amount of time wiping, installing and configuring new
+environments during my life.</p>
+<p><img alt="Breakfast club confession
+circle" src="https://images.rapgenius.com/c926d2a3a04802075917908417fa2236.1000x513x1
+.jpg"></p>
+<p>It's an addiction that developed from a young age, my earliest Linux memories
+was purchasing magazines with disks containing new distribution releases and
+like a kid in a candy store, excitedly trying each. It was a wild and
+experimental time, Canonical had just released Unity, Gnome 3 was released, KDE
+could do just about everything.</p>
+<p>I enjoyed exploring each new desktop paradigm and loved the level of
+customization available on Linux that simply wasn't available on Windows. I have
+fond memories of messing around with Compiz, turning on wobbly windows, fire
+closing animations and a crazy desktop cube overview. It felt like the future.</p>
+<p>That was around 10 years ago, and I've been using Linux on the desktop on most
+of my personal computing devices ever since. Perhaps I'm trying to chase that
+magical feeling I experienced during these first few years. Since then, I've
+used just about every big distribution there is, and toyed about with all kinds
+of desktop environments, you made it, I've probably tried it.</p>
+<p>The only slight benefit of this addiction is that consequently, over the years,
+I've gotten pretty good at quickly configuring systems and getting up and
+running. Give me a new PC (i.e. if I'm on-boarding at a company) and I'll be up
+and ready in a couple hours with whatever tools I need. Nowadays I tend to make
+minimal customization tweaks, and instead lean towards distributions/desktop
+environments that require little customization out of the box. The smoother the
+initial experience, the better my overall impression.</p>
+<p>The maximum amount of time I've been able to stay on the same
+distribution/desktop environment is about ~6 months. I can narrow this down to a
+few reasons:</p>
+<ol>
+<li>
+<p><strong>New and shiny</strong>: With new things constantly being released I always get the
+urge to try something new and exciting. The comfort and familiarity with using
+the same environment after a while becomes mundane, giving me the urge to switch.</p>
+</li>
+<li>
+<p><strong>Death by a thousand cuts / (The grass is always greener)</strong>: The longer I
+use a distro, the greater number of issues I tend to encounter. After time, the
+cracks begun to show, these little paper cuts add up and I get frustrated. I'll
+be tempted to start over with something new in the hopes it will address all my
+problems.</p>
+<p>Consequently I've noticed a pattern: I'll bounce back and forth between
+rolling release distributions, get annoyed when bleeding edge stuff breaks then
+switch to something fixed release, gaining stability but then feeling left out
+because I'm not using the newest/coolest software.</p>
+</li>
+<li>
+<p><strong>Nostalgia</strong>: If I haven't used something in a while, often I'll get the
+yearning to try it again, just for nostalgias sake. It's also great to
+experience first hand how far various projects have come when revisiting them
+after a long abscence.</p>
+</li>
+</ol>
+<p>Case and point, since writing about my positive impressions of Fedora 36
+earlier last year I ended up getting bored with Gnome desktop and decided to
+give Linux Mint another try after a long abscence. This brief affair only latest
+2 months. There wasn't anything wrong with Linux Mint per say, it was rock
+solid, stable and everything I needed. The temptation to try something new just
+took over.</p>
+<p><img src="https://media.tenor.com/rDNGnGliOOAAAAAC/futurama-days-since-last-accident.gif" alt="Days since last incident" width="500"/></p>
+<div class="highlight"><pre><span></span><code>❯<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="k">$((</span><span class="o">(</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="o">-</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="w"> </span>--date<span class="w"> </span><span class="k">$(</span>stat<span class="w"> </span>/<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;/Birth: /{print $2}&#39;</span><span class="k">))</span><span class="o">)/(</span><span class="m">3600</span><span class="o">*</span><span class="m">24</span><span class="k">))</span><span class="o">)</span><span class="w"> </span>days<span class="w"> </span>since<span class="w"> </span>distro<span class="w"> </span>installed
+<span class="m">0</span><span class="w"> </span>days<span class="w"> </span>since<span class="w"> </span>distro<span class="w"> </span>installed
+</code></pre></div>
+
+<p>Things aren't as crazy as they were back when I first got into Linux, the
+landscape seems to have matured a bit (or maybe I have). But that doesn't mean
+there isn't plenty of new shiny things to try all the time. There's exciting new
+developments all the time. System76 are developing their new Cosmic Desktop for
+POP OS, KDE Plamsa 6.0 is on the horizon (I'll be sure to try out each when
+they're released). Even the latest XFCE desktop release is packed full of
+features!</p>
+<p>Fueling my addiciton is the fact it's never been easier to hop between different
+distributions. With the advent of packaging formats like snap and flatpak I can
+pick practically any distribution and have the exact same set of applications
+I'm used to. These days, it really doesn't feel (from the end user standpoint)
+that there are really that many things the separate each distribution. This is
+obviously a good thing for end users, but I worry projects will lose their
+unique indentities as technology continues to converge.</p>
+<p>It's not like I don't have other hobbies or interests besides messing around
+with Linux, I have plenty. But I doubt I'll ever overcome my addiction, it's
+simply too much fun. So in the meantime and I look forward to trying a bunch of
+new distros and environments in the future. I hope you'll join me 👨‍💻🐧</p>
+  </article>
+</div>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
+</html>

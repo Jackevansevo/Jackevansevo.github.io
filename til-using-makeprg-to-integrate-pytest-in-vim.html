@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en" bs-theme="auto">
+  <head>
+        <title>Jack's Blog - TIL: Using makeprg to integrate pytest in Vim</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" type="text/css" href="https://jackevansevo.github.io/theme/css/pygments.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <link rel="shortcut icon" type="image/x-icon" href="https://jackevansevo.github.io/theme/favicon.ico">
+      <script src="https://cdn.counter.dev/script.js" data-id="91e2f16c-845b-4d6d-95f5-ec7838cee876" data-utcoffset="-3"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+<style>
+main {
+	font-family: "Signika Negative" !important;
+	font-weight: 300;
+}
+</style>
+
+        <link href="https://jackevansevo.github.io/index.xml" type="application/atom+xml" rel="alternate" title="Jack's Blog Full Atom Feed" />
+  <style>
+    .content {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+    }
+  </style>
+
+
+  <style>
+    article > h2, h3, h4, h5 {
+      padding: 1rem 0;
+    }
+    article > div.highlight > pre {
+      border: solid 0.1rem; rgb(33, 37, 41);
+      background-color: #fdf6e3;
+      padding: 0.5rem;
+      border-radius: 0.4rem;
+    }
+  </style>
+
+
+
+    <meta name="tags" content="Vim" />
+    <meta name="tags" content="Programming" />
+
+    <script>
+/*!
+ * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+ * Copyright 2011-2023 The Bootstrap Authors
+ * Licensed under the Creative Commons Attribution 3.0 Unported License.
+ */
+
+      (() => {
+        'use strict'
+
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme) {
+            return storedTheme
+          }
+
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+          if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark')
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+          }
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme')
+
+          if (!themeSwitcher) {
+            return
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text')
+          const activeThemeIcon = document.querySelector('.theme-icon-active use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+          const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href')
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+            element.setAttribute('aria-pressed', 'false')
+          })
+
+          btnToActive.classList.add('active')
+          btnToActive.setAttribute('aria-pressed', 'true')
+          activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+          const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
+          themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+
+          if (focus) {
+            themeSwitcher.focus()
+          }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme !== 'light' && storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme())
+
+          document.querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+              toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+              })
+            })
+        })
+      })()
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://jackevansevo.github.io/">Jack's Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/"><i class="bi bi-house-fill"></i>&nbsp;&nbsp;Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://jackevansevo.github.io/index.xml"><i class="bi bi-rss-fill"></i>&nbsp;&nbsp;Feed</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://twitter.com/Thisisjackevans"><i class="bi bi-twitter"></i>&nbsp;&nbsp;Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://fosstodon.org/@JackEvans"><i class="bi bi-mastodon"></i>&nbsp;&nbsp;Mastodon</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://www.youtube.com/channel/UC4yxFC8_z8-DeYLeHXKtdHg"><i class="bi bi-youtube"></i>&nbsp;&nbsp;Youtube</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub"><i class="bi bi-pen-fill"></i>&nbsp;&nbsp;Resume</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container p-lg-5 p-3">
+<div class="content">
+  <h1>
+    <a href="https://jackevansevo.github.io/til-using-makeprg-to-integrate-pytest-in-vim.html" rel="bookmark" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover" title="Permalink to TIL: Using makeprg to integrate pytest in Vim">TIL: Using makeprg to integrate pytest in Vim</a>
+  </h1>
+  <header>
+    
+  </header>
+  <footer>
+    <time datetime="2023-03-13T00:00:00+00:00">
+	    <i class="bi bi-clock"></i><b>Published:</b> Mon 13 March 2023
+    </time>
+<div>
+<i class="bi bi-tags"></i>&nbsp;<b>Tags</b>:
+  <a href="https://jackevansevo.github.io/tag/vim.html"><span class="badge text-bg-success">Vim</span></a>
+  <a href="https://jackevansevo.github.io/tag/programming.html"><span class="badge text-bg-secondary">Programming</span></a>
+</div>
+  </footer><!-- /.post-info -->
+  <hr>
+  <article>
+    <h1>Current Sitution</h1>
+<p>Up until recently I had been running my tests with something like the following:</p>
+<div class="highlight"><pre><span></span><code>:vsplit | term pytest %
+</code></pre></div>
+
+<p>I typically use different keybindings to invoke pytest with different arguments
+(such as -s to debug when setting breakpoints)</p>
+<p>Here's a little demo:</p>
+<video class="w-100" controls>
+<source src="https://jackevansevo.github.io/images/Screencast from 2023-03-13 18-33-49 (trimmed).webm">
+</video>
+
+<p>I liked this approach because it was simple and didn't require any additional
+plugins, it simply takes advantage of Neovims built in <a href="https://neovim.io/doc/user/nvim_terminal_emulator.html">terminal
+emulator</a>.</p>
+<p>One of the benefits of this is that the terminal task is non blocking, so I can
+continue editing code without long running tests blocking the UI.</p>
+<p>However, a major downside of this approach is that is doesn't take advantage of
+some of the more powerful builtin vim features.</p>
+<p>Ideally, test failures would appear in the <a href="https://vimdoc.sourceforge.net/htmldoc/quickfix.html">quickfix
+list</a>, making it possible
+to quickly jump to the exact lines that failed within tests, right inside my
+editor.</p>
+<p><br></p>
+<h1>Enter makeprg</h1>
+<p>I was inspired by <a href="https://www.youtube.com/watch?v=vB3NT9QIXo8">this youtube
+video</a> detailing the <code>makeprg</code> and
+<code>compiler</code> features in vim, and decided to give this method a try (in favour of
+my previous approach).</p>
+<p>Because vim doesn't include a pytest compiler by default, I installed
+a <a href="https://github.com/tartansandal/vim-compiler-pytest">plugin</a> to provide this
+functionality.</p>
+<p>Under the hood this plugin is defining the error structure of pytests output.
+With this information vim can parse the output from pytest and display
+errors/filenames in the quickfix list.</p>
+<p>Getting this all working is as straightforward as running:</p>
+<div class="highlight"><pre><span></span><code>compiler pytest
+</code></pre></div>
+
+<p>I can then invoke pytest with:</p>
+<div class="highlight"><pre><span></span><code>make %
+</code></pre></div>
+
+<p>(Percent is vim-speak for the current buffer filename)</p>
+<p>Here's video a comparison:</p>
+<video controls>
+<source src="https://jackevansevo.github.io/images/Screencast from 2023-03-13 18-35-10 (trimmed).webm">
+</video>
+
+<p>Invoking pytest via make populates the quickfix list with errors. This allows
+me to quickly jump to error locations directly from within my editor.</p>
+<p><br></p>
+<h1>But wait, there's more</h1>
+<p>The major downside of the previous approach is that it blocks the UI, so I've
+lost the asynchronous benefits of my original integrated terminal approach.</p>
+<p>However, it's possible to get these tests to run asynchronously (aka: without
+blocking the UI) by using:
+<a href="https://github.com/tpope/vim-dispatch">vim-dispatch</a>.</p>
+<p>This pops open a little tmux window I can quickly switch to with <code>C-b + o</code></p>
+<p>Here's the final result:</p>
+<video controls>
+<source src="https://jackevansevo.github.io/images/Screencast from 2023-03-13 18-41-54 (trimmed).webm">
+</video>
+
+<p><br></p>
+<h1>Conclusion</h1>
+<p>Overall I'm quite happy with the final result, and pleased I'm leveraged more
+of the builtin features of vim to make my life easier.</p>
+<p>If you'd like to learn more about these built-in vim features I recommend
+reading:
+<a href="https://learnvim.irian.to/basics/compile">https://learnvim.irian.to/basics/compile</a>
+which I found incredibly helpful.</p>
+<p><br></p>
+  </article>
+</div>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
+</html>

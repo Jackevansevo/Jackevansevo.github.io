@@ -1,92 +1,229 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-          <title>Jack's Blog - Simple Django Celery Guide (Part 1)</title>
-        <meta charset="utf-8" />
-        <meta name="generator" content="Pelican" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="/theme/css/main.css" />
-        <link rel="shortcut icon" type="image/x-icon" href="/theme/favicon.ico">
+<!doctype html>
+<html lang="en" bs-theme="auto">
+  <head>
+        <title>Jack's Blog - Simple Django Celery Guide (Part 1)</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" type="text/css" href="https://jackevansevo.github.io/theme/css/pygments.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <link rel="shortcut icon" type="image/x-icon" href="https://jackevansevo.github.io/theme/favicon.ico">
+      <script src="https://cdn.counter.dev/script.js" data-id="91e2f16c-845b-4d6d-95f5-ec7838cee876" data-utcoffset="-3"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+<style>
+main {
+	font-family: "Signika Negative" !important;
+	font-weight: 300;
+}
+</style>
+
+        <link href="https://jackevansevo.github.io/index.xml" type="application/atom+xml" rel="alternate" title="Jack's Blog Full Atom Feed" />
+  <style>
+    .content {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+    }
+  </style>
+
+
+  <style>
+    article > h2, h3, h4, h5 {
+      padding: 1rem 0;
+    }
+    article > div.highlight > pre {
+      border: solid 0.1rem; rgb(33, 37, 41);
+      background-color: #fdf6e3;
+      padding: 0.5rem;
+      border-radius: 0.4rem;
+    }
+  </style>
 
 
 
+    <meta name="tags" content="Python" />
+    <meta name="tags" content="Django" />
 
-    <meta name="tags" content="python" />
-    <meta name="tags" content="django" />
+    <script>
+/*!
+ * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+ * Copyright 2011-2023 The Bootstrap Authors
+ * Licensed under the Creative Commons Attribution 3.0 Unported License.
+ */
 
-</head>
+      (() => {
+        'use strict'
 
-<body>
-        <header>
-                <h1><a href="/">Jack's Blog</a></h1>
-        </header>
-        <nav><ul>
-        </ul></nav>
-        <main>
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme) {
+            return storedTheme
+          }
+
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+          if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark')
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+          }
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme')
+
+          if (!themeSwitcher) {
+            return
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text')
+          const activeThemeIcon = document.querySelector('.theme-icon-active use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+          const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href')
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+            element.setAttribute('aria-pressed', 'false')
+          })
+
+          btnToActive.classList.add('active')
+          btnToActive.setAttribute('aria-pressed', 'true')
+          activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+          const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
+          themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+
+          if (focus) {
+            themeSwitcher.focus()
+          }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme !== 'light' && storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme())
+
+          document.querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+              toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+              })
+            })
+        })
+      })()
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://jackevansevo.github.io/">Jack's Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/"><i class="bi bi-house-fill"></i>&nbsp;&nbsp;Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://jackevansevo.github.io/index.xml"><i class="bi bi-rss-fill"></i>&nbsp;&nbsp;Feed</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://twitter.com/Thisisjackevans"><i class="bi bi-twitter"></i>&nbsp;&nbsp;Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://fosstodon.org/@JackEvans"><i class="bi bi-mastodon"></i>&nbsp;&nbsp;Mastodon</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://www.youtube.com/channel/UC4yxFC8_z8-DeYLeHXKtdHg"><i class="bi bi-youtube"></i>&nbsp;&nbsp;Youtube</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub"><i class="bi bi-pen-fill"></i>&nbsp;&nbsp;Resume</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container p-lg-5 p-3">
+<div class="content">
+  <h1>
+    <a href="https://jackevansevo.github.io/simple-django-celery-guide-part-1.html" rel="bookmark" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover" title="Permalink to Simple Django Celery Guide (Part 1)">Simple Django Celery Guide (Part 1)</a>
+  </h1>
   <header>
-    <h1 class="entry-title">
-      <a href="/simple-django-celery-guide-part-1.html" rel="bookmark"
-         title="Permalink to Simple Django Celery Guide (Part 1)">Simple Django Celery Guide (Part 1)</a></h1>
- 
+    
   </header>
-  <footer class="post-info">
-    <time class="published" datetime="2022-09-17T00:00:00+01:00">
-      Sat 17 September 2022
+  <footer>
+    <time datetime="2022-09-17T00:00:00+01:00">
+	    <i class="bi bi-clock"></i><b>Published:</b> Sat 17 September 2022
     </time>
-    <address class="vcard author">
-      By           <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-    </address>
-    <div class="category">
-        Category: <a href="/category/python.html">Python</a>
-    </div>
-    <div class="tags">
-        Tags:
-            <a href="/tag/python.html">python</a>
-            <a href="/tag/django.html">django</a>
-    </div>
+<div>
+<i class="bi bi-tags"></i>&nbsp;<b>Tags</b>:
+  <a href="https://jackevansevo.github.io/tag/python.html"><span class="badge text-bg-warning">Python</span></a>
+  <a href="https://jackevansevo.github.io/tag/django.html"><span class="badge" style="background: #0C4B33">Django</span></a>
+</div>
   </footer><!-- /.post-info -->
+  <hr>
   <article>
     <p>Getting started with Django Celery and Redis</p>
-<p><img alt="django-celery-redis logo" src="/images/django-celery-redis-logo.png"></p>
+<p><img alt="django-celery-redis logo" src="https://jackevansevo.github.io/images/django-celery-redis-logo.png"></p>
 <p>This is part 1 on how to get up and running with Django and celery. It's a fairly opinionated guide and represents what I consider to be the easiest approach.</p>
 <p>To keep things simple, to start with we'll be using <strong>redis</strong> as our <strong>broker</strong> AND our <strong>results backend</strong>.</p>
 <h2>Initial Setup</h2>
 <p>Initialize a new Django project (I'm calling it <code>blog</code>)</p>
-<div class="highlight"><pre><span></span><code>django-admin startproject blog <span class="o">&amp;&amp;</span> <span class="nb">cd</span> blog
+<div class="highlight"><pre><span></span><code>django-admin<span class="w"> </span>startproject<span class="w"> </span>blog<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>blog
 </code></pre></div>
 
 <p>Once inside the project folder initialize a new Pipenv environment</p>
-<div class="highlight"><pre><span></span><code>pipenv shell
+<div class="highlight"><pre><span></span><code>pipenv<span class="w"> </span>shell
 </code></pre></div>
 
 <p>Install some necessary dependencies</p>
-<div class="highlight"><pre><span></span><code>pipenv install django celery<span class="o">[</span>redis<span class="o">]</span>
+<div class="highlight"><pre><span></span><code>pipenv<span class="w"> </span>install<span class="w"> </span>django<span class="w"> </span>celery<span class="o">[</span>redis<span class="o">]</span>
 </code></pre></div>
 
 <p>Note: I've included <code>redis</code> as an optionally celery dependency, to start with we'll be using redis to broker communication between Django &lt;-&gt; celery workers and to store the results of any tasks</p>
 <p>Next we'll need to start an initial app (will be useful later):</p>
-<div class="highlight"><pre><span></span><code>pipenv run django-admin startapp posts
+<div class="highlight"><pre><span></span><code>pipenv<span class="w"> </span>run<span class="w"> </span>django-admin<span class="w"> </span>startapp<span class="w"> </span>posts
 </code></pre></div>
 
 <p>Then add the new app to the <code>INSTALLED_APPS</code> in <code>blog/settings</code></p>
-<div class="highlight"><pre><span></span><code><span class="w"> </span>INSTALLED_APPS = [<span class="w"></span>
-<span class="w"> </span>    &quot;django.contrib.admin&quot;,<span class="w"></span>
-<span class="w"> </span>    &quot;django.contrib.auth&quot;,<span class="w"></span>
-<span class="w"> </span>    &quot;django.contrib.contenttypes&quot;,<span class="w"></span>
-<span class="w"> </span>    &quot;django.contrib.sessions&quot;,<span class="w"></span>
-<span class="w"> </span>    &quot;django.contrib.messages&quot;,<span class="w"></span>
-<span class="w"> </span>    &quot;django.contrib.staticfiles&quot;,<span class="w"></span>
-<span class="gi">+    &quot;posts.apps.PostsConfig&quot;,</span><span class="w"></span>
-<span class="w"> </span>]<span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="w"> </span>INSTALLED_APPS = [
+<span class="w"> </span>    &quot;django.contrib.admin&quot;,
+<span class="w"> </span>    &quot;django.contrib.auth&quot;,
+<span class="w"> </span>    &quot;django.contrib.contenttypes&quot;,
+<span class="w"> </span>    &quot;django.contrib.sessions&quot;,
+<span class="w"> </span>    &quot;django.contrib.messages&quot;,
+<span class="w"> </span>    &quot;django.contrib.staticfiles&quot;,
+<span class="gi">+    &quot;posts.apps.PostsConfig&quot;,</span>
+<span class="w"> </span>]
 </code></pre></div>
 
 <p>We then need to run some standard Django post initialization setup, which is typically the same for all projects:</p>
 <p>Run some initial migrations:</p>
-<div class="highlight"><pre><span></span><code>pipenv run ./manage.py migrate
+<div class="highlight"><pre><span></span><code>pipenv<span class="w"> </span>run<span class="w"> </span>./manage.py<span class="w"> </span>migrate
 </code></pre></div>
 
 <p>Create a superuser account (in order to view the admin page)</p>
-<div class="highlight"><pre><span></span><code>pipenv run ./manage.py createsuperuser
+<div class="highlight"><pre><span></span><code>pipenv<span class="w"> </span>run<span class="w"> </span>./manage.py<span class="w"> </span>createsuperuser
 </code></pre></div>
 
 <h2>Configuring Our Celery Application</h2>
@@ -118,7 +255,7 @@
 
 <h2>Configure Celery Broker (redis)</h2>
 <h3>Dev</h3>
-<p><img alt="diagram displaying dev architecture layout" src="/images/django-celery-dev-diagram.png">.</p>
+<p><img alt="diagram displaying dev architecture layout" src="https://jackevansevo.github.io/images/django-celery-dev-diagram.png">.</p>
 <p>In our local development environment we'll have the following three things:
 - one instance of Django running locally <code>./manage.py runserver</code>,
 - one instance of celery <code>celery worker -A blog worker</code>
@@ -131,7 +268,7 @@ production there's a good chance that celery worker(s) may not be running on
 the same machine.</p>
 <p>Furthermore you might even want to run multiple instances of celery. In this case
 celery will distribute tasks evenly amongst the worker pool.</p>
-<p><img alt="diagram displaying architecture layout" src="/images/django-celery-diagram.png"></p>
+<p><img alt="diagram displaying architecture layout" src="https://jackevansevo.github.io/images/django-celery-diagram.png"></p>
 <h3>Starting a Redis Instance</h3>
 <p>This next few steps of this tutorial assume you have an instance of Redis running <em>somewhere</em></p>
 <p>It doesn't particularly matter where/how you run your Redis instance, as long as you're able to connect to this instance from your machine.</p>
@@ -140,13 +277,13 @@ celery will distribute tasks evenly amongst the worker pool.</p>
 <p>If you want to run redis on your own machine <a href="https://redis.io/docs/getting-started/">official documentation</a>.</p>
 <h4>Running within docker</h4>
 <p>Alternatively if you have <code>docker</code> installed, you can quickly spin up a containerised redis instance instead:</p>
-<div class="highlight"><pre><span></span><code>docker run --rm -d -p <span class="m">6379</span>:6379 redis
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-d<span class="w"> </span>-p<span class="w"> </span><span class="m">6379</span>:6379<span class="w"> </span>redis
 </code></pre></div>
 
 <p>If your project uses <code>docker-compose</code> you can add a relevant entry in the docker compose file instead.</p>
 <h4>Using a managed instance</h4>
 <p>One option is to quickly spin up a free redis instance on <a href="https://console.upstash.com/">console.upstash.com</a></p>
-<p><img alt="upstash redis dashboard example" src="/images/upstash-redis.png"></p>
+<p><img alt="upstash redis dashboard example" src="https://jackevansevo.github.io/images/upstash-redis.png"></p>
 <p>I.e. in the example above I quickly spun up a Redis instance, from here I'm able to copy the Redis URL</p>
 <div class="highlight"><pre><span></span><code><span class="n">redis</span><span class="o">-</span><span class="n">cli</span><span class="w"> </span><span class="o">-</span><span class="n">u</span><span class="w"> </span><span class="nl">redis</span><span class="p">:</span><span class="o">/</span><span class="cm">/******@usw2-able-adder-30254.upstash.io:30254</span>
 </code></pre></div>
@@ -158,73 +295,73 @@ celery will distribute tasks evenly amongst the worker pool.</p>
 </code></pre></div>
 
 <p>And run:</p>
-<div class="highlight"><pre><span></span><code>pipenv run celery -A blog worker -l INFO
+<div class="highlight"><pre><span></span><code>pipenv<span class="w"> </span>run<span class="w"> </span>celery<span class="w"> </span>-A<span class="w"> </span>blog<span class="w"> </span>worker<span class="w"> </span>-l<span class="w"> </span>INFO
 </code></pre></div>
 
 <p>Celery is smart enough to fall-back to a default <code>hostname</code> and <code>port</code> when not specified in the <code>BROKER_URL</code>, as it evident from the logs:</p>
-<div class="highlight"><pre><span></span><code><span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="n">celery</span><span class="nv">@fedora</span><span class="w"> </span><span class="n">v5</span><span class="mf">.2.7</span><span class="w"> </span><span class="p">(</span><span class="n">dawn</span><span class="o">-</span><span class="n">chorus</span><span class="p">)</span><span class="w"></span>
-<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span><span class="w"></span>
-<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="n">Linux</span><span class="o">-</span><span class="mf">5.19.8</span><span class="o">-</span><span class="mf">200.</span><span class="n">fc36</span><span class="p">.</span><span class="n">x86_64</span><span class="o">-</span><span class="n">x86_64</span><span class="o">-</span><span class="k">with</span><span class="o">-</span><span class="n">glibc2</span><span class="mf">.35</span><span class="w"> </span><span class="mi">2022</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">17</span><span class="w"> </span><span class="mi">15</span><span class="err">:</span><span class="mi">10</span><span class="err">:</span><span class="mi">35</span><span class="w"></span>
-<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span><span class="w"></span>
-<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="o">[</span><span class="n">config</span><span class="o">]</span><span class="w"></span>
-<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">app</span><span class="p">:</span><span class="w">         </span><span class="nl">blog</span><span class="p">:</span><span class="mh">0x7f9aeee67a90</span><span class="w"></span>
-<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">transport</span><span class="p">:</span><span class="w">   </span><span class="nl">redis</span><span class="p">:</span><span class="o">//</span><span class="nl">localhost</span><span class="p">:</span><span class="mi">6379</span><span class="o">//</span><span class="w"></span>
-<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">results</span><span class="p">:</span><span class="w">     </span><span class="nl">disabled</span><span class="p">:</span><span class="o">//</span><span class="w"></span>
-<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">concurrency</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">(</span><span class="n">prefork</span><span class="p">)</span><span class="w"></span>
-<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">task</span><span class="w"> </span><span class="nl">events</span><span class="p">:</span><span class="w"> </span><span class="k">OFF</span><span class="w"> </span><span class="p">(</span><span class="n">enable</span><span class="w"> </span><span class="o">-</span><span class="n">E</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">monitor</span><span class="w"> </span><span class="n">tasks</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">worker</span><span class="p">)</span><span class="w"></span>
-<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span><span class="w"></span>
-<span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="o">[</span><span class="n">queues</span><span class="o">]</span><span class="w"></span>
-<span class="w">                </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">celery</span><span class="w">           </span><span class="n">exchange</span><span class="o">=</span><span class="n">celery</span><span class="p">(</span><span class="n">direct</span><span class="p">)</span><span class="w"> </span><span class="k">key</span><span class="o">=</span><span class="n">celery</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="n">celery</span><span class="nv">@fedora</span><span class="w"> </span><span class="n">v5</span><span class="mf">.2.7</span><span class="w"> </span><span class="p">(</span><span class="n">dawn</span><span class="o">-</span><span class="n">chorus</span><span class="p">)</span>
+<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span>
+<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="n">Linux</span><span class="o">-</span><span class="mf">5.19.8</span><span class="o">-</span><span class="mf">200.</span><span class="n">fc36</span><span class="p">.</span><span class="n">x86_64</span><span class="o">-</span><span class="n">x86_64</span><span class="o">-</span><span class="k">with</span><span class="o">-</span><span class="n">glibc2</span><span class="mf">.35</span><span class="w"> </span><span class="mi">2022</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">17</span><span class="w"> </span><span class="mi">15</span><span class="err">:</span><span class="mi">10</span><span class="err">:</span><span class="mi">35</span>
+<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="o">[</span><span class="n">config</span><span class="o">]</span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">app</span><span class="p">:</span><span class="w">         </span><span class="nl">blog</span><span class="p">:</span><span class="mh">0x7f9aeee67a90</span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">transport</span><span class="p">:</span><span class="w">   </span><span class="nl">redis</span><span class="p">:</span><span class="o">//</span><span class="nl">localhost</span><span class="p">:</span><span class="mi">6379</span><span class="o">//</span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">results</span><span class="p">:</span><span class="w">     </span><span class="nl">disabled</span><span class="p">:</span><span class="o">//</span>
+<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">concurrency</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">(</span><span class="n">prefork</span><span class="p">)</span>
+<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">task</span><span class="w"> </span><span class="nl">events</span><span class="p">:</span><span class="w"> </span><span class="k">OFF</span><span class="w"> </span><span class="p">(</span><span class="n">enable</span><span class="w"> </span><span class="o">-</span><span class="n">E</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">monitor</span><span class="w"> </span><span class="n">tasks</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">worker</span><span class="p">)</span>
+<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span>
+<span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="o">[</span><span class="n">queues</span><span class="o">]</span>
+<span class="w">                </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">celery</span><span class="w">           </span><span class="n">exchange</span><span class="o">=</span><span class="n">celery</span><span class="p">(</span><span class="n">direct</span><span class="p">)</span><span class="w"> </span><span class="k">key</span><span class="o">=</span><span class="n">celery</span>
 
 
-<span class="o">[</span><span class="n">tasks</span><span class="o">]</span><span class="w"></span>
-<span class="w">  </span><span class="p">.</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="n">debug_task</span><span class="w"></span>
+<span class="o">[</span><span class="n">tasks</span><span class="o">]</span>
+<span class="w">  </span><span class="p">.</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="n">debug_task</span>
 
-<span class="o">[</span><span class="n">2022-09-17 15:10:35,249: WARNING/MainProcess</span><span class="o">]</span><span class="w"> </span><span class="k">No</span><span class="w"> </span><span class="n">hostname</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="n">supplied</span><span class="p">.</span><span class="w"> </span><span class="n">Reverting</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="s1">&#39;localhost&#39;</span><span class="w"></span>
-<span class="o">[</span><span class="n">2022-09-17 15:10:35,249: INFO/MainProcess</span><span class="o">]</span><span class="w"> </span><span class="n">Connected</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nl">redis</span><span class="p">:</span><span class="o">//</span><span class="nl">localhost</span><span class="p">:</span><span class="mi">6379</span><span class="o">//</span><span class="w"></span>
+<span class="o">[</span><span class="n">2022-09-17 15:10:35,249: WARNING/MainProcess</span><span class="o">]</span><span class="w"> </span><span class="k">No</span><span class="w"> </span><span class="n">hostname</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="n">supplied</span><span class="p">.</span><span class="w"> </span><span class="n">Reverting</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="s1">&#39;localhost&#39;</span>
+<span class="o">[</span><span class="n">2022-09-17 15:10:35,249: INFO/MainProcess</span><span class="o">]</span><span class="w"> </span><span class="n">Connected</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="nl">redis</span><span class="p">:</span><span class="o">//</span><span class="nl">localhost</span><span class="p">:</span><span class="mi">6379</span><span class="o">//</span>
 </code></pre></div>
 
 <p><strong>Note:</strong> if you forget to configure the <code>CELERY_BROKER_URL</code> you'll likely be greeted by the following error:</p>
-<div class="highlight"><pre><span></span><code><span class="p">[</span><span class="mi">2022-09-17</span><span class="w"> </span><span class="mi">14</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mi">55</span><span class="p">,</span><span class="mi">224</span><span class="o">:</span><span class="w"> </span><span class="n">WARNING</span><span class="o">/</span><span class="n">MainProcess</span><span class="p">]</span><span class="w"> </span><span class="n">No</span><span class="w"> </span><span class="n">hostname</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="n">supplied</span><span class="p">.</span><span class="w"> </span><span class="n">Reverting</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="err">&#39;</span><span class="n">localhost</span><span class="err">&#39;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="p">[</span><span class="mi">2022-09-17</span><span class="w"> </span><span class="mi">14</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mi">55</span><span class="p">,</span><span class="mi">224</span><span class="o">:</span><span class="w"> </span><span class="n">WARNING</span><span class="o">/</span><span class="n">MainProcess</span><span class="p">]</span><span class="w"> </span><span class="n">No</span><span class="w"> </span><span class="n">hostname</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="n">supplied</span><span class="p">.</span><span class="w"> </span><span class="n">Reverting</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="err">&#39;</span><span class="n">localhost</span><span class="err">&#39;</span>
 
-<span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="n">celery</span><span class="p">@</span><span class="n">fedora</span><span class="w"> </span><span class="n">v5</span><span class="mf">.2.7</span><span class="w"> </span><span class="p">(</span><span class="n">dawn</span><span class="o">-</span><span class="n">chorus</span><span class="p">)</span><span class="w"></span>
-<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span><span class="w"></span>
-<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="n">Linux</span><span class="mf">-5.19.8-200.f</span><span class="n">c36</span><span class="p">.</span><span class="n">x86_64</span><span class="o">-</span><span class="n">x86_64</span><span class="o">-</span><span class="n">with</span><span class="o">-</span><span class="n">glibc2</span><span class="mf">.35</span><span class="w"> </span><span class="mi">2022-09-17</span><span class="w"> </span><span class="mi">14</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mi">55</span><span class="w"></span>
-<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span><span class="w"></span>
-<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">[</span><span class="n">config</span><span class="p">]</span><span class="w"></span>
-<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">app</span><span class="o">:</span><span class="w">         </span><span class="n">blog</span><span class="o">:</span><span class="mh">0x7fb8a1067a90</span><span class="w"></span>
+<span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="n">celery</span><span class="p">@</span><span class="n">fedora</span><span class="w"> </span><span class="n">v5</span><span class="mf">.2.7</span><span class="w"> </span><span class="p">(</span><span class="n">dawn</span><span class="o">-</span><span class="n">chorus</span><span class="p">)</span>
+<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span>
+<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="n">Linux</span><span class="mf">-5.19.8-200.f</span><span class="n">c36</span><span class="p">.</span><span class="n">x86_64</span><span class="o">-</span><span class="n">x86_64</span><span class="o">-</span><span class="n">with</span><span class="o">-</span><span class="n">glibc2</span><span class="mf">.35</span><span class="w"> </span><span class="mi">2022-09-17</span><span class="w"> </span><span class="mi">14</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mi">55</span>
+<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">[</span><span class="n">config</span><span class="p">]</span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">app</span><span class="o">:</span><span class="w">         </span><span class="n">blog</span><span class="o">:</span><span class="mh">0x7fb8a1067a90</span>
 <span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">transport</span><span class="o">:</span><span class="w">   </span><span class="n">amqp</span><span class="o">:</span><span class="c1">//guest:**@localhost:5672//</span>
 <span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">results</span><span class="o">:</span><span class="w">     </span><span class="n">disabled</span><span class="o">:</span><span class="c1">//</span>
-<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">concurrency</span><span class="o">:</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">(</span><span class="n">prefork</span><span class="p">)</span><span class="w"></span>
-<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">task</span><span class="w"> </span><span class="n">events</span><span class="o">:</span><span class="w"> </span><span class="n">OFF</span><span class="w"> </span><span class="p">(</span><span class="n">enable</span><span class="w"> </span><span class="o">-</span><span class="n">E</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">monitor</span><span class="w"> </span><span class="n">tasks</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">worker</span><span class="p">)</span><span class="w"></span>
-<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span><span class="w"></span>
-<span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="p">[</span><span class="n">queues</span><span class="p">]</span><span class="w"></span>
-<span class="w">                </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">celery</span><span class="w">           </span><span class="n">exchange</span><span class="o">=</span><span class="n">celery</span><span class="p">(</span><span class="n">direct</span><span class="p">)</span><span class="w"> </span><span class="n">key</span><span class="o">=</span><span class="n">celery</span><span class="w"></span>
+<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">concurrency</span><span class="o">:</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">(</span><span class="n">prefork</span><span class="p">)</span>
+<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">task</span><span class="w"> </span><span class="n">events</span><span class="o">:</span><span class="w"> </span><span class="n">OFF</span><span class="w"> </span><span class="p">(</span><span class="n">enable</span><span class="w"> </span><span class="o">-</span><span class="n">E</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">monitor</span><span class="w"> </span><span class="n">tasks</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">worker</span><span class="p">)</span>
+<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span>
+<span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="p">[</span><span class="n">queues</span><span class="p">]</span>
+<span class="w">                </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">celery</span><span class="w">           </span><span class="n">exchange</span><span class="o">=</span><span class="n">celery</span><span class="p">(</span><span class="n">direct</span><span class="p">)</span><span class="w"> </span><span class="n">key</span><span class="o">=</span><span class="n">celery</span>
 
 
-<span class="p">[</span><span class="n">tasks</span><span class="p">]</span><span class="w"></span>
-<span class="w">  </span><span class="p">.</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="n">debug_task</span><span class="w"></span>
+<span class="p">[</span><span class="n">tasks</span><span class="p">]</span>
+<span class="w">  </span><span class="p">.</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="n">debug_task</span>
 
 <span class="p">[</span><span class="mi">2022-09-17</span><span class="w"> </span><span class="mi">14</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mi">55</span><span class="p">,</span><span class="mi">443</span><span class="o">:</span><span class="w"> </span><span class="n">ERROR</span><span class="o">/</span><span class="n">MainProcess</span><span class="p">]</span><span class="w"> </span><span class="n">consumer</span><span class="o">:</span><span class="w"> </span><span class="n">Cannot</span><span class="w"> </span><span class="n">connect</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">amqp</span><span class="o">:</span><span class="c1">//guest:**@127.0.0.1:5672//: [Errno 111] Connection refused.</span>
-<span class="n">Trying</span><span class="w"> </span><span class="n">again</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mf">2.00</span><span class="w"> </span><span class="n">seconds</span><span class="p">...</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span><span class="w"></span>
+<span class="n">Trying</span><span class="w"> </span><span class="n">again</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mf">2.00</span><span class="w"> </span><span class="n">seconds</span><span class="p">...</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span>
 </code></pre></div>
 
 <p>This is because the default broker URL: <code>amqp://guest:**@127.0.0.1:5672//:</code>
 isn't available. For this to work we'd have to configure a local instance of RabbitMQ.</p>
 <h2>Monitoring Celery Workers</h2>
 <p>Once you're started your celery worker(s), you can monitor their status with:</p>
-<div class="highlight"><pre><span></span><code>pipenv run celery -A blog status
+<div class="highlight"><pre><span></span><code>pipenv<span class="w"> </span>run<span class="w"> </span>celery<span class="w"> </span>-A<span class="w"> </span>blog<span class="w"> </span>status
 </code></pre></div>
 
 <p>i.e:</p>
-<div class="highlight"><pre><span></span><code>$ pipenv run celery -A blog status
--&gt;  celery@fedora: OK
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>pipenv<span class="w"> </span>run<span class="w"> </span>celery<span class="w"> </span>-A<span class="w"> </span>blog<span class="w"> </span>status
+-&gt;<span class="w">  </span>celery@fedora:<span class="w"> </span>OK
 
-<span class="m">1</span> node online.
+<span class="m">1</span><span class="w"> </span>node<span class="w"> </span>online.
 </code></pre></div>
 
 <p>Or via the celery shell:</p>
-<div class="highlight"><pre><span></span><code>pipenv run celery -A blog shell
+<div class="highlight"><pre><span></span><code>pipenv<span class="w"> </span>run<span class="w"> </span>celery<span class="w"> </span>-A<span class="w"> </span>blog<span class="w"> </span>shell
 </code></pre></div>
 
 <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">app</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">inspect</span><span class="p">()</span><span class="o">.</span><span class="n">stats</span><span class="p">()</span>
@@ -233,7 +370,7 @@ isn't available. For this to work we'd have to configure a local instance of Rab
 
 <h2>Triggering Tasks</h2>
 <p>We can now start to trigger tasks via the celery shell. In a process process run:</p>
-<div class="highlight"><pre><span></span><code>pipenv run celery -A blog shell
+<div class="highlight"><pre><span></span><code>pipenv<span class="w"> </span>run<span class="w"> </span>celery<span class="w"> </span>-A<span class="w"> </span>blog<span class="w"> </span>shell
 </code></pre></div>
 
 <p>Launching the shell session gives us access to all the currently registered tasks, you can see whats available with:</p>
@@ -253,9 +390,9 @@ isn't available. For this to work we'd have to configure a local instance of Rab
 </code></pre></div>
 
 <p>If you check back on your celery worker process this task should have been received + executed</p>
-<div class="highlight"><pre><span></span><code><span class="o">[</span><span class="n">2022-09-17 15:45:31,460: INFO/MainProcess</span><span class="o">]</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="n">debug_task</span><span class="o">[</span><span class="n">55d109d4-cef1-477a-bbbf-6baf5acf2857</span><span class="o">]</span><span class="w"> </span><span class="n">received</span><span class="w"></span>
-<span class="o">[</span><span class="n">2022-09-17 15:45:31,461: WARNING/ForkPoolWorker-8</span><span class="o">]</span><span class="w"> </span><span class="nl">Request</span><span class="p">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nl">Context</span><span class="p">:</span><span class="w"> </span><span class="err">{</span><span class="s1">&#39;lang&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;py&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;task&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;blog.celery.debug_task&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;id&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;55d109d4-cef1-477a-bbbf-6baf5acf2857&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;shadow&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;eta&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;expires&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;group&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;group_index&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;retries&#39;</span><span class="err">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;timelimit&#39;</span><span class="err">:</span><span class="w"> </span><span class="o">[</span><span class="n">None, None</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;root_id&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;55d109d4-cef1-477a-bbbf-6baf5acf2857&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;parent_id&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;argsrepr&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;()&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;kwargsrepr&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;{}&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;origin&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;gen42154@fedora&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;ignore_result&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">False</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;properties&#39;</span><span class="err">:</span><span class="w"> </span><span class="err">{</span><span class="s1">&#39;correlation_id&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;55d109d4-cef1-477a-bbbf-6baf5acf2857&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;reply_to&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;a9e82ead-2c56-3682-883c-421d7ac5d9d1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;delivery_mode&#39;</span><span class="err">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;delivery_info&#39;</span><span class="err">:</span><span class="w"> </span><span class="err">{</span><span class="s1">&#39;exchange&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;routing_key&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;celery&#39;</span><span class="err">}</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;priority&#39;</span><span class="err">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;body_encoding&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;base64&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;delivery_tag&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;5191f0a6-d448-4fd8-ace1-a23fa674c25a&#39;</span><span class="err">}</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;reply_to&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;a9e82ead-2c56-3682-883c-421d7ac5d9d1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;correlation_id&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;55d109d4-cef1-477a-bbbf-6baf5acf2857&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;hostname&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;celery@fedora&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;delivery_info&#39;</span><span class="err">:</span><span class="w"> </span><span class="err">{</span><span class="s1">&#39;exchange&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;routing_key&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;celery&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;priority&#39;</span><span class="err">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;redelivered&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="err">}</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;args&#39;</span><span class="err">:</span><span class="w"> </span><span class="err">[]</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;kwargs&#39;</span><span class="err">:</span><span class="w"> </span><span class="err">{}</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;is_eager&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">False</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;callbacks&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;errbacks&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;chain&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;chord&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;called_directly&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">False</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_protected&#39;</span><span class="err">:</span><span class="w"> </span><span class="mi">1</span><span class="err">}</span><span class="o">&gt;</span><span class="w"></span>
-<span class="o">[</span><span class="n">2022-09-17 15:45:31,461: INFO/ForkPoolWorker-8</span><span class="o">]</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="n">debug_task</span><span class="o">[</span><span class="n">55d109d4-cef1-477a-bbbf-6baf5acf2857</span><span class="o">]</span><span class="w"> </span><span class="n">succeeded</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mf">0.0006546240001625847</span><span class="nl">s</span><span class="p">:</span><span class="w"> </span><span class="k">None</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="o">[</span><span class="n">2022-09-17 15:45:31,460: INFO/MainProcess</span><span class="o">]</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="n">debug_task</span><span class="o">[</span><span class="n">55d109d4-cef1-477a-bbbf-6baf5acf2857</span><span class="o">]</span><span class="w"> </span><span class="n">received</span>
+<span class="o">[</span><span class="n">2022-09-17 15:45:31,461: WARNING/ForkPoolWorker-8</span><span class="o">]</span><span class="w"> </span><span class="nl">Request</span><span class="p">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nl">Context</span><span class="p">:</span><span class="w"> </span><span class="err">{</span><span class="s1">&#39;lang&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;py&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;task&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;blog.celery.debug_task&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;id&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;55d109d4-cef1-477a-bbbf-6baf5acf2857&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;shadow&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;eta&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;expires&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;group&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;group_index&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;retries&#39;</span><span class="err">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;timelimit&#39;</span><span class="err">:</span><span class="w"> </span><span class="o">[</span><span class="n">None, None</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;root_id&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;55d109d4-cef1-477a-bbbf-6baf5acf2857&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;parent_id&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;argsrepr&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;()&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;kwargsrepr&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;{}&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;origin&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;gen42154@fedora&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;ignore_result&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">False</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;properties&#39;</span><span class="err">:</span><span class="w"> </span><span class="err">{</span><span class="s1">&#39;correlation_id&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;55d109d4-cef1-477a-bbbf-6baf5acf2857&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;reply_to&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;a9e82ead-2c56-3682-883c-421d7ac5d9d1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;delivery_mode&#39;</span><span class="err">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;delivery_info&#39;</span><span class="err">:</span><span class="w"> </span><span class="err">{</span><span class="s1">&#39;exchange&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;routing_key&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;celery&#39;</span><span class="err">}</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;priority&#39;</span><span class="err">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;body_encoding&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;base64&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;delivery_tag&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;5191f0a6-d448-4fd8-ace1-a23fa674c25a&#39;</span><span class="err">}</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;reply_to&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;a9e82ead-2c56-3682-883c-421d7ac5d9d1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;correlation_id&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;55d109d4-cef1-477a-bbbf-6baf5acf2857&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;hostname&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;celery@fedora&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;delivery_info&#39;</span><span class="err">:</span><span class="w"> </span><span class="err">{</span><span class="s1">&#39;exchange&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;routing_key&#39;</span><span class="err">:</span><span class="w"> </span><span class="s1">&#39;celery&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;priority&#39;</span><span class="err">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;redelivered&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="err">}</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;args&#39;</span><span class="err">:</span><span class="w"> </span><span class="err">[]</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;kwargs&#39;</span><span class="err">:</span><span class="w"> </span><span class="err">{}</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;is_eager&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">False</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;callbacks&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;errbacks&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;chain&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;chord&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">None</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;called_directly&#39;</span><span class="err">:</span><span class="w"> </span><span class="k">False</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_protected&#39;</span><span class="err">:</span><span class="w"> </span><span class="mi">1</span><span class="err">}</span><span class="o">&gt;</span>
+<span class="o">[</span><span class="n">2022-09-17 15:45:31,461: INFO/ForkPoolWorker-8</span><span class="o">]</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="n">debug_task</span><span class="o">[</span><span class="n">55d109d4-cef1-477a-bbbf-6baf5acf2857</span><span class="o">]</span><span class="w"> </span><span class="n">succeeded</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mf">0.0006546240001625847</span><span class="nl">s</span><span class="p">:</span><span class="w"> </span><span class="k">None</span>
 </code></pre></div>
 
 <h2>Configure Celery Results Backend (redis)</h2>
@@ -280,24 +417,24 @@ configured DB instance) as a results backend instead.</p>
 
 <p>After making this change you will need to restart celery. Once you've done so the new <code>blog.celery.square</code>
 task should appear under <code>[tasks]</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="n">celery</span><span class="nv">@fedora</span><span class="w"> </span><span class="n">v5</span><span class="mf">.2.7</span><span class="w"> </span><span class="p">(</span><span class="n">dawn</span><span class="o">-</span><span class="n">chorus</span><span class="p">)</span><span class="w"></span>
-<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span><span class="w"></span>
-<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="n">Linux</span><span class="o">-</span><span class="mf">5.19.8</span><span class="o">-</span><span class="mf">200.</span><span class="n">fc36</span><span class="p">.</span><span class="n">x86_64</span><span class="o">-</span><span class="n">x86_64</span><span class="o">-</span><span class="k">with</span><span class="o">-</span><span class="n">glibc2</span><span class="mf">.35</span><span class="w"> </span><span class="mi">2022</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">17</span><span class="w"> </span><span class="mi">15</span><span class="err">:</span><span class="mi">52</span><span class="err">:</span><span class="mi">57</span><span class="w"></span>
-<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span><span class="w"></span>
-<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="o">[</span><span class="n">config</span><span class="o">]</span><span class="w"></span>
-<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">app</span><span class="p">:</span><span class="w">         </span><span class="nl">blog</span><span class="p">:</span><span class="mh">0x7f48c5467a90</span><span class="w"></span>
-<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">transport</span><span class="p">:</span><span class="w">   </span><span class="nl">redis</span><span class="p">:</span><span class="o">//</span><span class="nl">localhost</span><span class="p">:</span><span class="mi">6379</span><span class="o">/</span><span class="mi">0</span><span class="w"></span>
-<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">results</span><span class="p">:</span><span class="w">     </span><span class="nl">disabled</span><span class="p">:</span><span class="o">//</span><span class="w"></span>
-<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">concurrency</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">(</span><span class="n">prefork</span><span class="p">)</span><span class="w"></span>
-<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">task</span><span class="w"> </span><span class="nl">events</span><span class="p">:</span><span class="w"> </span><span class="k">OFF</span><span class="w"> </span><span class="p">(</span><span class="n">enable</span><span class="w"> </span><span class="o">-</span><span class="n">E</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">monitor</span><span class="w"> </span><span class="n">tasks</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">worker</span><span class="p">)</span><span class="w"></span>
-<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span><span class="w"></span>
-<span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="o">[</span><span class="n">queues</span><span class="o">]</span><span class="w"></span>
-<span class="w">                </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">celery</span><span class="w">           </span><span class="n">exchange</span><span class="o">=</span><span class="n">celery</span><span class="p">(</span><span class="n">direct</span><span class="p">)</span><span class="w"> </span><span class="k">key</span><span class="o">=</span><span class="n">celery</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="n">celery</span><span class="nv">@fedora</span><span class="w"> </span><span class="n">v5</span><span class="mf">.2.7</span><span class="w"> </span><span class="p">(</span><span class="n">dawn</span><span class="o">-</span><span class="n">chorus</span><span class="p">)</span>
+<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span>
+<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="n">Linux</span><span class="o">-</span><span class="mf">5.19.8</span><span class="o">-</span><span class="mf">200.</span><span class="n">fc36</span><span class="p">.</span><span class="n">x86_64</span><span class="o">-</span><span class="n">x86_64</span><span class="o">-</span><span class="k">with</span><span class="o">-</span><span class="n">glibc2</span><span class="mf">.35</span><span class="w"> </span><span class="mi">2022</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">17</span><span class="w"> </span><span class="mi">15</span><span class="err">:</span><span class="mi">52</span><span class="err">:</span><span class="mi">57</span>
+<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="o">[</span><span class="n">config</span><span class="o">]</span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">app</span><span class="p">:</span><span class="w">         </span><span class="nl">blog</span><span class="p">:</span><span class="mh">0x7f48c5467a90</span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">transport</span><span class="p">:</span><span class="w">   </span><span class="nl">redis</span><span class="p">:</span><span class="o">//</span><span class="nl">localhost</span><span class="p">:</span><span class="mi">6379</span><span class="o">/</span><span class="mi">0</span>
+<span class="o">-</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="o">----------</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">results</span><span class="p">:</span><span class="w">     </span><span class="nl">disabled</span><span class="p">:</span><span class="o">//</span>
+<span class="o">-</span><span class="w"> </span><span class="o">***</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">---</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="nl">concurrency</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">(</span><span class="n">prefork</span><span class="p">)</span>
+<span class="o">--</span><span class="w"> </span><span class="o">*******</span><span class="w"> </span><span class="o">----</span><span class="w"> </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">task</span><span class="w"> </span><span class="nl">events</span><span class="p">:</span><span class="w"> </span><span class="k">OFF</span><span class="w"> </span><span class="p">(</span><span class="n">enable</span><span class="w"> </span><span class="o">-</span><span class="n">E</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">monitor</span><span class="w"> </span><span class="n">tasks</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">worker</span><span class="p">)</span>
+<span class="o">---</span><span class="w"> </span><span class="o">*****</span><span class="w"> </span><span class="o">-----</span>
+<span class="w"> </span><span class="o">--------------</span><span class="w"> </span><span class="o">[</span><span class="n">queues</span><span class="o">]</span>
+<span class="w">                </span><span class="p">.</span><span class="o">&gt;</span><span class="w"> </span><span class="n">celery</span><span class="w">           </span><span class="n">exchange</span><span class="o">=</span><span class="n">celery</span><span class="p">(</span><span class="n">direct</span><span class="p">)</span><span class="w"> </span><span class="k">key</span><span class="o">=</span><span class="n">celery</span>
 
 
-<span class="o">[</span><span class="n">tasks</span><span class="o">]</span><span class="w"></span>
-<span class="w">  </span><span class="p">.</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="n">debug_task</span><span class="w"></span>
-<span class="w">  </span><span class="p">.</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="nf">square</span><span class="w"></span>
+<span class="o">[</span><span class="n">tasks</span><span class="o">]</span>
+<span class="w">  </span><span class="p">.</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="n">debug_task</span>
+<span class="w">  </span><span class="p">.</span><span class="w"> </span><span class="n">blog</span><span class="p">.</span><span class="n">celery</span><span class="p">.</span><span class="nf">square</span>
 </code></pre></div>
 
 <p>Just as before, (inside a celery shell process) lets trigger our new <code>square</code> task:</p>
@@ -324,12 +461,9 @@ task should appear under <code>[tasks]</code>:</p>
 <code>django-celery-results</code> package to configure Djagno as a results backend and
 discuss cases where this might be necessary.</p>
   </article>
-        </main>
-        <footer>
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="https://getpelican.com/">Pelican</a>,
-                which takes great advantage of <a href="https://www.python.org/">Python</a>.
-                </address><!-- /#about -->
-        </footer>
-</body>
+</div>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
 </html>

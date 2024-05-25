@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en" bs-theme="auto">
+  <head>
+        <title>Jack's Blog - ⌨️ My unhealthy relationship with keyboards</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" type="text/css" href="https://jackevansevo.github.io/theme/css/pygments.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <link rel="shortcut icon" type="image/x-icon" href="https://jackevansevo.github.io/theme/favicon.ico">
+      <script src="https://cdn.counter.dev/script.js" data-id="91e2f16c-845b-4d6d-95f5-ec7838cee876" data-utcoffset="-3"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+<style>
+main {
+	font-family: "Signika Negative" !important;
+	font-weight: 300;
+}
+</style>
+
+        <link href="https://jackevansevo.github.io/index.xml" type="application/atom+xml" rel="alternate" title="Jack's Blog Full Atom Feed" />
+  <style>
+    .content {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+    }
+  </style>
+
+
+  <style>
+    article > h2, h3, h4, h5 {
+      padding: 1rem 0;
+    }
+    article > div.highlight > pre {
+      border: solid 0.1rem; rgb(33, 37, 41);
+      background-color: #fdf6e3;
+      padding: 0.5rem;
+      border-radius: 0.4rem;
+    }
+  </style>
+
+
+
+    <meta name="tags" content="Personal" />
+    <meta name="tags" content="Keyboards" />
+
+    <script>
+/*!
+ * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+ * Copyright 2011-2023 The Bootstrap Authors
+ * Licensed under the Creative Commons Attribution 3.0 Unported License.
+ */
+
+      (() => {
+        'use strict'
+
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme) {
+            return storedTheme
+          }
+
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+          if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark')
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+          }
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme')
+
+          if (!themeSwitcher) {
+            return
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text')
+          const activeThemeIcon = document.querySelector('.theme-icon-active use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+          const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href')
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+            element.setAttribute('aria-pressed', 'false')
+          })
+
+          btnToActive.classList.add('active')
+          btnToActive.setAttribute('aria-pressed', 'true')
+          activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+          const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
+          themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+
+          if (focus) {
+            themeSwitcher.focus()
+          }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme !== 'light' && storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme())
+
+          document.querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+              toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+              })
+            })
+        })
+      })()
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://jackevansevo.github.io/">Jack's Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/"><i class="bi bi-house-fill"></i>&nbsp;&nbsp;Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://jackevansevo.github.io/index.xml"><i class="bi bi-rss-fill"></i>&nbsp;&nbsp;Feed</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://twitter.com/Thisisjackevans"><i class="bi bi-twitter"></i>&nbsp;&nbsp;Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://fosstodon.org/@JackEvans"><i class="bi bi-mastodon"></i>&nbsp;&nbsp;Mastodon</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://www.youtube.com/channel/UC4yxFC8_z8-DeYLeHXKtdHg"><i class="bi bi-youtube"></i>&nbsp;&nbsp;Youtube</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub"><i class="bi bi-pen-fill"></i>&nbsp;&nbsp;Resume</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container p-lg-5 p-3">
+<div class="content">
+  <h1>
+    <a href="https://jackevansevo.github.io/my-unhealthy-relationship-with-keyboards.html" rel="bookmark" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover" title="Permalink to ⌨️ My unhealthy relationship with keyboards">⌨️ My unhealthy relationship with keyboards</a>
+  </h1>
+  <header>
+    
+  </header>
+  <footer>
+    <time datetime="2023-09-22T00:00:00+01:00">
+	    <i class="bi bi-clock"></i><b>Published:</b> Fri 22 September 2023
+    </time>
+<div>
+<i class="bi bi-tags"></i>&nbsp;<b>Tags</b>:
+  <a href="https://jackevansevo.github.io/tag/personal.html"><span class="badge text-bg-danger">Personal</span></a>
+  <a href="https://jackevansevo.github.io/tag/keyboards.html"><span class="badge text-bg-secondary">Keyboards</span></a>
+</div>
+  </footer><!-- /.post-info -->
+  <hr>
+  <article>
+    <p>I've had a pretty shaky history with keyboards. I've never been able to stick
+with the same board for any amount of time. They either break or I get the urge
+to try out something new. Just like with distro hopping and endless vim
+configuration, it's half hobby half unhealthy obsession.</p>
+<p>Thankfully for my wallet I'm neither a hoarder nor collector of keyboards.
+Typically owning one or two at a time before replacing them with a new purchase.</p>
+<p>As an experiment I wanted to write down a complete timeline of keyboards I've
+owned/used in my life up until now and reminisce of keyboards past.</p>
+<h2>Unknown Cherry Keyboard</h2>
+<p>I remember a few keyboards before this, but none of them are noteworthy
+enough to write about. So I'm starting with this board because it was
+my first mechanical keyboard.</p>
+<p>I don't have any receipts to look up the model name but I believe it was
+a <a href="https://www.cherry.kr/cherry-g84-4100-compact-keyboard.html">CHERRY
+G84-4100</a> (or
+similar). Because this was my first mechanical keyboard I didn't really have any
+point of reference to compare it to. At this point in time mechanical keyboards
+didn't register to me as especially popular, or even a hobby. It wasn't until later where I noticed they
+became really popular, mostly amongst programmers and gaming enthusiasts.</p>
+<p><img src="" class="img-fluid rounded mx-auto d-block" alt="Cherry compact keyboard"></p>
+<p>I remember loving this keyboard dearly right up until the moment I spilled
+coffee all over it and it died. I was utterly distraught and felt so clumsy for
+breaking something which (at the time) was such an expensive purchase.</p>
+<h2>Noppoo Choc Mini</h2>
+<p>Hooked on the clikcy sound, I think I next purchased a <a href="https://deskthority.net/wiki/Noppoo_Choc_Mini">Noppoo Choc
+Mini</a> online, which I believe it
+no longer available. I distinctly remember it being a super 'pingy' keyboard
+and my parents complaining about the noise, so I experimented with putting
+o-rings in dampen the sound, which helped a bit.</p>
+<p><img src="https://jackevansevo.github.io/images/Noppoo-Choc-Mini.png" class="img-fluid rounded mx-auto d-block" alt="Noppoo Choc Mini"></p>
+<p>Around this time I think I must have seen blank keycaps online for the first
+time and thought this was the coolest thing ever 😎.</p>
+<p>So like an idiot I borrowed my dads files and sanded off all the letters from
+the keyboard 🤦. As you might have guessed the outcome was not great.</p>
+<p>I think I sold it on eBay for a fraction of the cost to someone who probably
+had the sense the swap the keycaps.</p>
+<h2>Microsoft Sculpt Ergonomic Desktop</h2>
+<p>Perhaps jaded with mechanical keyboards at this point I decided to try
+something else whacky, the Microsoft Sculpt Ergonomic Desktop. This was my
+first foray into ergonomic style split keyboards so it took a while to get used
+to, but after a while I really grew to love this keyboard. The switches in this
+board were scissor switches, super quiet and an absolute joy to type on. Before
+this board I'd never learnt to touch type properly so I credit the ergonomic
+split with actually forcing me to learn how to touch type properly.</p>
+<p><img src="https://jackevansevo.github.io/images/Microsoft-Sculpt-Ergonomic-Desktop.png" class="img-fluid rounded mx-auto d-block" alt="Microsoft Scupt Ergonomic Desktop"></p>
+<p>This keyboard worked great until the 'e' key stopped working. Annoyingly this
+would only start to fail when typing a specific combination of keys. The actual
+error was difficult to reproduce but would intermittently cause problems when
+typing, frustrating enough to stop me using this board.</p>
+<h2>Das 4k Compact</h2>
+<p>Dissatisfied with my earlier bodged attempt to 'improve' (and ultimately
+destroy) my noppoo choc mini I fixed my eyes on the real deal: A Das 4K compact
+with blank keycaps 😎.</p>
+<p><img src="https://jackevansevo.github.io/images/daskeyboard-4C-ultimate.png" class="img-fluid rounded mx-auto d-block" alt="Das 4k Compact"></p>
+<p>I used this board during my final years of University, and afterwards at my
+first graduate office job. I remember feeling slightly nervous to bring
+it into the office because of the blank keycaps.</p>
+<p>At this job I frequently had to manually type in passwords when SSH'ing onto
+remote boxes (don't ask). I consider myself to be a pretty proficient touch
+typist, and pretty much never have to look at the keyboard, but in high
+pressure situations I'd frequently misstype passwords and be forced to ring up
+tech support to unlock my account. This happened frequently enough that
+I realised that blank keycaps weren't for me, at least not for the office/work
+environment.</p>
+<h2>Apple Magic Keyboard</h2>
+<p>During the pandemic I caved a brought an M1 Mac Mini, to compliment my purchase
+I also decided to buy an <a href="">apple magic keyboard</a>. The build quality was top
+notch, it felt nice to type on and the compact size meant it didn't take up
+much space on my desk. I can see why so many people use this kind of keyboard.</p>
+<p><img src="https://jackevansevo.github.io/images/Apple-Magic-Keyboard.png" class="img-fluid rounded mx-auto d-block" alt="Apple Magic Keyboard"></p>
+<p>Running MacOS 100% of the time wasn't all that I'd hoped it to be and I found
+myself swapping between my Mac Mini and other Windows or Linux machines. At
+this point using the magic keyboard with it's Mac specific layout became
+unpractical and confusing. To make it easier to switch between devices
+I decided to look for keyboards on the market that were compatible with each
+major OS and made it easy to quickly switch between layouts.</p>
+<h2>My current keyboard</h2>
+<p>...Which brings us to present day, currently I'm typing this article on
+a Logitech MX Keys. Because it's compatible with multiple OS's I use it for
+work on my company issued Macbook and personal usage on my own Linux machine.</p>
+<p><img src="https://jackevansevo.github.io/images/Logitceh-MX-Keys.png" class="img-fluid rounded mx-auto d-block" alt="Logitech MX Keys"></p>
+<p>I really like the tying experience of this keyboard, the super low profile keys
+allow me to type super fast. However I have a few personal gripes: Firstly the
+board is completely wireless, which means I have to charge it via USB-C. As I'm
+sat practically tethered to my desk all day a permanently wired option would
+actually be more convenient as it would save me to the hassle of charging.</p>
+<p>My second issue is simply the size of the board. Had I had waited a few months
+I could have purchased the more compact MX Mini compact equivalent which would
+have been far more convenient for me. The size is an issue for two main
+reasons, predominantly because I like to travel with my keyboard, so it needs
+to easily fit in a bag/suitcase. Secondly I'm not (and never have been) someone
+who ever uses the numpad, so all these additional keys just sit there unused,
+wasting precious real estate on my desk.</p>
+<p>My final gripe is in the construction of the board itself, and how this led to
+some unfortunate damage. The switch design makes it really tricky to pop off
+keys in case you ever need to clean your keyboard (who amongst us hasn't at
+some point eaten near their desk and got crumbs stuck under their keys). At one
+point I attempted to lever/pop off a keycap and managed to break the tiny
+connector the switch hooks into. So now I have a broken key on my number row
+that doesn't sit fully flush and occasionally gets stuck :(</p>
+<p>There appears to be no easy way to acquire replacement key caps for the MX keys
+unless you're willing to pay an absolutely extortionate price from third party
+vendors.</p>
+<h2>My Next Board?</h2>
+<p>My gripes with the Logitech MX Keys have led me once again to start evaluating
+other options that are out there. I think I'm in the market for a new keyboard
+before the end of 2023, but want to do plenty of research to find the best
+value board. I likely write a follow up post about my criteria and research and
+perhaps a follow up review if I end up pulling the trigger.</p>
+  </article>
+</div>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
+</html>

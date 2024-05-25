@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en" bs-theme="auto">
+  <head>
+        <title>Jack's Blog - Bulk audio/video processing on Linux</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" type="text/css" href="https://jackevansevo.github.io/theme/css/pygments.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <link rel="shortcut icon" type="image/x-icon" href="https://jackevansevo.github.io/theme/favicon.ico">
+      <script src="https://cdn.counter.dev/script.js" data-id="91e2f16c-845b-4d6d-95f5-ec7838cee876" data-utcoffset="-3"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+<style>
+main {
+	font-family: "Signika Negative" !important;
+	font-weight: 300;
+}
+</style>
+
+        <link href="https://jackevansevo.github.io/index.xml" type="application/atom+xml" rel="alternate" title="Jack's Blog Full Atom Feed" />
+  <style>
+    .content {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+    }
+  </style>
+
+
+  <style>
+    article > h2, h3, h4, h5 {
+      padding: 1rem 0;
+    }
+    article > div.highlight > pre {
+      border: solid 0.1rem; rgb(33, 37, 41);
+      background-color: #fdf6e3;
+      padding: 0.5rem;
+      border-radius: 0.4rem;
+    }
+  </style>
+
+
+
+    <meta name="tags" content="Linux" />
+    <meta name="tags" content="Audio" />
+
+    <script>
+/*!
+ * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+ * Copyright 2011-2023 The Bootstrap Authors
+ * Licensed under the Creative Commons Attribution 3.0 Unported License.
+ */
+
+      (() => {
+        'use strict'
+
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme) {
+            return storedTheme
+          }
+
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+          if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark')
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+          }
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme')
+
+          if (!themeSwitcher) {
+            return
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text')
+          const activeThemeIcon = document.querySelector('.theme-icon-active use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+          const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href')
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+            element.setAttribute('aria-pressed', 'false')
+          })
+
+          btnToActive.classList.add('active')
+          btnToActive.setAttribute('aria-pressed', 'true')
+          activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+          const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
+          themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+
+          if (focus) {
+            themeSwitcher.focus()
+          }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme !== 'light' && storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme())
+
+          document.querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+              toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+              })
+            })
+        })
+      })()
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://jackevansevo.github.io/">Jack's Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/"><i class="bi bi-house-fill"></i>&nbsp;&nbsp;Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://jackevansevo.github.io/index.xml"><i class="bi bi-rss-fill"></i>&nbsp;&nbsp;Feed</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://twitter.com/Thisisjackevans"><i class="bi bi-twitter"></i>&nbsp;&nbsp;Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://fosstodon.org/@JackEvans"><i class="bi bi-mastodon"></i>&nbsp;&nbsp;Mastodon</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://www.youtube.com/channel/UC4yxFC8_z8-DeYLeHXKtdHg"><i class="bi bi-youtube"></i>&nbsp;&nbsp;Youtube</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub"><i class="bi bi-pen-fill"></i>&nbsp;&nbsp;Resume</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container p-lg-5 p-3">
+<div class="content">
+  <h1>
+    <a href="https://jackevansevo.github.io/bulk-audiovideo-processing-on-linux.html" rel="bookmark" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover" title="Permalink to Bulk audio/video processing on Linux">Bulk audio/video processing on Linux</a>
+  </h1>
+  <header>
+    
+  </header>
+  <footer>
+    <time datetime="2023-05-03T00:00:00+01:00">
+	    <i class="bi bi-clock"></i><b>Published:</b> Wed 03 May 2023
+    </time>
+<div>
+<i class="bi bi-tags"></i>&nbsp;<b>Tags</b>:
+  <a href="https://jackevansevo.github.io/tag/linux.html"><span class="badge text-bg-dark">Linux</span></a>
+  <a href="https://jackevansevo.github.io/tag/audio.html"><span class="badge text-bg-secondary">Audio</span></a>
+</div>
+  </footer><!-- /.post-info -->
+  <hr>
+  <article>
+    <p>I recently decided to try my hand recording and producing some screencasts
+showing myself building a web application in Django.</p>
+<div class="ratio ratio-21x9">
+<iframe src="https://www.youtube.com/embed/U278PbXzF2I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
+
+<p>I found it comfortable record videos in short manageable sections between 5-20
+minutes. However doing so resulted in a bunch of videos ...</p>
+<div class="highlight"><pre><span></span><code>➜  Videos ls -rt podcatcher/*.mp4
+podcatcher/ep2.mp4  podcatcher/ep7.mp4  podcatcher/ep5.mp4  podcatcher/ep3.mp4  podcatcher/ep8.mp4   podcatcher/ep12.mp4  podcatcher/ep10.mp4  podcatcher/ep14.mp4
+podcatcher/ep1.mp4  podcatcher/ep6.mp4  podcatcher/ep4.mp4  podcatcher/ep9.mp4  podcatcher/ep13.mp4  podcatcher/ep11.mp4  podcatcher/ep15.mp4
+</code></pre></div>
+
+<p>Unfortunately for me the audio recording with my headset microphone didn't
+exactly come out to great. So I found myself needing to some post-processing in
+(Audacity)[https://www.audacityteam.org/] to equalize/amplify and compress the
+audio streams of each.</p>
+<h1>Fixing the bad audio</h1>
+<p>To figure out how to fix the audio quality I searched YouTube and found this great guide:</p>
+<div class="ratio ratio-21x9">
+<iframe src="https://www.youtube.com/embed/dQCB72S64L4"
+title="YouTube video player" frameborder="0" allow="accelerometer; autoplay;
+clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+allowfullscreen></iframe>
+</div>
+
+<p><br></p>
+<h1>Automating the process</h1>
+<p>I started out painstakingly opening each video in Kdenlive and rendering an
+audio only copy of the source video to load into Audacity.</p>
+<p>This was before realizing I could just open the videos themselves straight in
+Audacity with no issues 🤦 (Audacity will automatically convert an mp4 to an
+editable audio stream).</p>
+<p>The next piece of the puzzle was to automate the process of improving the audio. I wanted to be able to apply the same quick and dirty equalization/amplification/compression (from the above tutorial) across all of my files.</p>
+<p>I found that this could easily be achieved using Audacity custom macros, which
+allow you to chain together a sequence of steps you'd typically drive from the
+UI in an automated fashion.</p>
+<div class="ratio ratio-21x9">
+<iframe src="https://www.youtube.com/embed/_DZeio_ansE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
+
+<p><img src="https://jackevansevo.github.io/images/Screenshot_20230502_173754.png" alt="Adaucity Manage Macros"  style="max-height: 600px"/></p>
+<p>Running this macro across all my video files creates a bunch of processed audio files in: <code>~/Documents/macro-output</code></p>
+<div class="highlight"><pre><span></span><code>➜  ~ ls ~/Documents/macro-output
+ep10.ogg  ep11.ogg  ep12.ogg  ep13.ogg  ep14.ogg  ep15.ogg  ep1.ogg  ep2.ogg  ep3.ogg  ep4.ogg  ep5.ogg  ep6.ogg  ep7.ogg  ep8.ogg  ep9.ogg
+</code></pre></div>
+
+<h1>Replacing the original audio</h1>
+<p>I can then use <code>ffmpeg</code> (curtsey of this
+<a href="https://flyingsound.net/about/articles/replace-video-audio-ffmpeg/">article</a>)
+to create a brand new video from the original, replacing the original audio
+track with the newly processed audio files:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">for</span><span class="w"> </span><span class="nt">f</span><span class="w"> </span><span class="nt">in</span><span class="w"> </span><span class="o">$(</span><span class="nt">ls</span><span class="w"> </span><span class="o">*</span><span class="p">.</span><span class="nc">mp4</span><span class="o">);</span><span class="w"> </span><span class="nt">do</span><span class="w"> </span><span class="nt">ffmpeg</span><span class="w"> </span><span class="nt">-i</span><span class="w"> </span><span class="o">$</span><span class="nt">f</span><span class="w"> </span><span class="nt">-i</span><span class="w"> </span><span class="o">~/</span><span class="nt">Documents</span><span class="o">/</span><span class="nt">macro-output</span><span class="o">/$(</span><span class="nt">basename</span><span class="w"> </span><span class="o">$</span><span class="nt">f</span><span class="w"> </span><span class="p">.</span><span class="nc">mp4</span><span class="o">)</span><span class="p">.</span><span class="nc">ogg</span><span class="w"> </span><span class="nt">-acodec</span><span class="w"> </span><span class="nt">copy</span><span class="w"> </span><span class="nt">-vcodec</span><span class="w"> </span><span class="nt">copy</span><span class="w"> </span><span class="nt">-map</span><span class="w"> </span><span class="nt">0</span><span class="p">:</span><span class="nd">v</span><span class="p">:</span><span class="nd">0</span><span class="w"> </span><span class="nt">-map</span><span class="w"> </span><span class="nt">1</span><span class="p">:</span><span class="nd">a</span><span class="p">:</span><span class="nd">0</span><span class="w"> </span><span class="o">$(</span><span class="nt">basename</span><span class="w"> </span><span class="o">$</span><span class="nt">f</span><span class="w"> </span><span class="p">.</span><span class="nc">mp4</span><span class="o">)</span><span class="nt">-final</span><span class="p">.</span><span class="nc">mp4</span><span class="o">;</span><span class="w"> </span><span class="nt">done</span>
+</code></pre></div>
+
+<p>Which once finished gives me exactly what I need:</p>
+<div class="highlight"><pre><span></span><code>➜  podcatcher ll *.mp4
+-rw-r--r-- 1 jack jack  30M May  2 17:20 ep10-final.mp4
+-rw-r--r-- 1 jack jack  34M May  2 16:51 ep10.mp4
+-rw-r--r-- 1 jack jack  27M May  2 17:20 ep11-final.mp4
+-rw-r--r-- 1 jack jack  30M May  2 16:51 ep11.mp4
+-rw-r--r-- 1 jack jack  46M May  2 17:20 ep12-final.mp4
+-rw-r--r-- 1 jack jack  52M May  2 16:51 ep12.mp4
+-rw-r--r-- 1 jack jack  80M May  2 17:20 ep13-final.mp4
+-rw-r--r-- 1 jack jack  89M May  2 16:51 ep13.mp4
+-rw-r--r-- 1 jack jack  22M May  2 17:20 ep14-final.mp4
+-rw-r--r-- 1 jack jack  25M May  2 16:51 ep14.mp4
+-rw-r--r-- 1 jack jack  25M May  2 17:20 ep15-final.mp4
+-rw-r--r-- 1 jack jack  28M May  2 16:51 ep15.mp4
+-rw-r--r-- 1 jack jack 3.8M May  2 17:20 ep1-final.mp4
+-rw-r--r-- 1 jack jack 4.5M May  2 16:51 ep1.mp4
+-rw-r--r-- 1 jack jack 8.4M May  2 17:20 ep2-final.mp4
+-rw-r--r-- 1 jack jack  11M May  2 16:51 ep2.mp4
+-rw-r--r-- 1 jack jack  19M May  2 17:20 ep3-final.mp4
+-rw-r--r-- 1 jack jack  22M May  2 16:51 ep3.mp4
+-rw-r--r-- 1 jack jack  70M May  2 17:20 ep4-final.mp4
+-rw-r--r-- 1 jack jack  77M May  2 16:51 ep4.mp4
+-rw-r--r-- 1 jack jack  45M May  2 17:20 ep5-final.mp4
+-rw-r--r-- 1 jack jack  51M May  2 16:51 ep5.mp4
+-rw-r--r-- 1 jack jack  34M May  2 17:20 ep6-final.mp4
+-rw-r--r-- 1 jack jack  37M May  2 16:51 ep6.mp4
+-rw-r--r-- 1 jack jack  13M May  2 17:20 ep7-final.mp4
+-rw-r--r-- 1 jack jack  15M May  2 16:51 ep7.mp4
+-rw-r--r-- 1 jack jack  44M May  2 17:20 ep8-final.mp4
+-rw-r--r-- 1 jack jack  49M May  2 16:51 ep8.mp4
+-rw-r--r-- 1 jack jack  33M May  2 17:20 ep9-final.mp4
+-rw-r--r-- 1 jack jack  37M May  2 16:51 ep9.mp4
+</code></pre></div>
+
+<hr>
+<h1>Conclusion</h1>
+<p>Overall I'm super pleased with the result. Whilst the quality of the finished
+audio still isn't perfect, it's probably the best I can do with my current
+setup.</p>
+<p>The steps here have saved me quite a bit of painful editing and will hopefully
+save me a lot more time in the future.</p>
+<p>I'm curious to know what workflows over people have for solving this kind of
+task. I'm guessing the majority of people who upload content to Youtube
+probably aren't familiar with ffmpeg or Adaucity, would they painstakingly edit
+each clip by hand?</p>
+<p>I'm guessing  there's better tools in software like Premier Pro, lightworks or
+DaVinci that can handle audio processing easily.</p>
+<p>Now I just need to figure out how to automate thumbnail creation the whole
+process will be super smooth!</p>
+  </article>
+</div>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
+</html>

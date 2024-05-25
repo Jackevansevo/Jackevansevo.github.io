@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en" bs-theme="auto">
+  <head>
+        <title>Jack's Blog - January 2023 Review</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" type="text/css" href="https://jackevansevo.github.io/theme/css/pygments.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <link rel="shortcut icon" type="image/x-icon" href="https://jackevansevo.github.io/theme/favicon.ico">
+      <script src="https://cdn.counter.dev/script.js" data-id="91e2f16c-845b-4d6d-95f5-ec7838cee876" data-utcoffset="-3"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+<style>
+main {
+	font-family: "Signika Negative" !important;
+	font-weight: 300;
+}
+</style>
+
+        <link href="https://jackevansevo.github.io/index.xml" type="application/atom+xml" rel="alternate" title="Jack's Blog Full Atom Feed" />
+  <style>
+    .content {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+    }
+  </style>
+
+
+  <style>
+    article > h2, h3, h4, h5 {
+      padding: 1rem 0;
+    }
+    article > div.highlight > pre {
+      border: solid 0.1rem; rgb(33, 37, 41);
+      background-color: #fdf6e3;
+      padding: 0.5rem;
+      border-radius: 0.4rem;
+    }
+  </style>
+
+
+
+    <meta name="tags" content="Personal" />
+
+    <script>
+/*!
+ * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+ * Copyright 2011-2023 The Bootstrap Authors
+ * Licensed under the Creative Commons Attribution 3.0 Unported License.
+ */
+
+      (() => {
+        'use strict'
+
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme) {
+            return storedTheme
+          }
+
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+          if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark')
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+          }
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme')
+
+          if (!themeSwitcher) {
+            return
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text')
+          const activeThemeIcon = document.querySelector('.theme-icon-active use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+          const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href')
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+            element.setAttribute('aria-pressed', 'false')
+          })
+
+          btnToActive.classList.add('active')
+          btnToActive.setAttribute('aria-pressed', 'true')
+          activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+          const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
+          themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+
+          if (focus) {
+            themeSwitcher.focus()
+          }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme !== 'light' && storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme())
+
+          document.querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+              toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+              })
+            })
+        })
+      })()
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://jackevansevo.github.io/">Jack's Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/"><i class="bi bi-house-fill"></i>&nbsp;&nbsp;Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://jackevansevo.github.io/index.xml"><i class="bi bi-rss-fill"></i>&nbsp;&nbsp;Feed</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://twitter.com/Thisisjackevans"><i class="bi bi-twitter"></i>&nbsp;&nbsp;Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://fosstodon.org/@JackEvans"><i class="bi bi-mastodon"></i>&nbsp;&nbsp;Mastodon</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://www.youtube.com/channel/UC4yxFC8_z8-DeYLeHXKtdHg"><i class="bi bi-youtube"></i>&nbsp;&nbsp;Youtube</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub"><i class="bi bi-pen-fill"></i>&nbsp;&nbsp;Resume</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container p-lg-5 p-3">
+<div class="content">
+  <h1>
+    <a href="https://jackevansevo.github.io/january-2023-review.html" rel="bookmark" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover" title="Permalink to January 2023 Review">January 2023 Review</a>
+  </h1>
+  <header>
+    
+  </header>
+  <footer>
+    <time datetime="2023-02-02T00:00:00+00:00">
+	    <i class="bi bi-clock"></i><b>Published:</b> Thu 02 February 2023
+    </time>
+<div>
+<i class="bi bi-tags"></i>&nbsp;<b>Tags</b>:
+  <a href="https://jackevansevo.github.io/tag/personal.html"><span class="badge text-bg-danger">Personal</span></a>
+</div>
+  </footer><!-- /.post-info -->
+  <hr>
+  <article>
+    <style>
+img {
+    max-height: 250px;
+}
+</style>
+
+<p>2023 started with a bang and January has been a pretty busy month for me.</p>
+<p>Back in 2022 I applied for a visa to live and work in Brazil 🇧🇷. After some
+delays I'm pleased to announce my visa finally got approved 🥳. There's
+a deadline for me to present myself in the country with the appropriate
+paperwork so I've been rapidly scrambling to get ready. I'm a little anxious
+about the process, but fingers crossed everything will work out okay.</p>
+<p>I drew up a huge list of things I need to complete before my departure on the
+11th February and thankfully most of the things have now been crossed off.</p>
+<p>In preparation I've been moving items into storage and selling (or donating)
+personal belongings before I leave. So far I've managed to sell my car,
+completely clear out all of books on my bookshelf, and sell a bunch of unused
+computing devices.</p>
+<p>According to eBay I've sold 18 individual items in the last 30 days. Despite
+the postal strikes in the UK, much to my amazements all of them were delivered
+to buyers with zero issues. So I think I've used all my luck quota for 2023.</p>
+<p>The process of having a giant clear out has been quite therapeutic, and feels
+like I'm effectively starting my life afresh. The experience really made me
+realize quite how much rubbish I'd accumulated over the years.</p>
+<p><img src="https://jackevansevo.github.io/images/PXL_20230115_100555134.MP.jpg" alt="A pile of all the books I've sold on eBay"  style="max-height: 500px"/></p>
+<p>Amongst the pile of books was a 'Python for Dummies' I had as a teenager, which
+gave me a chuckle because now I'm paid to write Python.</p>
+<h1>📚 Books I Read This Month</h1>
+<p>Alongside selling books, I somehow managed to find the time to read this month.
+I managed to complete three books in total, which sets me well on target for my
+2023 reading goals.</p>
+<h2>1. Contact - Carl Sagan</h2>
+<p><img alt="Contact - Carl Sagan" src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1560757678l/52283742.jpg"></p>
+<p>I really enjoyed this one, a page turner that captured my attention all the way
+through.</p>
+<p>The book captures the work of the SETI Institute (Search for extraterrestrial
+intelligence), following a group scientists who monitor space for signs of life
+with telescopes.</p>
+<h2>2. Kleptopia: How Dirty Money is Conquering the World - Kleptopia: How Dirty Money is Conquering the World - Tom Burgis</h2>
+<p><img alt="Kleptopia: How Dirty Money is Conquering the World - Kleptopia: How Dirty Money is Conquering the World - Tom Burgis" src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1576309963i/49230961.jpg"></p>
+<p>I'll be honest this one felt like a bit of a chore to get through. There were
+numerous points where I nearly shelved it, but eventually I managed to power
+all the way through.</p>
+<h2>3. The Anthropocene Reviewed - John Green</h2>
+<p><img alt="The Anthropocene Reviewed - John Green" src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1616514130i/55145261.jpg"></p>
+<p>Although I've read some of his previous books I'm think I'm more familiar with
+John from his YouTube endeavours than his literature.</p>
+<p>I've been an on and off watcher of John (and his brother Hank) on YouTube for
+as long as I can remember. So it was nice to learn a bit more about someone
+who's been a stable of my YouTube subscription box for most of a decade.</p>
+<h2>Currently Reading</h2>
+<p><img alt="The Lord of the Rings" src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1566425108i/33.jpg"></p>
+<p>I'm currently reading the Lord of the Rings Trilogy, and I'm on Book 1 of the Fellowship of the Ring.</p>
+<p><br></p>
+<p><br></p>
+<h1>Some Articles I Enjoyed</h1>
+<p><a href="https://ntdotdev.wordpress.com/2023/01/01/state-of-the-windows-how-many-layers-of-ui-inconsistencies-are-in-windows-11/">State of the Windows: How many layers of UI inconsistencies are in Windows 11?</a></p>
+<p>Every time I touch Windows I'm shocked by the number of UI inconsistencies and
+this article really drives that point home. Made me realize I really do take
+Linux and MacOS for granted sometimes.</p>
+<p><a href="https://idlewords.com/2023/1/why_not_mars.htm">Why Not Mars</a></p>
+<p>This article/array lays out some arguments explaining why investing resources
+into travelling to Mars is most likely a bad idea.</p>
+<p>I do think it's a bit absurd the billionaire class on this planet (Elon
+Musk/Jeff Bezos) are so desperately trying to escape to space/mars via
+privately funded space programs instead of using those resources to solve
+problems back home on earth.</p>
+<p>Prediction: We won't see human being on the surface of Mars in my lifetime.
+Elon can barely run Twitter, so I hardly trust SpaceX to colonize another
+planet.</p>
+<p><a href="https://snarky.ca/classifying-python-virtual-environment-workflows/">Classifying Python virtual environment workflows</a></p>
+<p>A comprehensive overview of the madness that is Python packaging. Every time
+this topic comes up it's a tad depressing, because the landscape hasn't really
+improved, (and in some cases continues to fragment) in recent years.</p>
+<p>But I do think efforts to document &amp; describe all the different workflows like
+this are an important step to hopefully improving the situation. I am hopeful
+the situation will improve.</p>
+<p><a href="https://www.baldurbjarnason.com/2022/programming-is-a-pop-culture/">Programming is a Pop Culture</a></p>
+<p>This one resonated with me, we all like to think of programmers as super
+objective, but in reality, when it comes to the tools we pick there's a lot of
+tribalism. Things aren't necessarily trendy because they're 'the best' (by some
+objective measure), sometimes tools or language just happen to be in the right
+time at the right place.</p>
+<p><a href="https://lukeplant.me.uk/blog/posts/pythons-disappointing-superpowers/">Python’s “Disappointing” Superpowers</a></p>
+<p>A cracking article written in response to <a href="https://buttondown.email/hillelwayne/archive/i-am-disappointed-by-dynamic-typing/">another
+article</a>
+lamenting the lack of 'superpowers' in modern languages. This article shines
+a light on some major Python projects that do happen to make use of clever
+dynamic programming (you just might not notice). I'd encourage you to have
+a read of both.</p>
+  </article>
+</div>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
+</html>

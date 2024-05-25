@@ -1,50 +1,187 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-          <title>Jack's Blog - The struggles of building a Feed Reader</title>
-        <meta charset="utf-8" />
-        <meta name="generator" content="Pelican" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="/theme/css/main.css" />
-        <link rel="shortcut icon" type="image/x-icon" href="/theme/favicon.ico">
+<!doctype html>
+<html lang="en" bs-theme="auto">
+  <head>
+        <title>Jack's Blog - The struggles of building a Feed Reader</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" type="text/css" href="https://jackevansevo.github.io/theme/css/pygments.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <link rel="shortcut icon" type="image/x-icon" href="https://jackevansevo.github.io/theme/favicon.ico">
+      <script src="https://cdn.counter.dev/script.js" data-id="91e2f16c-845b-4d6d-95f5-ec7838cee876" data-utcoffset="-3"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+<style>
+main {
+	font-family: "Signika Negative" !important;
+	font-weight: 300;
+}
+</style>
+
+        <link href="https://jackevansevo.github.io/index.xml" type="application/atom+xml" rel="alternate" title="Jack's Blog Full Atom Feed" />
+  <style>
+    .content {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+    }
+  </style>
+
+
+  <style>
+    article > h2, h3, h4, h5 {
+      padding: 1rem 0;
+    }
+    article > div.highlight > pre {
+      border: solid 0.1rem; rgb(33, 37, 41);
+      background-color: #fdf6e3;
+      padding: 0.5rem;
+      border-radius: 0.4rem;
+    }
+  </style>
 
 
 
+    <meta name="tags" content="Python" />
+    <meta name="tags" content="RSS" />
 
-    <meta name="tags" content="python" />
-    <meta name="tags" content="rss" />
+    <script>
+/*!
+ * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+ * Copyright 2011-2023 The Bootstrap Authors
+ * Licensed under the Creative Commons Attribution 3.0 Unported License.
+ */
 
-</head>
+      (() => {
+        'use strict'
 
-<body>
-        <header>
-                <h1><a href="/">Jack's Blog</a></h1>
-        </header>
-        <nav><ul>
-        </ul></nav>
-        <main>
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme) {
+            return storedTheme
+          }
+
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+          if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark')
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+          }
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme')
+
+          if (!themeSwitcher) {
+            return
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text')
+          const activeThemeIcon = document.querySelector('.theme-icon-active use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+          const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href')
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+            element.setAttribute('aria-pressed', 'false')
+          })
+
+          btnToActive.classList.add('active')
+          btnToActive.setAttribute('aria-pressed', 'true')
+          activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+          const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
+          themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+
+          if (focus) {
+            themeSwitcher.focus()
+          }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme !== 'light' && storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme())
+
+          document.querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+              toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+              })
+            })
+        })
+      })()
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://jackevansevo.github.io/">Jack's Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/"><i class="bi bi-house-fill"></i>&nbsp;&nbsp;Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://jackevansevo.github.io/index.xml"><i class="bi bi-rss-fill"></i>&nbsp;&nbsp;Feed</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://twitter.com/Thisisjackevans"><i class="bi bi-twitter"></i>&nbsp;&nbsp;Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://fosstodon.org/@JackEvans"><i class="bi bi-mastodon"></i>&nbsp;&nbsp;Mastodon</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://www.youtube.com/channel/UC4yxFC8_z8-DeYLeHXKtdHg"><i class="bi bi-youtube"></i>&nbsp;&nbsp;Youtube</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub"><i class="bi bi-pen-fill"></i>&nbsp;&nbsp;Resume</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container p-lg-5 p-3">
+<div class="content">
+  <h1>
+    <a href="https://jackevansevo.github.io/the-struggles-of-building-a-feed-reader.html" rel="bookmark" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover" title="Permalink to The struggles of building a Feed Reader">The struggles of building a Feed Reader</a>
+  </h1>
   <header>
-    <h1 class="entry-title">
-      <a href="/the-struggles-of-building-a-feed-reader.html" rel="bookmark"
-         title="Permalink to The struggles of building a Feed Reader">The struggles of building a Feed Reader</a></h1>
- 
+    
   </header>
-  <footer class="post-info">
-    <time class="published" datetime="2022-10-05T00:00:00+01:00">
-      Wed 05 October 2022
+  <footer>
+    <time datetime="2022-10-05T00:00:00+01:00">
+	    <i class="bi bi-clock"></i><b>Published:</b> Wed 05 October 2022
     </time>
-    <address class="vcard author">
-      By           <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-    </address>
-    <div class="category">
-        Category: <a href="/category/python.html">Python</a>
-    </div>
-    <div class="tags">
-        Tags:
-            <a href="/tag/python.html">python</a>
-            <a href="/tag/rss.html">rss</a>
-    </div>
+<div>
+<i class="bi bi-tags"></i>&nbsp;<b>Tags</b>:
+  <a href="https://jackevansevo.github.io/tag/python.html"><span class="badge text-bg-warning">Python</span></a>
+  <a href="https://jackevansevo.github.io/tag/rss.html"><span class="badge text-bg-secondary">RSS</span></a>
+</div>
   </footer><!-- /.post-info -->
+  <hr>
   <article>
     <p><img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/1200px-Feed-icon.svg.png" style="width:18%;"></p>
 <p>I recently I fell down the rabbit hole of building a
@@ -70,7 +207,7 @@ table to handle data from both atom/rss feeds.</p>
 <p>Here's a comparison table I grabbed from the Wikipedia page for <a href="https://en.wikipedia.org/wiki/RSS#RSS_compared_with_Atom">RSS compared
 with Atom</a> which
 lists all the equivalent elements.</p>
-<table>
+<table class="table table-striped table-hover table-sm">
 <thead>
 <tr>
 <th>RSS 2.0</th>
@@ -144,6 +281,7 @@ lists all the equivalent elements.</p>
 </tr>
 </tbody>
 </table>
+
 <p>An RSS feed has a <code>description</code> whereas an Atom feed has a <code>subtitle</code>. If
 you wanted to store this information as a generic 'feed' representation what
 would you name this column?</p>
@@ -169,7 +307,7 @@ RSS/Atom. How do I find the feed URL?</p>
 <p>Typically I'll try and look for an RSS link/icon on the page itself and copy
 this value and paste into my feed reader of choice. Or I'll inspect the page
 source and hunt down the link by CTRL+F searching for different patterns.</p>
-<p><img alt="RSS Inspecting Page Source" src="/images/rss-inspect-element.png" title="Viewing the page source to find RSS links"></p>
+<p><img alt="RSS Inspecting Page Source" src="https://jackevansevo.github.io/images/rss-inspect-element.png" title="Viewing the page source to find RSS links"></p>
 <p>So far I've come across the following common patterns:</p>
 <ul>
 <li><code>example.com/rss.xml</code></li>
@@ -203,26 +341,26 @@ indicating this is very likely the link to the underlying item/entry (not some
 other external link).</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;entry&gt;</span>
 <span class="nt">&lt;title&gt;</span>2021-03-28<span class="nt">&lt;/title&gt;</span>
-<span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;alternate&quot;</span> <span class="na">type=</span><span class="s">&quot;text/html&quot;</span> <span class="na">href=</span><span class="s">&quot;https://www.suckless.org/#2021-03-28&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;link</span><span class="w"> </span><span class="na">rel=</span><span class="s">&quot;alternate&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;text/html&quot;</span><span class="w"> </span><span class="na">href=</span><span class="s">&quot;https://www.suckless.org/#2021-03-28&quot;</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;id&gt;</span>https://www.suckless.org/#2021-03-28T00:00Z<span class="nt">&lt;/id&gt;</span>
 <span class="nt">&lt;updated&gt;</span>2021-03-28T00:00Z<span class="nt">&lt;/updated&gt;</span>
 <span class="nt">&lt;published&gt;</span>2021-03-28T00:00Z<span class="nt">&lt;/published&gt;</span>
-<span class="nt">&lt;content</span> <span class="na">type=</span><span class="s">&quot;html&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;p&gt;</span>On Wednesday, 2021-03-31 there will be scheduled maintenance of the suckless servers. It&#39;s estimated this will take about 2-3 hours from about 19:00 to 21:00 - 22:00 UTC+02:00.<span class="nt">&lt;/p&gt;</span> <span class="nt">&lt;p&gt;</span>The mailinglist, website and source-code repositories will have some downtime.<span class="nt">&lt;/p&gt;</span> <span class="nt">&lt;p&gt;&lt;strong&gt;</span>Update:<span class="nt">&lt;/strong&gt;</span> the maintenance was finished at 2021-03-31 19:10 UTC+02:00. Please let us know if there are issues.<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;content</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;html&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;p&gt;</span>On<span class="w"> </span>Wednesday,<span class="w"> </span>2021-03-31<span class="w"> </span>there<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>scheduled<span class="w"> </span>maintenance<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>suckless<span class="w"> </span>servers.<span class="w"> </span>It&#39;s<span class="w"> </span>estimated<span class="w"> </span>this<span class="w"> </span>will<span class="w"> </span>take<span class="w"> </span>about<span class="w"> </span>2-3<span class="w"> </span>hours<span class="w"> </span>from<span class="w"> </span>about<span class="w"> </span>19:00<span class="w"> </span>to<span class="w"> </span>21:00<span class="w"> </span>-<span class="w"> </span>22:00<span class="w"> </span>UTC+02:00.<span class="nt">&lt;/p&gt;</span><span class="w"> </span><span class="nt">&lt;p&gt;</span>The<span class="w"> </span>mailinglist,<span class="w"> </span>website<span class="w"> </span>and<span class="w"> </span>source-code<span class="w"> </span>repositories<span class="w"> </span>will<span class="w"> </span>have<span class="w"> </span>some<span class="w"> </span>downtime.<span class="nt">&lt;/p&gt;</span><span class="w"> </span><span class="nt">&lt;p&gt;&lt;strong&gt;</span>Update:<span class="nt">&lt;/strong&gt;</span><span class="w"> </span>the<span class="w"> </span>maintenance<span class="w"> </span>was<span class="w"> </span>finished<span class="w"> </span>at<span class="w"> </span>2021-03-31<span class="w"> </span>19:10<span class="w"> </span>UTC+02:00.<span class="w"> </span>Please<span class="w"> </span>let<span class="w"> </span>us<span class="w"> </span>know<span class="w"> </span>if<span class="w"> </span>there<span class="w"> </span>are<span class="w"> </span>issues.<span class="nt">&lt;/p&gt;</span>
 <span class="nt">&lt;/content&gt;</span>
 <span class="nt">&lt;/entry&gt;</span>
 </code></pre></div>
 
 <p>Some Atom feeds just contain a <code>&lt;link href=""&gt;</code></p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;entry&gt;</span>
-  <span class="nt">&lt;title&gt;</span>
-    Finding performance problems: profiling or logging?
-  <span class="nt">&lt;/title&gt;</span>
-  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;https://pythonspeed.com/articles/logging-vs-profiling/&quot;</span><span class="nt">/&gt;</span>
-  <span class="nt">&lt;updated&gt;</span>2022-08-09T00:00:00+00:00<span class="nt">&lt;/updated&gt;</span>
-  <span class="nt">&lt;id&gt;</span>
-    https://pythonspeed.com/articles/logging-vs-profiling
-  <span class="nt">&lt;/id&gt;</span>
+<span class="w">  </span><span class="nt">&lt;title&gt;</span>
+<span class="w">    </span>Finding<span class="w"> </span>performance<span class="w"> </span>problems:<span class="w"> </span>profiling<span class="w"> </span>or<span class="w"> </span>logging?
+<span class="w">  </span><span class="nt">&lt;/title&gt;</span>
+<span class="w">  </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">href=</span><span class="s">&quot;https://pythonspeed.com/articles/logging-vs-profiling/&quot;</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;updated&gt;</span>2022-08-09T00:00:00+00:00<span class="nt">&lt;/updated&gt;</span>
+<span class="w">  </span><span class="nt">&lt;id&gt;</span>
+<span class="w">    </span>https://pythonspeed.com/articles/logging-vs-profiling
+<span class="w">  </span><span class="nt">&lt;/id&gt;</span>
 <span class="nt">&lt;/entry&gt;</span>
 </code></pre></div>
 
@@ -258,14 +396,14 @@ find the 'best' link for each entry:</p>
 <p>An entry might have <code>updated</code> but not published. If you weren't lucky enough to
 scrape/fetch the feed when the entry contained <code>published</code> you'll never know.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;entry&gt;</span>
-  <span class="nt">&lt;title&gt;</span>
-    Blah Blah Blah
-  <span class="nt">&lt;/title&gt;</span>
-  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;https://example.com/articles/example/&quot;</span><span class="nt">/&gt;</span>
-  <span class="nt">&lt;updated&gt;</span>2022-08-09T00:00:00+00:00<span class="nt">&lt;/updated&gt;</span>
-  <span class="nt">&lt;content</span> <span class="na">type=</span><span class="s">&quot;html&quot;</span> <span class="na">xml:base=</span><span class="s">&quot;https://example.com/articles/example/&quot;</span><span class="nt">&gt;</span>
-    Blah Blah Blah
-  <span class="nt">&lt;/content&gt;</span>
+<span class="w">  </span><span class="nt">&lt;title&gt;</span>
+<span class="w">    </span>Blah<span class="w"> </span>Blah<span class="w"> </span>Blah
+<span class="w">  </span><span class="nt">&lt;/title&gt;</span>
+<span class="w">  </span><span class="nt">&lt;link</span><span class="w"> </span><span class="na">href=</span><span class="s">&quot;https://example.com/articles/example/&quot;</span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;updated&gt;</span>2022-08-09T00:00:00+00:00<span class="nt">&lt;/updated&gt;</span>
+<span class="w">  </span><span class="nt">&lt;content</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;html&quot;</span><span class="w"> </span><span class="na">xml:base=</span><span class="s">&quot;https://example.com/articles/example/&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span>Blah<span class="w"> </span>Blah<span class="w"> </span>Blah
+<span class="w">  </span><span class="nt">&lt;/content&gt;</span>
 <span class="nt">&lt;/entry&gt;</span>
 </code></pre></div>
 
@@ -292,19 +430,19 @@ scrape/fetch the feed when the entry contained <code>published</code> you'll nev
 <p>Some feeds have an empty <code>description</code> and only serve <code>content</code>. To resolve
 this this I opt to show a preview of the article content in place of the
 missing description.</p>
-<div class="highlight"><pre><span></span><code><span class="cp">{%</span> <span class="k">if</span> <span class="nv">entry.summary</span> <span class="cp">%}</span><span class="x"></span>
-<span class="x">  </span><span class="cp">{{</span> <span class="nv">entry.summary</span><span class="o">|</span><span class="nf">truncatewords</span><span class="o">:</span><span class="m">50</span> <span class="cp">}}</span><span class="x"></span>
-<span class="cp">{%</span> <span class="k">elif</span> <span class="nv">entry.content</span> <span class="cp">%}</span><span class="x"></span>
-<span class="x">  </span><span class="cp">{{</span> <span class="nv">entry.content</span><span class="o">|</span><span class="nf">truncatewords</span><span class="o">:</span><span class="m">50</span> <span class="cp">}}</span><span class="x"></span>
-<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span><span class="x"></span>
+<div class="highlight"><pre><span></span><code><span class="cp">{%</span> <span class="k">if</span> <span class="nv">entry.summary</span> <span class="cp">%}</span>
+<span class="x">  </span><span class="cp">{{</span> <span class="nv">entry.summary</span><span class="o">|</span><span class="nf">truncatewords</span><span class="o">:</span><span class="m">50</span> <span class="cp">}}</span>
+<span class="cp">{%</span> <span class="k">elif</span> <span class="nv">entry.content</span> <span class="cp">%}</span>
+<span class="x">  </span><span class="cp">{{</span> <span class="nv">entry.content</span><span class="o">|</span><span class="nf">truncatewords</span><span class="o">:</span><span class="m">50</span> <span class="cp">}}</span>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
 </code></pre></div>
 
 <p>Sometimes the entry can just be completely devoid of any information, I've encountered feeds like:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;entry&gt;</span>
-  <span class="nt">&lt;title/&gt;</span>
-  <span class="nt">&lt;id/&gt;</span>
-  <span class="nt">&lt;updated&gt;</span>0001-01-01T00:00:00Z<span class="nt">&lt;/updated&gt;</span>
-  <span class="nt">&lt;content/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;title/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;id/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;updated&gt;</span>0001-01-01T00:00:00Z<span class="nt">&lt;/updated&gt;</span>
+<span class="w">  </span><span class="nt">&lt;content/&gt;</span>
 <span class="nt">&lt;/entry&gt;</span>
 </code></pre></div>
 
@@ -360,13 +498,13 @@ guaranteed to be something you can slugify.</p>
 <p>Most feeds are pretty good about this, but every so often I run into:</p>
 <p>Links to items/entries being relative:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;item&gt;</span>
-  <span class="nt">&lt;title&gt;</span>On being a staff engineer<span class="nt">&lt;/title&gt;</span>
-  <span class="nt">&lt;link&gt;</span>/blog/2022/08/on-being-a-staff-engineer/<span class="nt">&lt;/link&gt;</span>
+<span class="w">  </span><span class="nt">&lt;title&gt;</span>On<span class="w"> </span>being<span class="w"> </span>a<span class="w"> </span>staff<span class="w"> </span>engineer<span class="nt">&lt;/title&gt;</span>
+<span class="w">  </span><span class="nt">&lt;link&gt;</span>/blog/2022/08/on-being-a-staff-engineer/<span class="nt">&lt;/link&gt;</span>
 <span class="nt">&lt;/item&gt;</span>
 </code></pre></div>
 
 <p>Top level links (which should be absolute links back to the site) being relative:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;//navoshta.com/&quot;</span> <span class="na">rel=</span><span class="s">&quot;alternate&quot;</span> <span class="na">type=</span><span class="s">&quot;text/html&quot;</span><span class="nt">/&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;link</span><span class="w"> </span><span class="na">href=</span><span class="s">&quot;//navoshta.com/&quot;</span><span class="w"> </span><span class="na">rel=</span><span class="s">&quot;alternate&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;text/html&quot;</span><span class="nt">/&gt;</span>
 </code></pre></div>
 
 <p>Other times the link to the parent site is sometimes malformed or refers to the same URL as the feed itself (not the parent site)</p>
@@ -414,12 +552,9 @@ repeatedly.</p>
 this can be wasted computation + bandwidth. When you're polling many feeds in
 bulk this can start to add up.</p>
   </article>
-        </main>
-        <footer>
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="https://getpelican.com/">Pelican</a>,
-                which takes great advantage of <a href="https://www.python.org/">Python</a>.
-                </address><!-- /#about -->
-        </footer>
-</body>
+</div>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
 </html>

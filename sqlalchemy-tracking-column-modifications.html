@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en" bs-theme="auto">
+  <head>
+        <title>Jack's Blog - SQLAlchemy tracking column modifications</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" type="text/css" href="https://jackevansevo.github.io/theme/css/pygments.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <link rel="shortcut icon" type="image/x-icon" href="https://jackevansevo.github.io/theme/favicon.ico">
+      <script src="https://cdn.counter.dev/script.js" data-id="91e2f16c-845b-4d6d-95f5-ec7838cee876" data-utcoffset="-3"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+<style>
+main {
+	font-family: "Signika Negative" !important;
+	font-weight: 300;
+}
+</style>
+
+        <link href="https://jackevansevo.github.io/index.xml" type="application/atom+xml" rel="alternate" title="Jack's Blog Full Atom Feed" />
+  <style>
+    .content {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+    }
+  </style>
+
+
+  <style>
+    article > h2, h3, h4, h5 {
+      padding: 1rem 0;
+    }
+    article > div.highlight > pre {
+      border: solid 0.1rem; rgb(33, 37, 41);
+      background-color: #fdf6e3;
+      padding: 0.5rem;
+      border-radius: 0.4rem;
+    }
+  </style>
+
+
+
+    <meta name="tags" content="Python" />
+    <meta name="tags" content="SQLAlchemy" />
+
+    <script>
+/*!
+ * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+ * Copyright 2011-2023 The Bootstrap Authors
+ * Licensed under the Creative Commons Attribution 3.0 Unported License.
+ */
+
+      (() => {
+        'use strict'
+
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme) {
+            return storedTheme
+          }
+
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+          if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark')
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+          }
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme')
+
+          if (!themeSwitcher) {
+            return
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text')
+          const activeThemeIcon = document.querySelector('.theme-icon-active use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+          const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href')
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+            element.setAttribute('aria-pressed', 'false')
+          })
+
+          btnToActive.classList.add('active')
+          btnToActive.setAttribute('aria-pressed', 'true')
+          activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+          const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
+          themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+
+          if (focus) {
+            themeSwitcher.focus()
+          }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme !== 'light' && storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme())
+
+          document.querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+              toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+              })
+            })
+        })
+      })()
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://jackevansevo.github.io/">Jack's Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/"><i class="bi bi-house-fill"></i>&nbsp;&nbsp;Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://jackevansevo.github.io/index.xml"><i class="bi bi-rss-fill"></i>&nbsp;&nbsp;Feed</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://twitter.com/Thisisjackevans"><i class="bi bi-twitter"></i>&nbsp;&nbsp;Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://fosstodon.org/@JackEvans"><i class="bi bi-mastodon"></i>&nbsp;&nbsp;Mastodon</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://www.youtube.com/channel/UC4yxFC8_z8-DeYLeHXKtdHg"><i class="bi bi-youtube"></i>&nbsp;&nbsp;Youtube</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub"><i class="bi bi-pen-fill"></i>&nbsp;&nbsp;Resume</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container p-lg-5 p-3">
+<div class="content">
+  <h1>
+    <a href="https://jackevansevo.github.io/sqlalchemy-tracking-column-modifications.html" rel="bookmark" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover" title="Permalink to SQLAlchemy tracking column modifications">SQLAlchemy tracking column modifications</a>
+  </h1>
+  <header>
+    
+  </header>
+  <footer>
+    <time datetime="2023-06-22T00:00:00+01:00">
+	    <i class="bi bi-clock"></i><b>Published:</b> Thu 22 June 2023
+    </time>
+<div>
+<i class="bi bi-tags"></i>&nbsp;<b>Tags</b>:
+  <a href="https://jackevansevo.github.io/tag/python.html"><span class="badge text-bg-warning">Python</span></a>
+  <a href="https://jackevansevo.github.io/tag/sqlalchemy.html"><span class="badge text-bg-danger">SQLAlchemy</span></a>
+</div>
+  </footer><!-- /.post-info -->
+  <hr>
+  <article>
+    <p>Recently I've been playing around with tracking record/field level modifications in SQLAlchemy, here's what I've learnt.</p>
+<h2>Tracking record created at / updated at times</h2>
+<p>A common pattern in SQLAlchemy is to track the <code>created_at</code> &amp; <code>updated_at</code> values of
+individual records.</p>
+<p>Typically this is achieved with a
+<a href="https://docs.sqlalchemy.org/en/20/orm/declarative_mixins.html#mixing-in-
+columns">mixin</a> as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">TimestampMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">created_at</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+    <span class="n">updated_at</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span>
+        <span class="n">DateTime</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">onupdate</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">TimestampMixin</span><span class="p">,</span> <span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;user_account&quot;</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span>
+    <span class="n">fullname</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+</code></pre></div>
+
+<p>Here's an example of this in practice:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;spongebob&quot;</span><span class="p">,</span> <span class="n">fullname</span><span class="o">=</span><span class="s2">&quot;Spongebob Squarepants&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">spongebob</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span><span class="o">.</span><span class="n">created_at</span>
+<span class="go">datetime.datetime(2023, 6, 22, 18, 17, 52)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span><span class="o">.</span><span class="n">updated_at</span>
+<span class="go">datetime.datetime(2023, 6, 22, 18, 17, 52)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Spongebob&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span><span class="o">.</span><span class="n">updated_at</span>
+<span class="go">datetime.datetime(2023, 6, 22, 18, 18, 11)</span>
+</code></pre></div>
+
+<h2>Tracking individual field edit times</h2>
+<p>What if we needed to keep track of when each individual field was
+updated/changed independently?</p>
+<p>There's a million ways to achieve this, but a simple mechanism I came up with is
+to use a mixin that saves individual field changes to a JSON column on each
+table</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">ChangeTrackingMixin</span><span class="p">:</span>
+    <span class="n">changes</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">JSON</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">JSON</span><span class="o">.</span><span class="n">NULL</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">!=</span> <span class="s2">&quot;changes&quot;</span> <span class="ow">and</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__table__</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_record_field_change</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_record_field_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">new_value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">changes</span> <span class="ow">is</span> <span class="n">JSON</span><span class="o">.</span><span class="n">NULL</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">changes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">changes</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">changes</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">new_value</span><span class="p">,</span>
+            <span class="s2">&quot;updated_at&quot;</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+        <span class="p">}</span>
+        <span class="n">flag_modified</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;changes&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_updated_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="n">updated_at</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">changes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;updated_at&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">updated_at</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">updated_at</span><span class="p">)</span>
+</code></pre></div>
+
+<h2>How it works</h2>
+<p>The 'magic' here is this section:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">attr</span> <span class="o">!=</span> <span class="s2">&quot;changes&quot;</span> <span class="ow">and</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__table__</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_record_field_change</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</code></pre></div>
+
+<p>This <code>__setattr__</code> method gets called every time we try to modify the attribute
+of a user record.</p>
+<p>If we happen to be editing one of the keys in the user table (ignoring the <code>"changes"</code> field):</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">attr</span> <span class="o">!=</span> <span class="s2">&quot;changes&quot;</span> <span class="ow">and</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__table__</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</code></pre></div>
+
+<p>Then we call some extra bookkeeping logic:</p>
+<div class="highlight"><pre><span></span><code><span class="bp">self</span><span class="o">.</span><span class="n">_record_field_change</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Then fall back to calling the original logic to update the field</p>
+<div class="highlight"><pre><span></span><code><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</code></pre></div>
+
+<p><br></p>
+<h2>Usage</h2>
+<p>To lookup the individual edit time of a field you can write</p>
+<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">obj</span><span class="o">.</span><span class="n">get_updated_at</span><span class="p">(</span><span class="s1">&#39;field_name&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>You can see this in action below:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;spongebob&quot;</span><span class="p">,</span> <span class="n">fullname</span><span class="o">=</span><span class="s2">&quot;Spongebob Squarepants&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">spongebob</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span><span class="o">.</span><span class="n">created_at</span>
+<span class="go">datetime.datetime(2023, 6, 22, 19, 6, 11)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span><span class="o">.</span><span class="n">updated_at</span>
+<span class="go">datetime.datetime(2023, 6, 22, 19, 6, 11)</span>
+
+<span class="go"># Update the name (uppercase &#39;S&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Spongebob&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+<span class="go"># Reflects the new timestamp of when &#39;name&#39; was updated</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span><span class="o">.</span><span class="n">get_updated_at</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+<span class="go">datetime.datetime(2023, 6, 22, 16, 6, 53, 350103)</span>
+
+<span class="go"># Note &#39;fullname&#39; still retains its earlier value</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span><span class="o">.</span><span class="n">changes</span>
+<span class="go">{&#39;name&#39;: {&#39;value&#39;: &#39;Spongebob&#39;, &#39;updated_at&#39;: &#39;2023-06-22T16:06:53.350103&#39;}, &#39;fullname&#39;: {&#39;value&#39;: &#39;Spongebob Squarepants&#39;, &#39;updated_at&#39;: &#39;2023-06-22T16:06:04.176241&#39;}}</span>
+</code></pre></div>
+
+<p><br></p>
+<h2>Downsides</h2>
+<h3>No server time</h3>
+<p>A major issue with this approach is we're no longer using the server time
+<code>func.now()</code>. Instead we're using the local time of the Python environment
+executing the code.</p>
+<div class="highlight"><pre><span></span><code><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Unfortunately this means that the <code>updated_at</code> timestamp will be different for
+each dirty field in the session when committed. This is demonstrated below:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;spongebob&quot;</span><span class="p">,</span> <span class="n">fullname</span><span class="o">=</span><span class="s2">&quot;Spongebob Squarepants&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">spongebob</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+<span class="go"># Both these values are the same (computed server side)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span><span class="o">.</span><span class="n">created_at</span>
+<span class="go">datetime.datetime(2023, 6, 22, 19, 6, 11)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span><span class="o">.</span><span class="n">updated_at</span>
+<span class="go">datetime.datetime(2023, 6, 22, 19, 6, 11)</span>
+
+<span class="go"># Each of these individual field values are different :(</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span><span class="o">.</span><span class="n">get_updated_at</span><span class="p">(</span><span class="s2">&quot;fullname&quot;</span><span class="p">)</span>
+<span class="go">datetime.datetime(2023, 6, 22, 16, 6, 4, 176241)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span><span class="o">.</span><span class="n">get_updated_at</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+<span class="go">datetime.datetime(2023, 6, 22, 16, 6, 4, 176218)</span>
+</code></pre></div>
+
+<h3>Doesn't work with update statements</h3>
+<p>Mutating the record with an update will not propagate changes to the JSON column
+timestamps:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;spongebob&quot;</span><span class="p">,</span> <span class="n">fullname</span><span class="o">=</span><span class="s2">&quot;Spongebob Squarepants&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">spongebob</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span><span class="o">.</span><span class="n">get_updated_at</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+<span class="go">datetime.datetime(2023, 6, 22, 16, 38, 25, 595457)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">update</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Spongebob&quot;</span><span class="p">))</span>
+<span class="go">&lt;sqlalchemy.engine.cursor.CursorResult object at 0x7f2cd49657f0&gt;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">spongebob</span><span class="p">)</span>
+
+<span class="go"># This value is is the same as before!!!</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span><span class="o">.</span><span class="n">get_updated_at</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+<span class="go">datetime.datetime(2023, 6, 22, 16, 38, 25, 595457)</span>
+</code></pre></div>
+
+<p>To compare, using an <code>update</code> statement does update record level <code>updated_at</code>
+field from the <code>TimestampMixin</code></p>
+<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;spongebob&quot;</span><span class="p">,</span> <span class="n">fullname</span><span class="o">=</span><span class="s2">&quot;Spongebob Squarepants&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">spongebob</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span><span class="o">.</span><span class="n">updated_at</span>
+<span class="go">datetime.datetime(2023, 6, 22, 19, 35, 52)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">update</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Spongebob&quot;</span><span class="p">))</span>
+<span class="go">&lt;sqlalchemy.engine.cursor.CursorResult object at 0x7f35d8f697f0&gt;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">spongebob</span><span class="p">)</span>
+
+<span class="go"># Value is updated!</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spongebob</span><span class="o">.</span><span class="n">updated_at</span>
+<span class="go">datetime.datetime(2023, 6, 22, 19, 36, 10)</span>
+</code></pre></div>
+
+<h1>Conclusion</h1>
+<p>Perhaps there's a clever mechanism with event listeners that avoids these
+drawbacks but I've yet to figure it out.</p>
+<p>If you happen to know and I haven't updated this post, please let me know what
+I'm missing!</p>
+  </article>
+</div>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
+</html>

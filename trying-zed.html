@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en" bs-theme="auto">
+  <head>
+        <title>Jack's Blog - Trying zed</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" type="text/css" href="https://jackevansevo.github.io/theme/css/pygments.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <link rel="shortcut icon" type="image/x-icon" href="https://jackevansevo.github.io/theme/favicon.ico">
+      <script src="https://cdn.counter.dev/script.js" data-id="91e2f16c-845b-4d6d-95f5-ec7838cee876" data-utcoffset="-3"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+<style>
+main {
+	font-family: "Signika Negative" !important;
+	font-weight: 300;
+}
+</style>
+
+        <link href="https://jackevansevo.github.io/index.xml" type="application/atom+xml" rel="alternate" title="Jack's Blog Full Atom Feed" />
+  <style>
+    .content {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+    }
+  </style>
+
+
+  <style>
+    article > h2, h3, h4, h5 {
+      padding: 1rem 0;
+    }
+    article > div.highlight > pre {
+      border: solid 0.1rem; rgb(33, 37, 41);
+      background-color: #fdf6e3;
+      padding: 0.5rem;
+      border-radius: 0.4rem;
+    }
+  </style>
+
+
+
+    <meta name="tags" content="neovim" />
+    <meta name="tags" content="vim" />
+    <meta name="tags" content="editors" />
+
+    <script>
+/*!
+ * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+ * Copyright 2011-2023 The Bootstrap Authors
+ * Licensed under the Creative Commons Attribution 3.0 Unported License.
+ */
+
+      (() => {
+        'use strict'
+
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme) {
+            return storedTheme
+          }
+
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+          if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark')
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+          }
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme')
+
+          if (!themeSwitcher) {
+            return
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text')
+          const activeThemeIcon = document.querySelector('.theme-icon-active use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+          const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href')
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+            element.setAttribute('aria-pressed', 'false')
+          })
+
+          btnToActive.classList.add('active')
+          btnToActive.setAttribute('aria-pressed', 'true')
+          activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+          const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
+          themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+
+          if (focus) {
+            themeSwitcher.focus()
+          }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme !== 'light' && storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme())
+
+          document.querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+              toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+              })
+            })
+        })
+      })()
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://jackevansevo.github.io/">Jack's Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/"><i class="bi bi-house-fill"></i>&nbsp;&nbsp;Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://jackevansevo.github.io/index.xml"><i class="bi bi-rss-fill"></i>&nbsp;&nbsp;Feed</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://twitter.com/Thisisjackevans"><i class="bi bi-twitter"></i>&nbsp;&nbsp;Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://fosstodon.org/@JackEvans"><i class="bi bi-mastodon"></i>&nbsp;&nbsp;Mastodon</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://www.youtube.com/channel/UC4yxFC8_z8-DeYLeHXKtdHg"><i class="bi bi-youtube"></i>&nbsp;&nbsp;Youtube</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub"><i class="bi bi-pen-fill"></i>&nbsp;&nbsp;Resume</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container p-lg-5 p-3">
+<div class="content">
+  <h1>
+    <a href="https://jackevansevo.github.io/trying-zed.html" rel="bookmark" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover" title="Permalink to Trying zed">Trying zed</a>
+  </h1>
+  <header>
+    
+  </header>
+  <footer>
+    <time datetime="2024-07-13T00:00:00+01:00">
+	    <i class="bi bi-clock"></i><b>Published:</b> Sat 13 July 2024
+    </time>
+<div>
+<i class="bi bi-tags"></i>&nbsp;<b>Tags</b>:
+  <a href="https://jackevansevo.github.io/tag/neovim.html"><span class="badge" style="background: #7bb65a">neovim</span></a>
+  <a href="https://jackevansevo.github.io/tag/vim.html"><span class="badge text-bg-success">vim</span></a>
+  <a href="https://jackevansevo.github.io/tag/editors.html"><span class="badge text-bg-secondary">editors</span></a>
+</div>
+  </footer><!-- /.post-info -->
+  <hr>
+  <article>
+    <p>I've been following the development of <a href="https://zed.dev/">Zed</a> for a while. As
+a pretty diehard vim user myself, my interest was peaked after reading <a href="https://registerspill.thorstenball.com/p/from-vim-to-zed">From
+Vim to Zed</a> by
+<a href="https://substack.com/profile/1234646-thorsten-ball">Thorsten Ball</a>, which
+documents the experience of a long time vim switching to Zed.</p>
+<p>I also recently finished watching an interview with the founder (Nathan Sobo)
+on the <a href="https://www.youtube.com/watch?v=fV4aPy1bmY0">Developer Voices Podcast</a></p>
+<div class="ratio ratio-21x9">
+<iframe src="https://www.youtube.com/embed/fV4aPy1bmY0" title="Building the Zed Text Editor (with Nathan Sobo)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
+
+<p><br></p>
+<p>On a more personal note, I noticed the Zed team recently hired some super
+talented developers that I respect/look up to (so it must be good right?).</p>
+<p>So a couple of weeks ago I decided to ditch neovim completely and try out Zed,
+using it for 100% of my day to day coding. After two weeks I thought I'd share
+how my experience went.</p>
+<hr>
+<h2>Things I liked</h2>
+<h3>Change of scenery</h3>
+<p>A little weird to start with, but I've been using a pretty similar vim setup
+for a decade now, so trying something new was a nice change of scenery.</p>
+<p>Kind of like switching to working from a coffee shop,co-working space, or
+outdoor space after being holed up in your office for an extended period of
+time</p>
+<p>Was the code I wrote any better as a result? I doubt it. But was it refreshing
+and exciting to be writing code in an environment that felt completely new.</p>
+<h3>GUI Appearance</h3>
+<p>Whilst I do appreciate the aesthetic of my terminal neovim setup, it's
+difficult to deny a well designed GUI editor simply looks better.</p>
+<p>Instead of having to hack together splits, tabbars and statuslines with unicode
+symbols and text UI elements in Zed just look way nicer.</p>
+<p>Opening zed for the first time I feel like they've put a lot of effort into
+making things look beautiful. I'm a bit fan of their default font and the
+builtin colour schemes.</p>
+<h3>Sensible Balance Between Built-Ins vs 3rd Party Plugins</h3>
+<p>It's my understanding Zed has only recently opened up it's core to allow
+community members to start writing their own editor extensions. Instead of
+relying on community plugins the creators seem to be aiming for a more curated
+experience where core functionality is provided by the editor itself. To get an
+idea about what's included, check out the <a href="https://zed.dev/features">feature Just
+checklist</a> on their site</p>
+<p>Unlike neovim which is completely modular, Zed provides a lot of useful
+features out of the box such as git integration, auto completion, auto pairs,
+LSP support and tree sitter.</p>
+<p>Vim/Neovim is pretty barebones in comparison, instead you have to reach for
+third party plugins to provide useful functionality.</p>
+<p>In my opinion this is both the ecosystems biggest strength, and its biggest
+weakness. Although there's a healthy ecosystem of plugins to choose from, it's
+easy to feel a sense of decision paralysis when deciding which combination of
+plugins to use.</p>
+<p>I love to tweak and tinker with my neovim configuration as much as anyone, but
+lately I'm seeing more value in using a setup that's curated from the ground
+up. Things are just guaranteed to work together in a way that a myriad of third
+party plugins can't.</p>
+<p>I think it's a positive thing that text-editors like Zed (and helix)
+acknowledge the utility of certain functionality and provide these features out
+of the box. I think over time I'd like to see neovim do the same, (why aren't
+<a href="https://github.com/nvim-treesitter/nvim-treesitter">'nvim-treesitter/nvim-treesitter'</a>
+and <a href="https://github.com/neovim/nvim-lspconfig">nvim-lspconfig</a>) just part of
+core neovim already?</p>
+<p>This meant I was able to fire up Zed and actually start being productive with
+essentially zero tweaks to my config. I chose a colour scheme I liked, enabled
+Vim mode and suddenly I was writing code.</p>
+<h3>Comprehensive vim mode</h3>
+<p>Coming from neovim it's a non-starter for me if an editor doesn't support modal
+editing or provide vim key mappings. A lot of editors kind of get the basics
+right, but there's weird corners where things ends up not working as you'd
+expect. Unless you're a vim user this kind of uncanny valley behaviour is
+difficult to explain.</p>
+<p>Thankfully in Zed the vim mode feels really well thought out, it complements
+the editor experience and usually does what you'd expect it to.</p>
+<p>There's a really interesting discussion on zed's vim-mode and why they chose to
+not 'just embed neovim' and instead do their own things (spoiler they have
+different goals).</p>
+<h3>Performance</h3>
+<p>The editor feels super snappy, responsive and fairly light on resources. One of
+the things that prevents me from ever using VSCode for any length of time is
+that the experience feels sluggish, especially on older hardware.</p>
+<p>At no point during my trial did the editor freeze or or feel laggy, everything
+felt pretty buttery smooth.</p>
+<h3>Click to open files</h3>
+<p>Something super simple (but something completely missing from my terminal
+workflow) is the ability to click to open a file in the terminal output and
+have this pop up in the editor.</p>
+<p>This is great when running tests or linters and just directly jumping to the
+location in your editor to fix the problem.</p>
+<p>In neovim I'm accustomed to highlighting the path to a file in a terminal tab,
+switching back to my neovim tab and then opening with <code>:e &lt;filename&gt;</code>, which in
+comparison is super inconvenient.</p>
+<p>Now I've gotten used to the way Zed handles this it will be frustrating to ever
+revert back.</p>
+<h3>Multi cursors</h3>
+<p>There's a group of people in the vim community that are adamant multi-cursors
+ren't something that's needed. Technically you <strong>can</strong> do anything achievable
+with multi-cursors, but IMO that doesn't mean you <strong>should</strong> settle for it.</p>
+<p>Zed manages to implement this feature in a way that feels like it complements
+vim and feels much more useable that whatever the vim alternative would be.</p>
+<h3>Built in terminal</h3>
+<p>When I decided I give Zed a try I told myself I'd go all in, abandoning
+a designated terminal app completely. So when running tests, scripts and
+services I've been doing using Zeds builtin terminal.</p>
+<p>I like being able to quickly access the builtin terminal with Command+J, having
+a keybinding on the home-row makes it easy to access. Likewise being able to
+toggle full-screen this window with Shift+Escape means I was able to completely
+replicate what I was doing inside Iterm beforehand.</p>
+<hr>
+<h2>Things I Disliked</h2>
+<h3>Buffer/Split Management</h3>
+<p>My brain has been altered by the way vim/neovim manages splits and buffers.
+Fundamentally this makes it difficult for me to adapt to a tab based workflow.
+In vim a split is just a window into underlying buffers. Splits share the same
+underlying buffers, meaning you can cycle between all open buffers in any
+split.</p>
+<p>In zed (and most other GUI editors) if you make a separate window split, you
+can only cycle through tabs that belong to that split. Frequently, I found
+myself making new splits and having to do some manually tab management to get
+what I wanted.</p>
+<p>Furthermore, one of the settings I have in enabled in neovim is
+splitright/splitbelow. This means when I create a new split it automatically
+focusses the new split to the right (or below) of my existing window. In zed
+the opposite happens, which I found quite jarring.</p>
+<h3>LSP Support</h3>
+<p>I'm used to running both ruff and pylsp at the same time, the former helps lint
+&amp; format my code whereas the latter does more typical language server things
+like provide jump to definition and variable renaming.</p>
+<p>Currently it's only possible to use Python with the default <code>pyright</code> language
+server https://zed.dev/docs/languages/python</p>
+<p>This really is one of major things preventing me from making the leap to Zed
+completely. I really hope in the future they open up the editor to support any
+LSP's (not just the default recommended one), and allow multiple of them to run
+at the same time.</p>
+<h1>Conclusion</h1>
+<p>Overall my experience was positive and I'm excited to see how the editor
+evolves/improves other time. If you're curious, I'd encourage you to give it
+a try yourself.</p>
+<p>In the modern era of boated election apps and excessive RAM usage it's awesome
+to see the original authors of Atom (and it's electron framework cousin) take
+another stab at building an editor but this time with a focus on performance.</p>
+<p>I think once the LSP support is more mature I'll definitely be giving it
+another go!</p>
+  </article>
+</div>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
+</html>

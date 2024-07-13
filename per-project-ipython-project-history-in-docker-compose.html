@@ -1,83 +1,217 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-          <title>Jack's Blog - Per project IPython project history in docker compose</title>
-        <meta charset="utf-8" />
-        <meta name="generator" content="Pelican" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="/theme/css/main.css" />
-        <link rel="shortcut icon" type="image/x-icon" href="/theme/favicon.ico">
+<!doctype html>
+<html lang="en" bs-theme="auto">
+  <head>
+        <title>Jack's Blog - Per project IPython project history in docker compose</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" type="text/css" href="https://jackevansevo.github.io/theme/css/pygments.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <link rel="shortcut icon" type="image/x-icon" href="https://jackevansevo.github.io/theme/favicon.ico">
+      <script src="https://cdn.counter.dev/script.js" data-id="91e2f16c-845b-4d6d-95f5-ec7838cee876" data-utcoffset="-3"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+<style>
+main {
+	font-family: "Signika Negative" !important;
+	font-weight: 300;
+}
+</style>
+
+        <link href="https://jackevansevo.github.io/index.xml" type="application/atom+xml" rel="alternate" title="Jack's Blog Full Atom Feed" />
+  <style>
+    .content {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+    }
+  </style>
+
+
+  <style>
+    article > h2, h3, h4, h5 {
+      padding: 1rem 0;
+    }
+    article > div.highlight > pre {
+      border: solid 0.1rem; rgb(33, 37, 41);
+      background-color: #fdf6e3;
+      padding: 0.5rem;
+      border-radius: 0.4rem;
+    }
+  </style>
 
 
 
+    <meta name="tags" content="Python" />
+    <meta name="tags" content="Docker" />
 
-    <meta name="tags" content="python" />
-    <meta name="tags" content="docker" />
+    <script>
+/*!
+ * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+ * Copyright 2011-2023 The Bootstrap Authors
+ * Licensed under the Creative Commons Attribution 3.0 Unported License.
+ */
 
-</head>
+      (() => {
+        'use strict'
 
-<body>
-        <header>
-                <h1><a href="/">Jack's Blog</a></h1>
-        </header>
-        <nav><ul>
-        </ul></nav>
-        <main>
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme) {
+            return storedTheme
+          }
+
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+          if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark')
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+          }
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme')
+
+          if (!themeSwitcher) {
+            return
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text')
+          const activeThemeIcon = document.querySelector('.theme-icon-active use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+          const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href')
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+            element.setAttribute('aria-pressed', 'false')
+          })
+
+          btnToActive.classList.add('active')
+          btnToActive.setAttribute('aria-pressed', 'true')
+          activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+          const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
+          themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+
+          if (focus) {
+            themeSwitcher.focus()
+          }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme !== 'light' && storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme())
+
+          document.querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+              toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+              })
+            })
+        })
+      })()
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://jackevansevo.github.io/">Jack's Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/"><i class="bi bi-house-fill"></i>&nbsp;&nbsp;Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://jackevansevo.github.io/index.xml"><i class="bi bi-rss-fill"></i>&nbsp;&nbsp;Feed</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://twitter.com/Thisisjackevans"><i class="bi bi-twitter"></i>&nbsp;&nbsp;Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://fosstodon.org/@JackEvans"><i class="bi bi-mastodon"></i>&nbsp;&nbsp;Mastodon</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://www.youtube.com/channel/UC4yxFC8_z8-DeYLeHXKtdHg"><i class="bi bi-youtube"></i>&nbsp;&nbsp;Youtube</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub"><i class="bi bi-pen-fill"></i>&nbsp;&nbsp;Resume</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container p-lg-5 p-3">
+<div class="content">
+  <h1>
+    <a href="https://jackevansevo.github.io/per-project-ipython-project-history-in-docker-compose.html" rel="bookmark" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover" title="Permalink to Per project IPython project history in docker compose">Per project IPython project history in docker compose</a>
+  </h1>
   <header>
-    <h1 class="entry-title">
-      <a href="/per-project-ipython-project-history-in-docker-compose.html" rel="bookmark"
-         title="Permalink to Per project IPython project history in docker compose">Per project IPython project history in docker compose</a></h1>
- 
+    
   </header>
-  <footer class="post-info">
-    <time class="published" datetime="2022-07-13T00:00:00+01:00">
-      Wed 13 July 2022
+  <footer>
+    <time datetime="2022-07-13T00:00:00+01:00">
+	    <i class="bi bi-clock"></i><b>Published:</b> Wed 13 July 2022
     </time>
-    <address class="vcard author">
-      By           <a class="url fn" href="/author/jack-evans.html">Jack Evans</a>
-    </address>
-    <div class="category">
-        Category: <a href="/category/python.html">Python</a>
-    </div>
-    <div class="tags">
-        Tags:
-            <a href="/tag/python.html">python</a>
-            <a href="/tag/docker.html">docker</a>
-    </div>
+<div>
+<i class="bi bi-tags"></i>&nbsp;<b>Tags</b>:
+  <a href="https://jackevansevo.github.io/tag/python.html"><span class="badge text-bg-warning">Python</span></a>
+  <a href="https://jackevansevo.github.io/tag/docker.html"><span class="badge text-bg-secondary">Docker</span></a>
+</div>
   </footer><!-- /.post-info -->
+  <hr>
   <article>
     <p>A neat trick I learnt recently (<a href="[https://github.com/cookiecutter/cookiecutter-django/issues/1589">From this Github thread</a>)</p>
 <p>It's possible to store IPython history persistently per project in a docker compose, i.e:</p>
-<div class="highlight"><pre><span></span><code><span class="gh">diff --git a/docker-compose.yml b/docker-compose.yml</span><span class="w"></span>
-<span class="gh">index 043b004..7e6d029 100644</span><span class="w"></span>
-<span class="gd">--- a/docker-compose.yml</span><span class="w"></span>
-<span class="gi">+++ b/docker-compose.yml</span><span class="w"></span>
-<span class="gu">@@ -18,7 +18,7 @@ services:</span><span class="w"></span>
-<span class="w"> </span>    volumes:<span class="w"></span>
-<span class="w"> </span>      - .:/app<span class="w"></span>
-<span class="gi">+      - ipython_data_local:/root/.ipython/profile_default</span><span class="w"></span>
-<span class="w"> </span>    build:<span class="w"></span>
-<span class="w"> </span>      context: .<span class="w"></span>
-<span class="w"> </span>      target: dev<span class="w"></span>
-<span class="gu">@@ -85,3 +85,7 @@ services:</span><span class="w"></span>
-<span class="w"> </span>    depends_on:<span class="w"></span>
-<span class="w"> </span>      - redis<span class="w"></span>
-<span class="w"> </span>      - db<span class="w"></span>
-<span class="gi">+</span><span class="w"></span>
-<span class="gi">+</span><span class="w"></span>
-<span class="gi">+volumes:</span><span class="w"></span>
-<span class="gi">+    ipython_data_local: {}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="gh">diff --git a/docker-compose.yml b/docker-compose.yml</span>
+<span class="gh">index 043b004..7e6d029 100644</span>
+<span class="gd">--- a/docker-compose.yml</span>
+<span class="gi">+++ b/docker-compose.yml</span>
+<span class="gu">@@ -18,7 +18,7 @@ services:</span>
+<span class="w"> </span>    volumes:
+<span class="w"> </span>      - .:/app
+<span class="gi">+      - ipython_data_local:/root/.ipython/profile_default</span>
+<span class="w"> </span>    build:
+<span class="w"> </span>      context: .
+<span class="w"> </span>      target: dev
+<span class="gu">@@ -85,3 +85,7 @@ services:</span>
+<span class="w"> </span>    depends_on:
+<span class="w"> </span>      - redis
+<span class="w"> </span>      - db
+<span class="gi">+</span>
+<span class="gi">+</span>
+<span class="gi">+volumes:</span>
+<span class="gi">+    ipython_data_local: {}</span>
 </code></pre></div>
 
 <p>Previously I'd tried mounting <code>~/.ipython/profile_default/history.sqlite</code> but I found this per project solution to be much nicer.</p>
 <p>Sidenote: the <a href="https://github.com/cookiecutter/cookiecutter-django">cookiecutter-django</a> repo has some really nice features (even if you're not using the template itself)</p>
   </article>
-        </main>
-        <footer>
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="https://getpelican.com/">Pelican</a>,
-                which takes great advantage of <a href="https://www.python.org/">Python</a>.
-                </address><!-- /#about -->
-        </footer>
-</body>
+</div>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
 </html>

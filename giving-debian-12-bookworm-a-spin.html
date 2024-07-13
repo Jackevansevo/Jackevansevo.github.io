@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en" bs-theme="auto">
+  <head>
+        <title>Jack's Blog - Giving Debian 12 'Bookworm' a Spin</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" type="text/css" href="https://jackevansevo.github.io/theme/css/pygments.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <link rel="shortcut icon" type="image/x-icon" href="https://jackevansevo.github.io/theme/favicon.ico">
+      <script src="https://cdn.counter.dev/script.js" data-id="91e2f16c-845b-4d6d-95f5-ec7838cee876" data-utcoffset="-3"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+<style>
+main {
+	font-family: "Signika Negative" !important;
+	font-weight: 300;
+}
+</style>
+
+        <link href="https://jackevansevo.github.io/index.xml" type="application/atom+xml" rel="alternate" title="Jack's Blog Full Atom Feed" />
+  <style>
+    .content {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+    }
+  </style>
+
+
+  <style>
+    article > h2, h3, h4, h5 {
+      padding: 1rem 0;
+    }
+    article > div.highlight > pre {
+      border: solid 0.1rem; rgb(33, 37, 41);
+      background-color: #fdf6e3;
+      padding: 0.5rem;
+      border-radius: 0.4rem;
+    }
+  </style>
+
+
+
+    <meta name="tags" content="Linux" />
+    <meta name="tags" content="Debian" />
+
+    <script>
+/*!
+ * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+ * Copyright 2011-2023 The Bootstrap Authors
+ * Licensed under the Creative Commons Attribution 3.0 Unported License.
+ */
+
+      (() => {
+        'use strict'
+
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme) {
+            return storedTheme
+          }
+
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+          if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark')
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+          }
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme')
+
+          if (!themeSwitcher) {
+            return
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text')
+          const activeThemeIcon = document.querySelector('.theme-icon-active use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+          const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href')
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+            element.setAttribute('aria-pressed', 'false')
+          })
+
+          btnToActive.classList.add('active')
+          btnToActive.setAttribute('aria-pressed', 'true')
+          activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+          const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
+          themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+
+          if (focus) {
+            themeSwitcher.focus()
+          }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme !== 'light' && storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme())
+
+          document.querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+              toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+              })
+            })
+        })
+      })()
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://jackevansevo.github.io/">Jack's Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/"><i class="bi bi-house-fill"></i>&nbsp;&nbsp;Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://jackevansevo.github.io/index.xml"><i class="bi bi-rss-fill"></i>&nbsp;&nbsp;Feed</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://twitter.com/Thisisjackevans"><i class="bi bi-twitter"></i>&nbsp;&nbsp;Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://fosstodon.org/@JackEvans"><i class="bi bi-mastodon"></i>&nbsp;&nbsp;Mastodon</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://www.youtube.com/channel/UC4yxFC8_z8-DeYLeHXKtdHg"><i class="bi bi-youtube"></i>&nbsp;&nbsp;Youtube</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub"><i class="bi bi-pen-fill"></i>&nbsp;&nbsp;Resume</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container p-lg-5 p-3">
+<div class="content">
+  <h1>
+    <a href="https://jackevansevo.github.io/giving-debian-12-bookworm-a-spin.html" rel="bookmark" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover" title="Permalink to Giving Debian 12 'Bookworm' a Spin">Giving Debian 12 'Bookworm' a Spin</a>
+  </h1>
+  <header>
+    
+  </header>
+  <footer>
+    <time datetime="2023-06-15T00:00:00+01:00">
+	    <i class="bi bi-clock"></i><b>Published:</b> Thu 15 June 2023
+    </time>
+<div>
+<i class="bi bi-tags"></i>&nbsp;<b>Tags</b>:
+  <a href="https://jackevansevo.github.io/tag/linux.html"><span class="badge text-bg-dark">Linux</span></a>
+  <a href="https://jackevansevo.github.io/tag/debian.html"><span class="badge" style="background: #a80030">Debian</span></a>
+</div>
+  </footer><!-- /.post-info -->
+  <hr>
+  <article>
+    <p>Debian 12 'Bookworm' was recently released, and a number of different factors
+aligned that made me decide to give it a go.</p>
+<div class="ratio ratio-21x9">
+<iframe src="https://www.youtube.com/embed/pwx-TujW8sE" title="Debian 12
+&quot;Bookworm&quot; is the Best Release of Debian. Ever." frameborder="0"
+allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;
+picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
+
+<h2>Switching</h2>
+<p>It's been a number of years since I daily drove a Debian, but it's a distro that
+I've always had a soft spot for. Back at university I interned at a company
+where a number of employees were contributors to the Debian project, which at
+the time I was enamoured by. I respected their Linux expertise and no-nonsense
+approach to system administration, something I feel is reflected in the Debian
+culture.</p>
+<p><img src="https://jackevansevo.github.io/images/Screenshot_20230615_222129.png" alt="Debian
+desktop"  style="max-height: 600px"/></p>
+<p>The distribution itself has a reputation for rock solid stability, historically
+not great for users that want the latest and greatest features, but ideal for
+being predictable, staying out your way and allowing you to get work done.</p>
+<p>I've always had the sense that if I really wanted a reliable, non-thrills
+desktop that I was confident would work for years to come I'd definitely
+consider either Debian for personal use. Perhaps if I was installing something
+for a family member I'd consider something like Linux Mint. But for myself, I'm
+easily distracted and chronically addicted to new shiny things so rarely stick
+with one distribution for extended periods of time.</p>
+<h2>Saying Farewell to Open SUSE 🦎</h2>
+<p>I was previously using KDE plasma desktop on Open SUSE, a rolling release distro
+that includes all the latest and greatest packages. With the latest release of
+Debian 12 the stars aligned perfectly it includes the latest (at the time of
+writing) KDE Plasma version 5.27.5, identical to what I was using on SUSE. This
+also represents the <a href="https://community.kde.org/Schedules/Plasma_5#LTS_releases">latest major release of KDE plasma version
+5</a> before KDE plasma
+6.</p>
+<p>Below is a quote taken directly from the <a href="https://community.kde.org/Schedules/Plasma_5#LTS_releases">KDE Plasma 5
+schedule</a></p>
+<blockquote>
+<p>The current LTS release is Plasma 5.27.</p>
+<p>This is the last Plasma 5 release and will receive bugfixes only, no new features. The bugfixes are intended to continue being integrated into 5.27 until a first version of Plasma 6 can be released (and might continue longer).</p>
+</blockquote>
+<p>I'm hoping this means I'll continue to get the KDE experience I've grown
+accustomed to for the foreseeable future without having to worry about potential
+breakage of unstability introduced by KDE Plamsa 6 (Something I'd potentially
+more likely to encounter sticking with Open SUSE)</p>
+<p>For the most part my experience using Open SUSE was positive. I was pleasantly
+surprised by the stability of a rolling release desktop. However I occasionally
+ran into issues with conflicting packages, with no clue how my system managed to
+end up in such a state and unsure what actions to take to resolve said
+conflicts.</p>
+<p>Furthermore, using Open SUSE was a departure from what I'm more familiar with.
+Historically I've mostly used Debian or Ubuntu based distrubtions, as such I'm
+much more confortable using apt compared to tools like zypper or yast.</p>
+<h2>Impressions</h2>
+<p>I think it's a huge improvement that Debian is including non-free firmware
+(where required) in the official installation media. I remember the days where
+Wi-Fi on my old thinkpad didn't work post-installation until I'd enabled some
+non-free sources. This kind of stuff is just user hostile (especially for
+beginners) and I feel this will really help adoption.</p>
+<p><img src="https://jackevansevo.github.io/images/Screenshot_20230615_221037.png" alt="Debian about
+this system dialogue"  style="max-height: 600px"/></p>
+<p>In terms of the desktop experience I really appreciate that Debian provides a
+very vanilla experience out of the box. Similar to the approach I've seen Fedora
+take, there's no major attempts customize any of the desktop environments they
+ship.</p>
+<p>Enabling flathub and install packages from flathub means my setup now feels 100%
+identical on the surface, the only difference being the underpinnings of the
+distribution. I think this speaks to one of the main advantages of Debian in the
+current ecosystem. When combined with flatpak you get the best of both worlds: a
+rock solid distrbution base and (potentially) the latest and greatest versions of
+popular applications via flathub.</p>
+<h2>Issues</h2>
+<p>The only one issue I had was getting video capture working with pipewire in OBS
+Studio. After trying both the .deb version and flatpak I was unable to add my
+desktop as a screen capture source, resulting in the following warning in the
+logs:</p>
+<p><code>warning: [pipewire] Failed to start screencast, denied or cancelled by user</code></p>
+<p>After a lot of googling it turns out I just needed to install an extra
+'metapackage' pipewire-audio
+<a href="https://wiki.debian.org/
+PipeWire#Installation">https://wiki.debian.org/PipeWire#Installation</a> which I guess it not included by default when using KDE
+plasma.</p>
+  </article>
+</div>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
+</html>

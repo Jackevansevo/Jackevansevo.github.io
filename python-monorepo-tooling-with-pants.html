@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en" bs-theme="auto">
+  <head>
+        <title>Jack's Blog - Python Monorepo Tooling With Pants 👖</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" type="text/css" href="https://jackevansevo.github.io/theme/css/pygments.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <link rel="shortcut icon" type="image/x-icon" href="https://jackevansevo.github.io/theme/favicon.ico">
+      <script src="https://cdn.counter.dev/script.js" data-id="91e2f16c-845b-4d6d-95f5-ec7838cee876" data-utcoffset="-3"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+<style>
+main {
+	font-family: "Signika Negative" !important;
+	font-weight: 300;
+}
+</style>
+
+        <link href="https://jackevansevo.github.io/index.xml" type="application/atom+xml" rel="alternate" title="Jack's Blog Full Atom Feed" />
+  <style>
+    .content {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+    }
+  </style>
+
+
+  <style>
+    article > h2, h3, h4, h5 {
+      padding: 1rem 0;
+    }
+    article > div.highlight > pre {
+      border: solid 0.1rem; rgb(33, 37, 41);
+      background-color: #fdf6e3;
+      padding: 0.5rem;
+      border-radius: 0.4rem;
+    }
+  </style>
+
+
+
+    <meta name="tags" content="python" />
+
+    <script>
+/*!
+ * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+ * Copyright 2011-2023 The Bootstrap Authors
+ * Licensed under the Creative Commons Attribution 3.0 Unported License.
+ */
+
+      (() => {
+        'use strict'
+
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme) {
+            return storedTheme
+          }
+
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+          if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark')
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+          }
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme')
+
+          if (!themeSwitcher) {
+            return
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text')
+          const activeThemeIcon = document.querySelector('.theme-icon-active use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+          const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href')
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+            element.setAttribute('aria-pressed', 'false')
+          })
+
+          btnToActive.classList.add('active')
+          btnToActive.setAttribute('aria-pressed', 'true')
+          activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+          const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
+          themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+
+          if (focus) {
+            themeSwitcher.focus()
+          }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme !== 'light' && storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme())
+
+          document.querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+              toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+              })
+            })
+        })
+      })()
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://jackevansevo.github.io/">Jack's Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/"><i class="bi bi-house-fill"></i>&nbsp;&nbsp;Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://jackevansevo.github.io/index.xml"><i class="bi bi-rss-fill"></i>&nbsp;&nbsp;Feed</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://twitter.com/Thisisjackevans"><i class="bi bi-twitter"></i>&nbsp;&nbsp;Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://fosstodon.org/@JackEvans"><i class="bi bi-mastodon"></i>&nbsp;&nbsp;Mastodon</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://www.youtube.com/channel/UC4yxFC8_z8-DeYLeHXKtdHg"><i class="bi bi-youtube"></i>&nbsp;&nbsp;Youtube</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub"><i class="bi bi-pen-fill"></i>&nbsp;&nbsp;Resume</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container p-lg-5 p-3">
+<div class="content">
+  <h1>
+    <a href="https://jackevansevo.github.io/python-monorepo-tooling-with-pants.html" rel="bookmark" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover" title="Permalink to Python Monorepo Tooling With Pants 👖">Python Monorepo Tooling With Pants 👖</a>
+  </h1>
+  <header>
+    
+  </header>
+  <footer>
+    <time datetime="2024-05-25T00:00:00+01:00">
+	    <i class="bi bi-clock"></i><b>Published:</b> Sat 25 May 2024
+    </time>
+<div>
+<i class="bi bi-tags"></i>&nbsp;<b>Tags</b>:
+  <a href="https://jackevansevo.github.io/tag/python.html"><span class="badge text-bg-warning">python</span></a>
+</div>
+  </footer><!-- /.post-info -->
+  <hr>
+  <article>
+    <p>A while back I helped migrate a Python monorepo at my workplace
+(<a href="multiply.ai">multiply.ai</a>) to use <a href="https://www.pantsbuild.org/">Pantsbuild</a>.
+I thought I'd write a bit about my motivations for doing so and my experience
+adopting pantsbuild.</p>
+<p>If you're unfamiliar with pantsbuild (or build systems in general) I encourage
+you to watch the talk below:</p>
+<div class="m-5">
+    <div class="ratio ratio-16x9">
+      <iframe src="https://www.youtube.com/embed/N6ENyH4_r8U" title="Benjy Weinberger: Python monorepos: what, why and how" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+</div>
+
+<h1>Requirements</h1>
+<p>Storing all our code in a monorepo allows us to easily share code between
+different deployable artifacts (app-engine services or cloud-functions).</p>
+<p>A big challenge we face is that each deployment artifact has a different subset
+of modules/requirements/dependencies.</p>
+<p>The below image demonstrates a simplified overview of our monorepo. The colours
+indicate where shared library code in our repo might be shared across multiple
+deployable artifacts.</p>
+<p>I.e. we have shared schema definitions that need including in a cloud function
+or app engine deployment but excluded from all other deployments.</p>
+<p>Service C might be the only service to use numpy/scipy, but we want to avoid
+including this dependency in our cloud function deployments or other artifacts.</p>
+<p><img src="https://jackevansevo.github.io/images/Untitled-2024-05-06-1909.png" class="d-block w-100 p-4" alt="..."></p>
+<p>A compiled language will typically take care of removing dead/unreachable code
+automatically. But unfortunately Python doesn't really have any built in
+tooling to support this<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></p>
+<p>When starting out you might be able to get away with bundling all dependencies
+for every deployment (irrespective of whether they're required or not). But
+    this approach really doesn't scale all that well.</p>
+<p>Large dependencies might start slowing down all your deployments, especially if
+a compilation step is involved. You might also run into artificial size limits
+of tools like google cloud functions or AWS lambda.</p>
+<p>Additionally, for compliance purposes it makes sense to only include strictly
+whats necessary. This reduces the blast radius of sensitive code getting leaked
+(i.e. a server gets hacked or accidental exposure). It also enables us to
+easily share code with clients if they should ever wish to audit our code.</p>
+<p>Before adopting pants each deployable artifact had to manually specify which
+local modules it needed. We had a custom build step to package then package up
+this code. This meant switching between projects was a pain, increased the
+barrier to re-using code and made it harder to globally manage/upgrade
+dependencies with a single tool.</p>
+<p><br></p>
+<h1>Migrating to Pants</h1>
+<p>One of the main advantages touted by pants is that you can progressively adopt
+it into your code-base. Instead of a piecemeal migration I opted just to get
+everything working in a single big change.</p>
+<p>At a top level we like to be able to define a single requirement file with ALL
+the dependencies used in our monorepo. When working locally this enables us to
+globally install ALL dependencies in a single virtualenv and then work on any
+part of the repo.</p>
+<p>The trade off here is that there's the potential to run into dependencies
+conflicts, but in practice we don't tend to run into these issues. We're also
+fortunate to be in a situation where no deployments require different
+versions<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>.</p>
+<p><br></p>
+<h1>Advantages</h1>
+<p>In a typical Python project you'll likely install dependencies into a virtual
+environment and periodically merge in changes from upstream. In situations
+where upstream changes modify dependencies there's absolutely nothing stopping
+you from running code locally without first updating your virtualenv.</p>
+<p>In my experience this is a huge source of confusion<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup>, especially to
+contributors who are unfamiliar with the Python ecosystem.</p>
+<p>Pants avoids this entire category of problems entirely by utilising Pex.
+Executing a pants target typically builds a pex executable vendoring only the
+necessary dependencies and requirements.</p>
+<p>This is great for frontend engineers I work with who infrequently run the
+backend locally to make changes or debug issues. They don't have to worry about
+the idiosyncrasies of python virtual environments, they just run a command.</p>
+<p>During the course of migrating the repo I asked a tonne of questions on the
+Pants slack channel. I found the community there to be incredibly accommodating
+and helpful.</p>
+<hr>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Python has <code>modulefinder</code> in the standard library that can be used to
+determine the set of modules imported by a script. But it falls short in
+a lot of cases.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>For these situations pants does support multiple lockfiles but we've
+never had to reach for it.&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>At a previous job we had a Slack bot reminder every time dependabot
+merged changes to remind people to merge upstream and explicitly rebuild
+their containers/re-create their virtual environments.&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+  </article>
+</div>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
+</html>

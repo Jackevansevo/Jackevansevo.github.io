@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en" bs-theme="auto">
+  <head>
+        <title>Jack's Blog - 2023 Resolutions</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" type="text/css" href="https://jackevansevo.github.io/theme/css/pygments.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <link rel="shortcut icon" type="image/x-icon" href="https://jackevansevo.github.io/theme/favicon.ico">
+      <script src="https://cdn.counter.dev/script.js" data-id="91e2f16c-845b-4d6d-95f5-ec7838cee876" data-utcoffset="-3"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap" rel="stylesheet">
+<style>
+main {
+	font-family: "Signika Negative" !important;
+	font-weight: 300;
+}
+</style>
+
+        <link href="https://jackevansevo.github.io/index.xml" type="application/atom+xml" rel="alternate" title="Jack's Blog Full Atom Feed" />
+  <style>
+    .content {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+    }
+  </style>
+
+
+  <style>
+    article > h2, h3, h4, h5 {
+      padding: 1rem 0;
+    }
+    article > div.highlight > pre {
+      border: solid 0.1rem; rgb(33, 37, 41);
+      background-color: #fdf6e3;
+      padding: 0.5rem;
+      border-radius: 0.4rem;
+    }
+  </style>
+
+
+
+
+    <script>
+/*!
+ * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+ * Copyright 2011-2023 The Bootstrap Authors
+ * Licensed under the Creative Commons Attribution 3.0 Unported License.
+ */
+
+      (() => {
+        'use strict'
+
+        const getStoredTheme = () => localStorage.getItem('theme')
+        const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+        const getPreferredTheme = () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme) {
+            return storedTheme
+          }
+
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = theme => {
+          if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-bs-theme', 'dark')
+          } else {
+            document.documentElement.setAttribute('data-bs-theme', theme)
+          }
+        }
+
+        setTheme(getPreferredTheme())
+
+        const showActiveTheme = (theme, focus = false) => {
+          const themeSwitcher = document.querySelector('#bd-theme')
+
+          if (!themeSwitcher) {
+            return
+          }
+
+          const themeSwitcherText = document.querySelector('#bd-theme-text')
+          const activeThemeIcon = document.querySelector('.theme-icon-active use')
+          const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+          const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href')
+
+          document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+            element.classList.remove('active')
+            element.setAttribute('aria-pressed', 'false')
+          })
+
+          btnToActive.classList.add('active')
+          btnToActive.setAttribute('aria-pressed', 'true')
+          activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+          const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
+          themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
+
+          if (focus) {
+            themeSwitcher.focus()
+          }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          const storedTheme = getStoredTheme()
+          if (storedTheme !== 'light' && storedTheme !== 'dark') {
+            setTheme(getPreferredTheme())
+          }
+        })
+
+        window.addEventListener('DOMContentLoaded', () => {
+          showActiveTheme(getPreferredTheme())
+
+          document.querySelectorAll('[data-bs-theme-value]')
+            .forEach(toggle => {
+              toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+              })
+            })
+        })
+      })()
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://jackevansevo.github.io/">Jack's Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/"><i class="bi bi-house-fill"></i>&nbsp;&nbsp;Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://jackevansevo.github.io/index.xml"><i class="bi bi-rss-fill"></i>&nbsp;&nbsp;Feed</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://twitter.com/Thisisjackevans"><i class="bi bi-twitter"></i>&nbsp;&nbsp;Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://fosstodon.org/@JackEvans"><i class="bi bi-mastodon"></i>&nbsp;&nbsp;Mastodon</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://www.youtube.com/channel/UC4yxFC8_z8-DeYLeHXKtdHg"><i class="bi bi-youtube"></i>&nbsp;&nbsp;Youtube</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://docs.google.com/document/d/e/2PACX-1vRHykkB3oIRnf7HkA6jlb_p_g47D0WPapwppQxyyss9AzXlLHqZTAT8qD0xnG7E6qSk7sNpF3GfdQdm/pub"><i class="bi bi-pen-fill"></i>&nbsp;&nbsp;Resume</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="container p-lg-5 p-3">
+<div class="content">
+  <h1>
+    <a href="https://jackevansevo.github.io/2023-resolutions.html" rel="bookmark" class="link-underline link-underline-opacity-0 link-underline-opacity-75-hover" title="Permalink to 2023 Resolutions">2023 Resolutions</a>
+  </h1>
+  <header>
+    
+  </header>
+  <footer>
+    <time datetime="2022-12-29T00:00:00+00:00">
+	    <i class="bi bi-clock"></i><b>Published:</b> Thu 29 December 2022
+    </time>
+  </footer><!-- /.post-info -->
+  <hr>
+  <article>
+    <p>Here's five resolutions I'm setting myself for 2023. At the end of this year I
+plan to revisit this list and see whether my resolutions were upheld.</p>
+<p>To maximise my chances of success I've tried to make each goal as actionable as
+possible, as having something concrete to aim for should make them easier to
+complete.</p>
+<h2>1. Read more books than 2022 📚</h2>
+<p>Last year was a pretty successful year in terms of reading for me, but in 2023 I
+intend to read more. Measuring total books is a soft metric as not all books are
+made equally, but this seems easily achievable regardless of what books I
+choose.</p>
+<p>Specifically, I'd like to replace my habit of aimlessly browsing social media on
+my phone with focused reading instead. As all the time I've wasted this year
+scrolling Twitter / Reddit / Instagram could probably have been better spent
+productively.</p>
+<h2>2. Run a(nother) half marathon 🏃</h2>
+<p>Back in March I ran my first ever half marathon (see photo). I trained pretty
+hard to get to this point and it remains the furthest I've ran in my life.
+Getting to this level of fitness was pretty difficult, but incredibly
+satisfying, having positive effects on both my mental and physical health.</p>
+<p>Recently I've slumped a bit (blame the winter weather) and haven't been running
+as frequently. Consequently, next year I'm not focused on beating my previous
+time or increasing the distance (although that would be a bonus). The purpose of
+this goal is mainly to get me back into the habit of regular running and a
+return to my previous fitness level.</p>
+<p><img src="https://jackevansevo.github.io/images/strava7360810133316658810.jpg" alt="Strava screenshot" width="500"/></p>
+<h2>3. Improve my Portuguese 🇧🇷</h2>
+<p>In 2022 I spent three months living in Brazil, giving me the opportunity to
+fully immerse myself in the language. During which I think my Portuguese really
+improved.</p>
+<p>By the time I left I was able to understand most basic conversation and
+following events on the news. However I still quickly struggle with regular
+conversations as soon as it moves past the basics.</p>
+<p>So next year I'd like to get better by putting myself into situations where I'm
+forced to practice. Especially trying my best not to immediately revert to
+English at the first signs of struggles when communicating with bilingual
+foreign speakers.</p>
+<h2>4. Write (at least) one blog post a month 📝</h2>
+<p>This feels like a recurring theme each year. Each year I strive to write more,
+but always seem to lack the confidence or motivation. Consequently I've
+neglected dedicating much time to writing/blogging in the past.</p>
+<p>Next year I'd like to buck this trend and post more frequently. I already have a
+backlog of ideas/topics to write about, I just need to commit to writing them
+up.</p>
+<p>Where appropriate I'll try and cross these articles to link aggregator sites
+like Reddit/Lobsters/Hacker News in the hopes that a few people find the content
+useful/engaging. But virality, popularity or developing any sort of following is
+not my goal.</p>
+<h2>5. Record (at least) one full cover song 🎸</h2>
+<p>I've been playing guitar for a few years (~4) now, and during the pandemic I
+started to semi regularly post small clips of myself playing guitar on
+Instagram.</p>
+<p>Despite this, I've never had the perseverance to learn, practice and
+subsequently record a full cover. In 2023 I'd like to change this.</p>
+<p>I'm confident enough to play through quite a few songs completely, I just need
+to work up the confidence to bust out a camera and film it.</p>
+  </article>
+</div>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  </body>
+</html>
